@@ -1,0 +1,221 @@
+//===----------------------------------------------------------------------===//
+//
+// This source file is part of the Swift open source project
+//
+// Copyright (c) 2026 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE.txt for license information
+// See CONTRIBUTORS.txt for the list of Swift project authors
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+//===----------------------------------------------------------------------===//
+
+#if !NETWORK_NO_SWIFT_QUIC
+
+#if canImport(Glibc)
+import Glibc
+internal import Logging
+#elseif canImport(os)
+internal import os
+#endif
+
+extension System {
+    static func isHighMemory() -> Bool {
+        #if NETWORK_EMBEDDED
+        return false
+        #else
+        /*
+		 * The hw.memsize sysctl will usually return < 4GB on a 4GB system, so we consider
+		 * a high memory system a device that holds more than 3GB of usable memory.
+		 */
+        var memsize: UInt64 = 0
+        #if os(Linux)
+        memsize = 0xffff_ffff + 1
+        #elseif !NETWORK_STANDALONE
+        var len = Int.bitWidth
+        if sysctlbyname("hw.memsize", &memsize, &len, nil, 0) < 0 {
+            Logger.proto.error("sysctlbyname(hw.memsize) failed, assuming 4GB")
+            memsize = 0xffff_ffff + 1
+        }
+        #endif
+        return memsize > Constants.highMemorySystem
+        #endif
+    }
+}
+
+@_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
+public struct QUICRoutingHeader: ~Copyable {
+    public var type: UInt8?
+    public var version: UInt32?
+    public var destinationConnectionID: QUICConnectionID?
+    public var sourceConnectionID: QUICConnectionID?
+    public var token: [UInt8]
+}
+
+@_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
+public struct QUICConnectionUtilities {
+    public static func parseInboundPacket(
+        _ buffer: UnsafeRawBufferPointer,
+        shortHeaderDestinationCIDLength: Int?
+    ) -> QUICRoutingHeader? {
+        guard buffer.count >= Constants.minimumPacketSize else {
+            Logger.proto.error("buffer length < minimum packet size, len=\(buffer.count)")
+            return nil
+        }
+
+        var dcidLength: Int = 0
+        var scidLength: Int = 0
+        var firstOctet: UInt8 = 0
+        var rawVersion: UInt32 = 0
+        var returnVersion: UInt32?
+        var parsedDcidLength: UInt8 = 0
+        var parsedScidLength: UInt8 = 0
+        var retryToken: [UInt8] = []
+        var retryPacket = false
+        let result = Deserializer.deserialize(buffer.bytes) { read throws(DeserializationError) in
+            try read.uint8(&firstOctet)
+        }
+
+        guard result.isValid else {
+            Logger.proto.error("Unable to parse first octect")
+            return nil
+        }
+
+        let longHeader = (firstOctet & 0x80) != 0
+        var dcidStorage = QUICConnectionIDStorage.empty
+        var scidStorage = QUICConnectionIDStorage.empty
+        var destinationConnectionID: QUICConnectionID?
+        var sourceConnectionID: QUICConnectionID?
+        let packetType = (firstOctet & 0x30) >> 4
+        if longHeader {
+            // Retry packet present
+            var padding = 0
+            if packetType == 0x03 {
+                // If retry packet determine if there is padding to compute the size of the token
+                var paddingIndex = 0
+                for index in buffer.indices.reversed() {
+                    if buffer[index] != 0 && index != 0 {
+                        paddingIndex = index + 1
+                        break
+                    }
+                }
+                padding = buffer.count - paddingIndex
+                retryPacket = true
+            }
+            let result = Deserializer.deserialize(buffer.bytes) { read throws(DeserializationError) in
+                try read.uint8(&firstOctet)
+                try read.uint32NetworkByteOrder(&rawVersion)
+                try read.uint8(&parsedDcidLength)
+                try read.connectionID(&dcidStorage, length: Int(parsedDcidLength))
+                try read.uint8(&parsedScidLength)
+                try read.connectionID(&scidStorage, length: Int(parsedScidLength))
+                if retryPacket {
+                    // Calculate the length of the retry token
+                    // For firstOctet, version, and DCID length and SCID length for retry packet
+                    let staticHeaderBytes =
+                        MemoryLayout<UInt8>.size + MemoryLayout<UInt32>.size
+                        + (2 * MemoryLayout<UInt8>.size)
+                    // Header bytes plus the size of the DCID and SCID
+                    let expectedLongHeaderLength =
+                        UInt8(staticHeaderBytes) + parsedDcidLength + parsedScidLength
+                    // Compute the length minus the header, padding, and integrity tag
+                    let retryTokenLength =
+                        Int(buffer.count) - Int(expectedLongHeaderLength) - padding
+                        - Int(Constants.retryTokenIntegrityTagLength)
+                    if retryTokenLength > 0 {
+                        try read.buffer(&retryToken, length: retryTokenLength)
+                    }
+                }
+            }
+            guard result.isValid else {
+                Logger.proto.error("Unable to parse long header")
+                return nil
+            }
+            returnVersion = rawVersion
+            dcidLength = Int(parsedDcidLength)
+
+            scidLength = Int(parsedScidLength)
+            destinationConnectionID = QUICConnectionID(storage: dcidStorage, size: Int(dcidLength))
+            sourceConnectionID = QUICConnectionID(storage: scidStorage, size: Int(scidLength))
+
+        } else {  // shortheader
+            // incoming destination cid must be the currently active source cid for this path
+            guard let shortHeaderDestinationCIDLength = shortHeaderDestinationCIDLength else {
+                Logger.proto.error("Bad short header: unknown incoming cid length")
+                return nil
+            }
+            let fixed = (firstOctet & 0x40) != 0
+            dcidLength = shortHeaderDestinationCIDLength
+
+            if _slowPath(!fixed) {
+                Logger.proto.error("Bad short header: fixed bit is zero")
+                return nil
+            }
+
+            let result = Deserializer.deserialize(buffer.bytes) { read throws(DeserializationError) in
+                try read.uint8(&firstOctet)
+                try read.connectionID(&dcidStorage, length: Int(dcidLength))
+            }
+            guard result.isValid else {
+                Logger.proto.error("Unable to deserialize destination CID")
+                return nil
+            }
+            destinationConnectionID = QUICConnectionID(storage: dcidStorage, size: Int(dcidLength))
+        }
+
+        return QUICRoutingHeader(
+            type: packetType,
+            version: returnVersion,
+            destinationConnectionID: destinationConnectionID,
+            sourceConnectionID: sourceConnectionID,
+            token: retryToken
+        )
+    }
+
+    /// Given a token and a length, create a Stateless Reset packet
+    ///
+    /// - Parameters:
+    ///     - token: The stateless reset token to send
+    ///     - triggeringPacketLength: The size of the packet that cause this stateless reset token to be sent
+    public static func createStatelessResetPacket(
+        token: QUICStatelessResetToken,
+        triggeringPacketLength: Int
+    ) -> [UInt8] {
+
+        guard token.token.count > 0, triggeringPacketLength > 0 else {
+            Logger.proto.error("Failed to provide valid input: \(token), \(triggeringPacketLength)")
+            return []
+        }
+        // An endpoint MUST ensure that every Stateless Reset that it sends is smaller than the packet that triggered it
+        let totalLength = triggeringPacketLength
+        var unpredictableBytesOverride: Int = 22  // Default unpredictable Bytes (Total size 38 bytes)
+        if QUICStatelessResetPacket.unpredictableBytes + token.token.count > totalLength {
+            // Make sure the new Stateless Reset packet is smaller by adjusting unpredictableBytes stored after the short header.
+            // For example, if the received packet was of size 36, the Stateless Reset packet needs to be size 35 (or smaller).
+            let overLength =
+                (QUICStatelessResetPacket.unpredictableBytes + token.token.count) - totalLength + 1
+            unpredictableBytesOverride = QUICStatelessResetPacket.unpredictableBytes - overLength
+        }
+        do {
+            let statelessReset = try QUICStatelessResetPacket(
+                resetToken: token.token,
+                unpredictableBytes: unpredictableBytesOverride
+            )
+            guard statelessReset.bytes.count >= Constants.minimumPacketSize else {
+                Logger.proto.error(
+                    "Failed to create QUICStatelessResetPacket greater than the minimum packet size"
+                )
+                return []
+            }
+            return statelessReset.bytes
+        } catch {
+            Logger.proto.error("Failed to create QUICStatelessResetPacket")
+            return []
+        }
+    }
+}
+#endif

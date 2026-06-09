@@ -1,0 +1,115 @@
+//===----------------------------------------------------------------------===//
+//
+// This source file is part of the Swift open source project
+//
+// Copyright (c) 2026 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE.txt for license information
+// See CONTRIBUTORS.txt for the list of Swift project authors
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+//===----------------------------------------------------------------------===//
+
+public struct IPv4Address: IPAddress, Hashable, CustomDebugStringConvertible {
+
+    /// The IPv4 any address used for listening
+    public static var any: IPv4Address {
+        IPv4Address(UInt32(0x0000_0000).bigEndian)
+    }
+
+    /// The IPv4 broadcast address used to broadcast to all hosts
+    public static var broadcast: IPv4Address {
+        IPv4Address(UInt32(0xffff_ffff).bigEndian)
+    }
+
+    /// The IPv4 loopback address
+    public static var loopback: IPv4Address {
+        IPv4Address(UInt32(0x7f00_0001).bigEndian)
+    }
+
+    /// Indicates if this IPv4 address is loopback (127.0.0.1)
+    public var isLoopback: Bool {
+        self == IPv4Address.loopback
+    }
+
+    /// Indicates if this IPv4 address is multicast
+    public var isMulticast: Bool {
+        let v4WireAddress = self.address
+        let mask = (0xF000_0000 as UInt32).bigEndian
+        let subnet = (0xE000_0000 as UInt32).bigEndian
+        return v4WireAddress & mask == subnet
+    }
+
+    public var isLinkLocal: Bool {
+        let v4WireAddress = self.address
+        let mask = (0xFFFF_0000 as UInt32).bigEndian
+        let subnet = (0xA9FE_0000 as UInt32).bigEndian
+        return v4WireAddress & mask == subnet
+    }
+
+    public var isLocalGroup: Bool {
+        let v4WireAddress = self.address
+        let mask = (0xFFFF_FF00 as UInt32).bigEndian
+        let subnet = (0xE000_0000 as UInt32).bigEndian
+        return v4WireAddress & mask == subnet
+    }
+
+    public var isZeroNet: Bool {
+        let v4WireAddress = self.address
+        let mask = (0xFF00_0000 as UInt32).bigEndian
+        let subnet = (0x0000_0000 as UInt32).bigEndian
+        return v4WireAddress & mask == subnet
+    }
+
+    // Stored in network byte order
+    let address: UInt32
+
+    internal var addressValue: UInt32 {
+        address
+    }
+
+    var rawValue: UInt32 {
+        self.address
+    }
+
+    public init(_ rawValue: UInt32) {
+        self.address = rawValue
+    }
+
+    /// An IPv4 address as a byte array
+    public init?(_ bytes: [UInt8]) {
+        guard bytes.count == MemoryLayout<UInt32>.size else {
+            return nil
+        }
+        var address: UInt32 = 0
+        withUnsafeMutableBytes(of: &address) { $0.copyBytes(from: bytes) }
+        self = IPv4Address(address)
+    }
+
+    static func ipv4AddressString(from address: UInt32) -> String {
+        withUnsafeBytes(of: address) {
+            "\($0[0]).\($0[1]).\($0[2]).\($0[3])"
+        }
+    }
+
+    public var debugDescription: String {
+        Self.ipv4AddressString(from: address)
+    }
+
+    var addressFamily: AddressFamily {
+        .ipv4
+    }
+
+    static public func == (lhs: IPv4Address, rhs: IPv4Address) -> Bool {
+        if lhs.rawValue == rhs.rawValue {
+            return true
+        }
+        return false
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.address)
+    }
+}

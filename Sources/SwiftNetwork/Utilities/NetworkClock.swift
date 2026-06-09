@@ -1,0 +1,304 @@
+//===----------------------------------------------------------------------===//
+//
+// This source file is part of the Swift open source project
+//
+// Copyright (c) 2026 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0
+//
+// See LICENSE.txt for license information
+// See CONTRIBUTORS.txt for the list of Swift project authors
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+//===----------------------------------------------------------------------===//
+
+/// NetworkDuration is a shorter representation of Swift.Duration using only 8 bytes.
+/// The purpose of NetworkDuration is to represent times relative to the system boot up time
+/// or relative to the UNIX epoch.
+/// Although it can represent durations that span several years, its purpose is limited
+/// to representing durations relevant to networking protocols which are usually under one hour.
+#if !NETWORK_EMBEDDED
+@_spi(Essentials)
+@available(Network 0.1.0, *)
+#endif
+public struct NetworkDuration: DurationProtocol, Hashable, Equatable, CustomStringConvertible {
+    public private(set) var nanoseconds: Int64
+
+    init(nanoseconds: Int64) {
+        self.nanoseconds = nanoseconds
+    }
+
+    public static var zero: NetworkDuration {
+        NetworkDuration(nanoseconds: 0)
+    }
+
+    public static func + (lhs: NetworkDuration, rhs: NetworkDuration) -> NetworkDuration {
+        NetworkDuration(nanoseconds: lhs.nanoseconds + rhs.nanoseconds)
+    }
+
+    public static func - (lhs: NetworkDuration, rhs: NetworkDuration) -> NetworkDuration {
+        NetworkDuration(nanoseconds: lhs.nanoseconds - rhs.nanoseconds)
+    }
+
+    public static func += (lhs: inout NetworkDuration, rhs: NetworkDuration) {
+        lhs.nanoseconds += rhs.nanoseconds
+    }
+
+    public static func -= (lhs: inout NetworkDuration, rhs: NetworkDuration) {
+        lhs.nanoseconds -= rhs.nanoseconds
+    }
+
+    public static func / (lhs: NetworkDuration, rhs: Int) -> NetworkDuration {
+        NetworkDuration(nanoseconds: lhs.nanoseconds / Int64(rhs))
+    }
+
+    public static func * (lhs: NetworkDuration, rhs: Int) -> NetworkDuration {
+        NetworkDuration(nanoseconds: lhs.nanoseconds * Int64(rhs))
+    }
+
+    static func * (lhs: Double, rhs: NetworkDuration) -> NetworkDuration {
+        NetworkDuration(nanoseconds: rhs.nanoseconds * Int64(lhs))
+    }
+
+    static func * (lhs: NetworkDuration, rhs: Double) -> NetworkDuration {
+        NetworkDuration(nanoseconds: Int64(Double(lhs.nanoseconds) * rhs))
+    }
+
+    static func >> (lhs: NetworkDuration, rhs: Int) -> NetworkDuration {
+        NetworkDuration(nanoseconds: Int64(lhs.nanoseconds >> rhs))
+    }
+
+    static func << (lhs: NetworkDuration, rhs: Int) -> NetworkDuration {
+        NetworkDuration(nanoseconds: Int64(lhs.nanoseconds << rhs))
+    }
+
+    public static func / (lhs: NetworkDuration, rhs: NetworkDuration) -> Double {
+        Double(lhs.nanoseconds / rhs.nanoseconds)
+    }
+
+    public static func < (lhs: NetworkDuration, rhs: NetworkDuration) -> Bool {
+        lhs.nanoseconds < rhs.nanoseconds
+    }
+
+    public static func <= (lhs: NetworkDuration, rhs: NetworkDuration) -> Bool {
+        lhs.nanoseconds <= rhs.nanoseconds
+    }
+
+    public static func > (lhs: NetworkDuration, rhs: NetworkDuration) -> Bool {
+        lhs.nanoseconds > rhs.nanoseconds
+    }
+
+    public static func >= (lhs: NetworkDuration, rhs: NetworkDuration) -> Bool {
+        lhs.nanoseconds >= rhs.nanoseconds
+    }
+
+    public static func == (lhs: NetworkDuration, rhs: NetworkDuration) -> Bool {
+        lhs.nanoseconds == rhs.nanoseconds
+    }
+
+    public static func nanoseconds<T>(_ nanoseconds: T) -> NetworkDuration where T: BinaryInteger {
+        NetworkDuration(nanoseconds: Int64(nanoseconds))
+    }
+
+    public static func microseconds<T>(_ microseconds: T) -> NetworkDuration where T: BinaryInteger {
+        NetworkDuration(nanoseconds: Int64(microseconds) * 1000)
+    }
+
+    public static func microseconds(_ microseconds: Double) -> NetworkDuration {
+        NetworkDuration(nanoseconds: Int64(microseconds * 1000))
+    }
+
+    public static func milliseconds<T>(_ milliseconds: T) -> NetworkDuration where T: BinaryInteger {
+        NetworkDuration(nanoseconds: Int64(milliseconds) * 1_000_000)
+    }
+
+    public static func milliseconds(_ milliseconds: Double) -> NetworkDuration {
+        NetworkDuration(nanoseconds: Int64(milliseconds * 1_000_000))
+    }
+
+    public static func seconds<T>(_ seconds: T) -> NetworkDuration where T: BinaryInteger {
+        NetworkDuration(nanoseconds: Int64(seconds) * 1_000_000_000)
+    }
+
+    public static func minutes<T>(_ minutes: T) -> NetworkDuration where T: BinaryInteger {
+        NetworkDuration(nanoseconds: (Int64(minutes) * 60 * 1_000_000_000))
+    }
+
+    public var description: String {
+        // Ideally we would use:
+        //     formatted(.units(allowed: [.seconds, .milliseconds, .microseconds, .nanoseconds]))
+        // However, that requires Foundation, so we implement our own description.
+        if self.nanoseconds >= 0 {
+            if self.seconds > 0 {
+                return NetworkDuration.fractionalDescription(
+                    unit: "s",
+                    value: self.seconds,
+                    thousandth: self.milliseconds
+                )
+            } else if self.milliseconds > 0 {
+                return NetworkDuration.fractionalDescription(
+                    unit: "ms",
+                    value: self.milliseconds,
+                    thousandth: self.microseconds
+                )
+            } else if self.microseconds > 0 {
+                return "\(self.microseconds) μs"
+            } else {
+                return "\(nanoseconds) ns"
+            }
+        } else {
+            if self.seconds <= -1 {
+                return NetworkDuration.fractionalDescription(
+                    unit: "s",
+                    value: self.seconds,
+                    thousandth: self.milliseconds
+                )
+            } else if self.milliseconds <= -1 {
+                return NetworkDuration.fractionalDescription(
+                    unit: "ms",
+                    value: self.milliseconds,
+                    thousandth: self.microseconds
+                )
+            } else if self.microseconds <= -1 {
+                return "\(self.microseconds) μs"
+            } else {
+                return "\(nanoseconds) ns"
+            }
+        }
+    }
+
+    private static func fractionalDescription(unit: String, value: Int64, thousandth: Int64) -> String {
+        let fractional = ((value >= 0) ? 1 : -1) * (thousandth % 1000)
+        if fractional % 100 == 0 {
+            return "\(value).\(fractional / 100) \(unit)"
+        } else if fractional % 10 == 0 {
+            let twoDigits = fractional / 10
+            let padded = (twoDigits <= 9) ? "0\(twoDigits)" : "\(twoDigits)"
+            return "\(value).\(padded) \(unit)"
+        } else {
+            let hundreds = fractional / 100
+            let tens = (fractional / 10) % 10
+            let ones = fractional % 10
+            return "\(value).\(hundreds)\(tens)\(ones) \(unit)"
+        }
+    }
+
+    public var seconds: Int64 {
+        nanoseconds / 1_000_000_000
+    }
+
+    public var milliseconds: Int64 {
+        nanoseconds / 1_000_000
+    }
+
+    public var microseconds: Int64 {
+        nanoseconds / 1000
+    }
+
+    // Returns the number of microseconds round to the nearest integer.
+    public var roundedMicroseconds: Self {
+        if nanoseconds == 0 {
+            return self
+        }
+        let nanosecondsPerMicrosecond: Int64 = 1000
+        let halfway = nanosecondsPerMicrosecond / 2
+        let roundedMicroseconds =
+            ((nanoseconds + halfway) / nanosecondsPerMicrosecond)
+
+        return .microseconds(roundedMicroseconds)
+    }
+}
+
+/// NetworkClock is a continuous clock that mimics Swift.ContinuousClock but it has two changes
+/// 1. It uses NetworkDuration internally to make its size 8 bytes.
+/// 2. It allows clocks to be created with any random value for unit tests.
+#if !NETWORK_EMBEDDED
+@_spi(Essentials)
+@available(Network 0.1.0, *)
+#endif
+public struct NetworkClock: Clock {
+    public struct Instant: InstantProtocol, CustomStringConvertible {
+        var time: NetworkDuration
+
+        public func advanced(by duration: NetworkDuration) -> Self {
+            NetworkClock.Instant(self.time + duration)
+        }
+
+        public func duration(to other: Self) -> NetworkDuration {
+            other.time - self.time
+        }
+
+        public static func < (lhs: Self, rhs: Self) -> Bool {
+            lhs.time < rhs.time
+        }
+
+        public static func + (lhs: Self, rhs: NetworkDuration) -> Self {
+            NetworkClock.Instant(lhs.time + rhs)
+        }
+
+        public static func - (lhs: Self, rhs: NetworkDuration) -> Self {
+            NetworkClock.Instant(lhs.time - rhs)
+        }
+
+        public static func - (lhs: Self, rhs: NetworkClock.Instant) -> Self {
+            NetworkClock.Instant(lhs.time - rhs.time)
+        }
+
+        init(milliseconds: Int64) {
+            time = .milliseconds(milliseconds)
+        }
+
+        init(microseconds: Int64) {
+            time = .microseconds(microseconds)
+        }
+
+        init(nanoseconds: Int64) {
+            time = .nanoseconds(nanoseconds)
+        }
+
+        init(_ time: NetworkDuration) {
+            self.time = time
+        }
+
+        public static var now: Instant {
+            // TODO: this should probably call ContinuousClock.now instead
+            Instant(microseconds: Int64(System.Time.now()))
+        }
+
+        public static var nowAbsolute: Instant {
+            Instant(nanoseconds: Int64(System.Time.nowAbsoluteNanoseconds()))
+        }
+
+        public static var zero: Instant {
+            Instant(microseconds: 0)
+        }
+
+        public static var maximum: Instant {
+            Instant(nanoseconds: Int64.max)
+        }
+
+        public var description: String {
+            time.description
+        }
+    }
+
+    public var now: Instant {
+        Instant.now
+    }
+
+    public var minimumResolution: NetworkDuration {
+        .nanoseconds(1)
+    }
+    #if !NETWORK_DRIVERKIT && !NETWORK_EMBEDDED  // no Swift Concurrency
+    public func sleep(until deadline: Instant, tolerance: NetworkDuration?) async throws {
+        fatalError("not implemented")
+    }
+    #endif
+}
+
+#if NETWORK_DRIVERKIT || NETWORK_EMBEDDED  // need Clock protocol from Swift _Concurrency
+protocol Clock<Duration>: Sendable {
+    associatedtype Duration where Self.Duration == Self.Instant.Duration
+    associatedtype Instant: InstantProtocol
+}
+#endif

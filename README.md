@@ -10,14 +10,27 @@ On macOS, iOS, and other Apple platforms, apps should use the Network.framework 
 > At this time, all types exposed in this package are marked as SPI and subject to change at any time.
 > There are no support guarantees that can be made until these SPIs transition to stable APIs at a later date.
 
+## Getting Started
+
+## Prerequisites
+
+- [Swift 6.3 and up](https://swift.org/install)
+- macOS 26.0 and up or Linux (Ubuntu 22.04+)
+- Xcode 26.0 and up (Apple platforms only)
+
 ## Building and Testing
 
-> [!NOTE]
-> Building this package requires the Swift 6.3 toolchain or later. You can download toolchains from [the Swift website](https://swift.org/install).
+To build via the command line (for all platforms), run  at the root of package:
+```
+swift build
+```
 
-To build via the command line (for all platforms), run `swift build` at the root of package.
+To run all unit tests, run: 
+```
+swift test
+```
 
-To run all unit tests, run `swift test`. Unit tests can also be run by filtering a specific class or function:
+Unit tests can also be run by filtering a specific class or function:
 
 ```
 % swift test --filter SwiftNetworkUDPTests
@@ -99,10 +112,16 @@ This package builds several tools that can be used for benchmarking performance.
 - `QUICStreamLoad` measures parallel data transfers over parallel QUIC streams, for requests/second metrics.
 - `QUICTransfer` measures large data transfers over single QUIC streams, for throughput metrics.
 
-## Contributions
+## Contributing
 
-Swift Network welcomes contributions from the community, including bug fixes, tests, documentation, and ports to new platforms. Note that this project currently has a limited scope and is focused on supporting specific projects, such as supporting QUIC in SwiftNIO.
+The [Swift Network Contributing Guide](CONTRIBUTING.md) includes detailed information about participating in the project. 
 
-Please use [GitHub Issues](https://github.com/apple/swift-network-evolution/issues) for tracking bugs, feature requests, and other work.
+We welcome the following contributions:
+* Reporting bugs with clear, reproducible steps via [GitHub Issues](https://github.com/apple/swift-network-evolution/issues)
+* Improving documentation to make the project more accessible
+* Adding or enhancing tests to improve reliability and coverage
+* Adding ports to new platforms
+* Triaging issues by providing feedback, testing, and validation
+* Participating in the [Networking category on the Swift Forums](https://forums.swift.org/c/development/networking/129)
 
-Please see the [CONTRIBUTING](https://github.com/apple/swift-network-evolution/blob/main/CONTRIBUTING.md) document for information on how to contribute to the project.
+Swift Network has a limited scope and is focused on supporting specific projects, such as QUIC in SwiftNIO. Please start with an Issue before opening a Pull Request that adds new functionality or expands the surface.

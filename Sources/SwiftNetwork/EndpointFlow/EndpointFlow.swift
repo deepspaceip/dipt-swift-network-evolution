@@ -30,7 +30,7 @@ internal import Synchronization
 
 final class EndpointFlow: CustomDebugStringConvertible {
 
-    /// The data path logging state.
+    /// State used to emit logs on the data path.
     public var log = NetworkLoggerState()
 
     enum State: Equatable, Sendable {
@@ -44,7 +44,7 @@ final class EndpointFlow: CustomDebugStringConvertible {
         case ready
         /// Failed connections are disconnected and can no longer send or receive data.
         case failed(NetworkError)
-        /// Canceled connections have been invalidated by the client and send no more events.
+        /// Cancelled connections have been invalidated by the client and send no more events.
         case cancelled
 
         public static func == (lhs: State, rhs: State) -> Bool {

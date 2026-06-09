@@ -14,7 +14,7 @@
 
 public struct IPv6Address: IPAddress, Hashable, CustomDebugStringConvertible {
 
-    /// The IPv6 any-address.
+    /// The IPv6 "any" address.
     public static var any: IPv6Address {
         IPv6Address((0, 0, 0, 0))
     }

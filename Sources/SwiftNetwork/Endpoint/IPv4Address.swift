@@ -14,7 +14,7 @@
 
 public struct IPv4Address: IPAddress, Hashable, CustomDebugStringConvertible {
 
-    /// The IPv4 any-address used for listening.
+    /// The IPv4 "any" address used for listening.
     public static var any: IPv4Address {
         IPv4Address(UInt32(0x0000_0000).bigEndian)
     }

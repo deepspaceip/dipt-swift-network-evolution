@@ -148,7 +148,7 @@ where UpperProtocol: InboundDataLinkage, LowerProtocol: OutboundDataLinkage {
 public protocol OneToOneStreamProtocol: ~Copyable, OneToOneDatapathProtocol
 where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundStreamLinkage {
 
-    /// Reads stream data from this protocol on behalf of the upper protocol.
+    /// Returns received stream data to the upper protocol.
     ///
     /// Protocols can implement this function to customize behavior.
     mutating func receiveStreamData(minimumBytes: Int, maximumBytes: Int) throws(NetworkError) -> FrameArray?
@@ -158,7 +158,7 @@ where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundStreamLink
     /// Protocols can implement this function to customize behavior.
     mutating func getOutboundStreamDataRoomAvailable() throws(NetworkError) -> Int
 
-    /// Writes stream data on behalf of the upper protocol.
+    /// Sends stream data created by the upper protocol.
     ///
     /// Protocols can implement this function to customize behavior.
     mutating func sendStreamData(_ streamData: consuming FrameArray) throws(NetworkError)
@@ -180,7 +180,7 @@ where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundStreamLink
 public protocol OneToOneStreamToDatagramProtocol: ~Copyable, OneToOneDatapathProtocol
 where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundDatagramLinkage {
 
-    /// Reads stream data from this protocol on behalf of the upper protocol.
+    /// Returns received stream data to the upper protocol.
     ///
     /// Protocols can implement this function to customize behavior.
     mutating func receiveStreamData(minimumBytes: Int, maximumBytes: Int) throws(NetworkError) -> FrameArray?
@@ -190,7 +190,7 @@ where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundDatagramLi
     /// Protocols can implement this function to customize behavior.
     mutating func getOutboundStreamDataRoomAvailable() throws(NetworkError) -> Int
 
-    /// Writes stream data on behalf of the upper protocol.
+    /// Sends stream data created by the upper protocol.
     ///
     /// Protocols can implement this function to customize behavior.
     mutating func sendStreamData(_ streamData: consuming FrameArray) throws(NetworkError)
@@ -202,12 +202,12 @@ where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundDatagramLi
 public protocol OneToOneDatagramProtocol: ~Copyable, OneToOneDatapathProtocol
 where UpperProtocol == InboundDatagramLinkage, LowerProtocol == OutboundDatagramLinkage {
 
-    /// Reads datagrams from this protocol on behalf of the upper protocol.
+    /// Returns received datagrams to the upper protocol.
     ///
     /// Protocols can implement this function to customize behavior.
     mutating func receiveDatagrams(maximumDatagramCount: Int) throws(NetworkError) -> FrameArray?
 
-    /// Returns datagram frames to send on behalf of the upper protocol.
+    /// Returns datagram frames the upper protocol can use to send.
     ///
     /// Protocols can implement this function to customize behavior.
     mutating func getDatagramsToSend(
@@ -215,7 +215,7 @@ where UpperProtocol == InboundDatagramLinkage, LowerProtocol == OutboundDatagram
         minimumDatagramSize: Int
     ) throws(NetworkError) -> FrameArray?
 
-    /// Sends datagrams on behalf of the upper protocol.
+    /// Sends datagrams created by the upper protocol.
     ///
     /// Protocols can implement this function to customize behavior.
     mutating func sendDatagrams(_ datagrams: consuming FrameArray) throws(NetworkError)

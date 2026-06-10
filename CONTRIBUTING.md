@@ -1,10 +1,10 @@
 # Contributing to Swift Network Evolution
 
-Welcome to the community! Contributions are welcomed and encouraged. SwiftTLS is part of the Swift ecosystem and closely aligns with the [contribution guidelines for the Swift project](swift.org/contributing).
+Welcome to the community! Contributions are welcomed and encouraged. Swift Network Evolution is part of the Swift ecosystem and closely aligns with the [contribution guidelines for the Swift project](swift.org/contributing).
 
 ## How You Can Help
 
-* Reporting bugs with clear, reproducible steps via [GitHub Issues](https://github.com/apple/swift-tls/issues)
+* Reporting bugs with clear, reproducible steps via [GitHub Issues](https://github.com/apple/swift-network-evolution/issues)
 * Improving documentation to make the project more accessible
 * Adding or enhancing tests to improve reliability and coverage
 * Adding ports to new platforms

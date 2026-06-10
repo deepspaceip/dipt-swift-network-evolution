@@ -61,6 +61,8 @@ public protocol ManyToManyProtocolHandler: ListenerHandler, LoggableProtocol {
     func teardown(flow: MultiplexedFlowIdentifier)
     func handleApplicationEvent(flow: MultiplexedFlowIdentifier, event: ApplicationEvent) -> HandleNetworkEventResult
     func getMetadata<P>(flow: MultiplexedFlowIdentifier) -> ProtocolMetadata<P>? where P: NetworkProtocol
+    func updateDataTransferSnapshot(flow: MultiplexedFlowIdentifier, _ snapshot: inout DataTransferSnapshot)
+    var protocolEstablishmentReport: ProtocolEstablishmentReport? { get }
 
     // MARK: Per-path events to implement
     func handleConnectedEvent(path: MultiplexingPathIdentifier)
@@ -289,6 +291,25 @@ extension ManyToManyProtocolHandler {
 
     public func getMetadata<P>(_ from: ProtocolInstanceReference) -> ProtocolMetadata<P>? where P: NetworkProtocol {
         getMetadata(flow: .allFlows)
+    }
+
+    public func updateDataTransferSnapshot(flow: MultiplexedFlowIdentifier, _ snapshot: inout DataTransferSnapshot) {}
+    public var protocolEstablishmentReport: ProtocolEstablishmentReport? { nil }
+
+    public func getMetrics(flow: MultiplexedFlowIdentifier, type: NetworkMetricsType) -> NetworkMetrics? {
+        switch type {
+        case .protocolEstablishmentReports:
+            guard let report = protocolEstablishmentReport else { return nil }
+            return .protocolEstablishmentReports([report])
+        case .dataTransferSnapshot:
+            var snapshot = DataTransferSnapshot()
+            updateDataTransferSnapshot(flow: flow, &snapshot)
+            return .dataTransferSnapshot(snapshot)
+        }
+    }
+
+    public func getMetrics(_ from: ProtocolInstanceReference, type: NetworkMetricsType) -> NetworkMetrics? {
+        getMetrics(flow: .allFlows, type: type)
     }
 
     public func handleInboundDataAvailableEvent(path: MultiplexingPathIdentifier) {}
@@ -1209,6 +1230,11 @@ extension MultiplexedFlow {
     public func getMetadata<P>(_ from: ProtocolInstanceReference) -> ProtocolMetadata<P>? where P: NetworkProtocol {
         do { try validate(upper: from, #function) } catch { return nil }
         return parentProtocol.getMetadata(flow: identifier)
+    }
+
+    public func getMetrics(_ from: ProtocolInstanceReference, type: NetworkMetricsType) -> NetworkMetrics? {
+        do { try validate(upper: from, #function) } catch { return nil }
+        return parentProtocol.getMetrics(flow: identifier, type: type)
     }
 
     fileprivate func deliverConnectedEvent() {

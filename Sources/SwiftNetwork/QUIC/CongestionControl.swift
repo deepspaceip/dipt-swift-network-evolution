@@ -281,6 +281,19 @@ enum CongestionControl {
         #endif
         }
     }
+
+    func filloutDataTransferSnapshot(dataTransferSnapshot: inout DataTransferSnapshot) {
+        switch self {
+        case .cubic(algorithm: let cubic):
+            cubic.filloutDataTransferSnapshot(dataTransferSnapshot: &dataTransferSnapshot)
+        #if !NETWORK_EMBEDDED
+        case .ledbat(algorithm: let ledbat):
+            ledbat.filloutDataTransferSnapshot(dataTransferSnapshot: &dataTransferSnapshot)
+        case .prague(algorithm: let prague):
+            prague.filloutDataTransferSnapshot(dataTransferSnapshot: &dataTransferSnapshot)
+        #endif
+        }
+    }
 }
 
 protocol CongestionControlProtocol: PrefixedLoggable {

@@ -238,8 +238,10 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
         }
     }
 
-    var handshakeStartTime: NetworkClock.Instant = .zero
-    var idleTimeout: NetworkDuration = .zero
+    private(set) var handshakeStartTime: NetworkClock.Instant = .zero
+    private(set) var handshakeDuration: NetworkDuration = .zero
+    private(set) var handshakeRTT: NetworkDuration = .zero
+    private(set) var idleTimeout: NetworkDuration = .zero
 
     var keepaliveDuration: NetworkDuration = .zero
     var keepaliveTimerID: Timer.TimerID?
@@ -352,6 +354,7 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
     private(set) var waitingForOutstandingKeepAliveAcks = false
     private(set) var tlsOptions: SwiftTLSProtocol.Options?
     private(set) var testSendingShortPackets = false
+    private(set) var migrationSupported = false
 
     // false == IPv6, true == IPv4
     private(set) var initialAddressIsIPv4 = false
@@ -1022,6 +1025,7 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
                     log.error("Error inserting remote CID for a preferred address: \(error)")
                 }
             }
+            migrationSupported = true
             migration.addPreferredAddress(preferredAddress)
         }
     }
@@ -2499,6 +2503,58 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
     }
     #endif
 
+    public func updateDataTransferSnapshot(flow: MultiplexedFlowIdentifier, _ snapshot: inout DataTransferSnapshot) {
+        snapshot.receivedTransportOutOfOrderByteCount = UInt64(clamping: self.stats[.rxOutOfOrderBytes])
+        snapshot.sentTransportRetransmittedByteCount = UInt64(clamping: self.stats[.txRetransmittedBytes])
+        snapshot.sentTransportECNCapablePacketCount = UInt64(clamping: self.stats[.ecnCapablePacketsSent])
+        snapshot.sentTransportECNCapableAckedPacketCount = UInt64(clamping: self.stats[.ecnCapablePacketsAcknowledged])
+        snapshot.sentTransportECNCapableMarkedPacketCount = UInt64(clamping: self.stats[.ecnCapablePacketsMarked])
+        snapshot.sentTransportECNCapableLostPacketCount = UInt64(clamping: self.stats[.ecnCapablePacketsLost])
+        if let path = currentPath {
+            snapshot.transportMinimumRTT = path.rtt.minRTT
+            snapshot.transportSmoothedRTT = path.rtt.smoothedRTT
+            snapshot.transportCurrentRTT = path.rtt.adjustedRTT
+            snapshot.transportRTTVariance = path.rtt.RTTVariance
+            path.congestionControlFilloutDataTransferSnapshot(snapshot: &snapshot)
+        }
+    }
+
+    public var protocolEstablishmentReport: ProtocolEstablishmentReport? {
+        var clientAccurateECNState: ClientAccurateECNState = .ecnFeatureDisabled
+        var l4sEnabled = false
+        if let path = currentPath {
+            l4sEnabled = path.l4sEnabled
+            if let ecnState = path.ecnState?.state {
+                switch ecnState {
+                case .probing, .validate:
+                    clientAccurateECNState = .ecnFeatureEnabled
+                case .manglingDetected:
+                    clientAccurateECNState = .ecnNegotiationSuccessECTManglingDetected
+                case .handshakeValidationSuccess, .capable:
+                    clientAccurateECNState = .ecnNegotiationSuccess
+                case .blackholed:
+                    clientAccurateECNState = .ecnNegotiationBlackholed
+                case .unsupported:
+                    clientAccurateECNState = .ecnNotAvailable
+                default:
+                    break
+                }
+            }
+        }
+        var protocolEstablishmentReport = ProtocolEstablishmentReport(
+            handshakeMilliseconds: handshakeDuration,
+            handshakeRTTMilliseconds: handshakeRTT,
+            protocolIdentifier: QUICConnectionProtocol.identifier,
+            clientAccurateECNState: clientAccurateECNState
+        )
+        protocolEstablishmentReport.l4sEnabled = l4sEnabled
+        protocolEstablishmentReport.quicMigrationSupported = migrationSupported
+        protocolEstablishmentReport.quicStatelessResetReceived = (self.stats[.statelessResetReceived] > 0)
+        protocolEstablishmentReport.quicStatelessResetDuringPathProbe = (self.stats[.statelessResetDuringPathProbe] > 0)
+
+        return protocolEstablishmentReport
+    }
+
     func setupNewOutboundStream(
         _ stream: QUICStreamInstance,
         with protocolOptions: QUICStreamProtocol.Options
@@ -3867,7 +3923,11 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
             let packetToken = packet.tag,
             let statelessToken = QUICStatelessResetToken(packetToken)
         {
+            self.stats.increment(.statelessResetReceived)
             if remoteCIDs.find(statelessResetToken: statelessToken) != nil {
+                if migration.probingPathCount(self) > 0 {
+                    self.stats.increment(.statelessResetDuringPathProbe)
+                }
                 log.info("received valid stateless reset token")
                 errorToReport = NetworkError.posix(ECONNRESET)
                 close()
@@ -4055,6 +4115,8 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
         } else if !isServer, self.currentPath?.dcid?.length == 0 {
             log.info("disabling migration due to zero-length peer CID")
             migration.disableActiveMigration()
+        } else {
+            migrationSupported = true
         }
 
         state.change(to: .connected, logIDString: logPrefixer.logIDString)
@@ -4070,12 +4132,13 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
             }
         }
 
-        let establishmentTime = handshakeStartTime.duration(to: .now)
+        handshakeDuration = handshakeStartTime.duration(to: .now)
         var currentRTT: NetworkDuration = .milliseconds(0)
         if let currentPath = currentPath {
             currentRTT = currentPath.rtt.smoothedRTT
+            handshakeRTT = currentRTT
         }
-        log.notice("QUIC connection established in \(establishmentTime), RTT \(currentRTT)")
+        log.notice("QUIC connection established in \(handshakeDuration), RTT \(currentRTT)")
 
         self.keyState = .phase0
 

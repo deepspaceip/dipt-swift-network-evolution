@@ -142,6 +142,7 @@ public protocol LowerProtocolHandler<UpperProtocol>: ~Copyable, ProtocolInstance
     mutating func handleApplicationEvent(_ from: ProtocolInstanceReference, event: ApplicationEvent)
 
     func getMetadata<P: NetworkProtocol>(_ from: ProtocolInstanceReference) -> ProtocolMetadata<P>?
+    func getMetrics(_ from: ProtocolInstanceReference, type: NetworkMetricsType) -> NetworkMetrics?
 }
 
 extension ProtocolInstanceReference {
@@ -885,6 +886,33 @@ extension ProtocolInstanceReference {
             case .custom(let container, let index): return container.accessLower(at: index) { $0.getMetadata(from) }
             #endif
             default: fatalError("Protocol cannot accept getMetadata call")
+            }
+        }
+    }
+
+    public func getMetrics(_ from: ProtocolInstanceReference, type: NetworkMetricsType) -> NetworkMetrics? {
+        self.handleCallFromUpperProtocol {
+            switch self.reference {
+            case .none: return nil
+            case .udp(let index): return context.udpInstances[index].getMetrics(from, type: type)
+            case .ip(let index): return context.ipInstances[index].getMetrics(from, type: type)
+            case .tcp(let instance): return instance.getMetrics(from, type: type)
+            case .tls(let instance): return instance.getMetrics(from, type: type)
+            #if !NETWORK_NO_SWIFT_QUIC
+            case .quic(let instance): return instance.getMetrics(from, type: type)
+            case .quicStream(let instance): return instance.getMetrics(from, type: type)
+            case .quicDatagram(let instance): return instance.getMetrics(from, type: type)
+            case .quicCrypto(let instance): return instance.getMetrics(from, type: type)
+            #if !NETWORK_NO_TESTING_HARNESS
+            case .datagramLowerHarness(let instance): return instance.getMetrics(from, type: type)
+            case .streamLowerHarness(let instance): return instance.getMetrics(from, type: type)
+            #endif
+            #endif
+            #if !NETWORK_EMBEDDED
+            case .custom(let container, let index):
+                return container.accessLower(at: index) { $0.getMetrics(from, type: type) }
+            #endif
+            default: fatalError("Protocol cannot accept getMetrics call")
             }
         }
     }

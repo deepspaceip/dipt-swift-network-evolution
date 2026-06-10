@@ -432,12 +432,10 @@ struct Cubic: CongestionControlProtocol, CubicLikeProtocol {
         initPipeAckSamples()
     }
 
-    #if !NETWORK_EMBEDDED
     func filloutDataTransferSnapshot(dataTransferSnapshot: inout DataTransferSnapshot) {
         dataTransferSnapshot.transportCongestionWindow = congestionWindow
         dataTransferSnapshot.transportSlowStartThreshold = slowStartThreshold
     }
-    #endif
 
     mutating func reset(mss: Int, qlog: QLog? = nil) {
         congestionWindow = Cubic.initialCongestionWindow(mss)

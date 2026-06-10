@@ -317,12 +317,10 @@ struct Ledbat: CongestionControlProtocol, CubicLikeProtocol {
         logUpdate(qlog: qlog)
     }
 
-    #if !NETWORK_EMBEDDED
     func filloutDataTransferSnapshot(dataTransferSnapshot: inout DataTransferSnapshot) {
         dataTransferSnapshot.transportCongestionWindow = congestionWindow
         dataTransferSnapshot.transportSlowStartThreshold = slowStartThreshold
     }
-    #endif
 
     mutating func reset(mss: Int, qlog: QLog? = nil) {
         congestionWindow = Ledbat.initialCongestionWindow(mss)

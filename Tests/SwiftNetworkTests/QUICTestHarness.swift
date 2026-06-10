@@ -906,6 +906,7 @@ final class QUICTestHarness {
         clientOptions: ProtocolOptions<QUICProtocol> = QUICProtocol.options(),
         serverOptions: ProtocolOptions<QUICProtocol> = QUICProtocol.options(),
         sendMaxStreamUpdate: Bool = false,
+        validateMetrics: Bool = false,
         extraServerCIDs: [(QUICConnectionID, QUICStatelessResetToken)] = .init(),
         afterHandshake: ((QUICTestHarness) -> Void)? = nil,  // Block to run after handshake is complete
         afterData: ((QUICTestHarness) -> Void)? = nil,  // Block to run after handshake is complete
@@ -1094,6 +1095,38 @@ final class QUICTestHarness {
 
         if let afterData {
             afterData(self)
+        }
+
+        if validateMetrics {
+            if let serverHarness = state?.serverHarness, let clientHarness = state?.clientHarness {
+                var clientReports: NetworkMetrics?
+                var serverReports: NetworkMetrics?
+                let snapshotExpectation = XCTestExpectation(description: "Wait for QUIC connection to receive metrics")
+                context.async {
+                    clientReports = clientHarness.getMetrics(type: .dataTransferSnapshot)
+                    serverReports = serverHarness.getMetrics(type: .dataTransferSnapshot)
+                    XCTAssertNotNil(clientReports)
+                    XCTAssertNotNil(serverReports)
+                    snapshotExpectation.fulfill()
+                }
+                wait(for: [snapshotExpectation], timeout: 2.0)
+                // Now validate the protocol establishment report
+                clientReports = nil
+                serverReports = nil
+                let protocolEstablishmentReportExpectation = XCTestExpectation(
+                    description: "Wait for QUIC connection to receive metrics"
+                )
+                context.async {
+                    clientReports = clientHarness.getMetrics(type: .protocolEstablishmentReports)
+                    serverReports = serverHarness.getMetrics(type: .protocolEstablishmentReports)
+                    XCTAssertNotNil(clientReports)
+                    XCTAssertNotNil(serverReports)
+                    protocolEstablishmentReportExpectation.fulfill()
+                }
+                wait(for: [protocolEstablishmentReportExpectation], timeout: 2.0)
+            } else {
+                XCTFail("There should be saved server and client harnesses")
+            }
         }
 
         // If applicationError is present, act upon that here

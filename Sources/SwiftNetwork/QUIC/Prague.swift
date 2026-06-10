@@ -657,12 +657,10 @@ struct Prague: CongestionControlProtocol, CubicLikeProtocol {
         resetInternal()
     }
 
-    #if !NETWORK_EMBEDDED
     func filloutDataTransferSnapshot(dataTransferSnapshot: inout DataTransferSnapshot) {
         dataTransferSnapshot.transportCongestionWindow = congestionWindow
         dataTransferSnapshot.transportSlowStartThreshold = slowStartThreshold
     }
-    #endif
 
     mutating func reset(mss: Int, qlog: QLog? = nil) {
         congestionWindow = Prague.initialCongestionWindow(mss)

@@ -398,6 +398,15 @@ final class SwiftNetworkQUICHarnessTests: NetTestCase {
         QUICTestHarness().runQUICTest(streamCount: 4, blockSize: 10240, blockCount: 4)
     }
 
+    func testQUICEcho40KiBMultistreamWithMetrics() {
+        QUICTestHarness().runQUICTest(
+            streamCount: 8,
+            blockSize: 10240,
+            blockCount: 8,
+            validateMetrics: true
+        )
+    }
+
     func testQUIC13AutomaticStreams() {
         let serverOptions = QUICProtocol.options()
         serverOptions.connectionOptions.initialMaxStreamsBidirectional = 5

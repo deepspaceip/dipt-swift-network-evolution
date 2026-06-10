@@ -12,8 +12,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if !NETWORK_EMBEDDED
-struct DataTransferSnapshot: Equatable {
+@_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
+public struct DataTransferSnapshot: Equatable {
     var interfaceIndex: UInt64?
 
     var receivedIPPacketCount: UInt64 = 0
@@ -49,4 +50,3 @@ struct DataTransferSnapshot: Equatable {
     var migrationToOtherCount: UInt64 = 0
     var migrationToFallbackCount: UInt64 = 0
 }
-#endif

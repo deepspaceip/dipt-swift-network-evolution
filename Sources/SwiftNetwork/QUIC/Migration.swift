@@ -129,6 +129,16 @@ struct Migration: ~Copyable {
 
     }
 
+    func probingPathCount(_ connection: QUICConnection) -> Int {
+        var probingPaths = 0
+        connection.applyToAllPaths { path in
+            if path.state.isProbing {
+                probingPaths += 1
+            }
+        }
+        return probingPaths
+    }
+
     func handshakeConfirmed(_ connection: QUICConnection) {
         // TODO: pending migration feature completion
     }

@@ -110,7 +110,7 @@ public struct IPv6Address: IPAddress, Hashable, CustomDebugStringConvertible {
         address
     }
 
-    init(_ tuple: (UInt32, UInt32, UInt32, UInt32)) {
+    public init(_ tuple: (UInt32, UInt32, UInt32, UInt32)) {
         self.address = tuple
     }
 

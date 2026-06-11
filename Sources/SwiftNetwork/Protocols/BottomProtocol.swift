@@ -251,7 +251,7 @@ extension BottomProtocolHandler where Self: ~Copyable {
         return nil
     }
 
-    public func getMetrics(_ from: ProtocolInstanceReference, type: NetworkMetricsType) -> NetworkMetrics? {
+    public func getMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics? {
         do { try validate(upper: from, #function) } catch { return nil }
         switch type {
         case .protocolEstablishmentReports:

@@ -14,7 +14,7 @@
 
 @_spi(ProtocolProvider)
 @available(Network 0.1.0, *)
-public enum NetworkMetricsType {
+public enum RequestedNetworkMetrics {
     case protocolEstablishmentReports
     case dataTransferSnapshot
 }

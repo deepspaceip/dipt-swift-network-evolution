@@ -142,7 +142,7 @@ public protocol LowerProtocolHandler<UpperProtocol>: ~Copyable, ProtocolInstance
     mutating func handleApplicationEvent(_ from: ProtocolInstanceReference, event: ApplicationEvent)
 
     func getMetadata<P: NetworkProtocol>(_ from: ProtocolInstanceReference) -> ProtocolMetadata<P>?
-    func getMetrics(_ from: ProtocolInstanceReference, type: NetworkMetricsType) -> NetworkMetrics?
+    func getMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics?
 }
 
 extension ProtocolInstanceReference {
@@ -890,7 +890,7 @@ extension ProtocolInstanceReference {
         }
     }
 
-    public func getMetrics(_ from: ProtocolInstanceReference, type: NetworkMetricsType) -> NetworkMetrics? {
+    public func getMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics? {
         self.handleCallFromUpperProtocol {
             switch self.reference {
             case .none: return nil

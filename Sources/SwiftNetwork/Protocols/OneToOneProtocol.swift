@@ -385,7 +385,7 @@ extension OneToOneProtocolHandler where Self: ~Copyable {
         #endif
     }
 
-    public func getMetrics(_ from: ProtocolInstanceReference, type: NetworkMetricsType) -> NetworkMetrics? {
+    public func getMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics? {
         do { try validate(upper: from, #function) } catch { return nil }
         let lowerMetrics = lower.invokeGetMetrics(effectiveSelfReference, type: type)
         switch type {

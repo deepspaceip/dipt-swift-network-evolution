@@ -927,7 +927,7 @@ public class NewFlowHarness<LinkageType: InboundFlowLinkage, HarnessType: UpperH
         }
     }
 
-    final public func getMetrics(type: NetworkMetricsType) -> NetworkMetrics? {
+    final public func getMetrics(type: RequestedNetworkMetrics) -> NetworkMetrics? {
         fromExternal {
             lower.invokeGetMetrics(reference, type: type)
         }

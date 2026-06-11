@@ -214,7 +214,7 @@ extension LowerProtocolLinkage {
         reference.getMetadata(from)
     }
 
-    public func invokeGetMetrics(_ from: ProtocolInstanceReference, type: NetworkMetricsType) -> NetworkMetrics? {
+    public func invokeGetMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics? {
         reference.getMetrics(from, type: type)
     }
 }

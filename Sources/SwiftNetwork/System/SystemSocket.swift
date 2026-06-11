@@ -52,7 +52,7 @@ enum SocketType: CUnsignedInt, Sendable {
 }
 
 /// A type that creates a cross-platform socket.
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 class SystemSocket {
 
     /// Socket file descriptor
@@ -247,7 +247,7 @@ class SystemSocket {
 }
 
 #if !NETWORK_PRIVATE && !NETWORK_STANDALONE
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension IPAddress {
     func withSockAddr<T>(_ body: (UnsafePointer<sockaddr>, Int) throws -> T) throws(NetworkError) -> T {
         try self.withSockAddr(port: 0, body)

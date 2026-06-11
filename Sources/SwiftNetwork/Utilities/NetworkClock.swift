@@ -20,7 +20,7 @@
 /// relevant to networking protocols, which are usually under one hour.
 #if !NETWORK_EMBEDDED
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 #endif
 public struct NetworkDuration: DurationProtocol, Hashable, Equatable, CustomStringConvertible {
     public private(set) var nanoseconds: Int64
@@ -217,7 +217,7 @@ public struct NetworkDuration: DurationProtocol, Hashable, Equatable, CustomStri
 /// 2. You can create a clock with any value, which is useful for unit tests.
 #if !NETWORK_EMBEDDED
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 #endif
 public struct NetworkClock: Clock {
     public struct Instant: InstantProtocol, CustomStringConvertible {

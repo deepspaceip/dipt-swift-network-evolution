@@ -26,7 +26,7 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 enum ECNState {
     /// The app explicitly asked to disable ECN.
     case disabled
@@ -76,7 +76,7 @@ enum ECNState {
 }
 
 // Global explicit congestion notification state
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct ECN: ~Copyable, PrefixedLoggable {
     let log: LogPrefixer
 
@@ -199,7 +199,7 @@ struct ECN: ~Copyable, PrefixedLoggable {
 }
 
 // Per path explicit congestion notification state
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct ECNPathState: ~Copyable, PrefixedLoggable {
     let log: LogPrefixer
 
@@ -494,7 +494,7 @@ struct ECNPathState: ~Copyable, PrefixedLoggable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct ECNCounter {
     var ect0: Int
     var ect1: Int
@@ -506,7 +506,7 @@ struct ECNCounter {
 }
 
 // ECN state metadata for a packet number space
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 class ECNCounters {
     // Number of packets sent with ECT(1) or ECT(0) codepoint
     var txECNPackets = 0

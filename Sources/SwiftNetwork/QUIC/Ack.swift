@@ -26,11 +26,11 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 typealias AckBlock = (start: PacketNumber, end: PacketNumber)
 
 // ACK state per packet number space.
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct AckSpace: ~Copyable, PrefixedLoggable {
     var log: LogPrefixer
     var blocks: [AckBlock] = []
@@ -341,7 +341,7 @@ struct AckSpace: ~Copyable, PrefixedLoggable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct AckBlockIterator: IteratorProtocol {
     typealias Element = AckBlock
 
@@ -396,7 +396,7 @@ struct AckBlockIterator: IteratorProtocol {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct AckBlockSequence: Sequence {
     let largest: PacketNumber
     let oldestPacketNumber: PacketNumber
@@ -417,7 +417,7 @@ struct AckBlockSequence: Sequence {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 final class Ack: PrefixedLoggable, TimerUser {
     var log: LogPrefixer
 
@@ -950,7 +950,7 @@ extension UInt64 {
 
 // This is a C bitstring.h inspired ACK bitstring, useful for finding out
 // which packets are newly acked.
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct AckBitstring: ~Copyable {
     private(set) var initialWord: UInt64 = 0
     // Store up to 512 packets
@@ -1114,7 +1114,7 @@ struct AckBitstring: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct AckBitstringIterator: IteratorProtocol {
     typealias Element = PacketNumber
 
@@ -1159,7 +1159,7 @@ struct AckBitstringIterator: IteratorProtocol {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct AckBitstringSequence: Sequence {
     let initialWord: UInt64
     let startingWord: UInt64
@@ -1204,7 +1204,7 @@ struct AckBitstringSequence: Sequence {
 
 // MARK: - Testing interface
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Ack {
     // Builds the ACK frame and inserts it in the packetBuilder, otherwise just calculates the size.
     // This function is only used in testing

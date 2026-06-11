@@ -21,7 +21,7 @@ internal import os
 
 /// The type of underlying media for a network link.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum InterfaceType: Int, Sendable, CaseIterable {
     /// A virtual or otherwise unknown interface type.
     case other = 0
@@ -37,7 +37,7 @@ public enum InterfaceType: Int, Sendable, CaseIterable {
 
 /// The subtype of underlying media for a network link.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum InterfaceSubtype: Int, Sendable, CaseIterable {
     /// A virtual or otherwise unknown interface subtype.
     case other = 0
@@ -72,7 +72,7 @@ struct InterfaceFlagDefinitions {
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct Interface: Sendable, Hashable, CustomStringConvertible {
 
     public var index: Int { backing.storage.index }
@@ -489,7 +489,7 @@ public struct Interface: Sendable, Hashable, CustomStringConvertible {
 }
 
 #if !NETWORK_EMBEDDED
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Interface: Codable {
     enum CodingKeys: String, CodingKey {
         case name
@@ -519,7 +519,7 @@ extension Interface: Codable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension InterfaceType: Codable {
     enum CodingKeys: String, CodingKey {
         case value
@@ -537,7 +537,7 @@ extension InterfaceType: Codable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension InterfaceSubtype: Codable {
     enum CodingKeys: String, CodingKey {
         case value

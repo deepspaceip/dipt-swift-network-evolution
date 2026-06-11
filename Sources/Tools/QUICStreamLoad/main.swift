@@ -31,7 +31,7 @@ import Crypto
 
 #if IMPORT_SWIFTTLS && canImport(SwiftTLS)
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 final class QUICStreamLoad {
 
     // 169.254.156.146

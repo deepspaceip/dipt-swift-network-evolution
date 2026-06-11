@@ -18,7 +18,7 @@ internal import DequeModule
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct FrameArray: ~Copyable {
     private var frames: NetworkUniqueDeque<Frame>
 

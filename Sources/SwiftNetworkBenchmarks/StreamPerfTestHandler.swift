@@ -24,7 +24,7 @@ internal import os
 #if IMPORT_SWIFTTLS && canImport(SwiftTLS)
 
 @_spi(Essentials) @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class StreamPerfTestHandler: ProtocolInstanceContainer, InboundStreamHandler, LoggableProtocol {
 
     public typealias LowerProtocol = OutboundStreamLinkage
@@ -267,7 +267,7 @@ public final class StreamPerfTestHandler: ProtocolInstanceContainer, InboundStre
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension StreamPerfTestHandler: UpperProtocolHandler {
 
     // UpperProtocolHandler conformance

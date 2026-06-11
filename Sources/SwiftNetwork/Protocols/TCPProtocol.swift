@@ -29,7 +29,7 @@ enum MultipathVersion: UInt8 {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct TCPProtocol: NetworkProtocol {
     public typealias Options = TCPOptions
     public typealias Metadata = TCPMetadata
@@ -415,7 +415,7 @@ public struct TCPProtocol: NetworkProtocol {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolOptions<TCPProtocol> {
     public var reduceBuffering: Bool {
         get { perProtocolOptions!.reduceBuffering }

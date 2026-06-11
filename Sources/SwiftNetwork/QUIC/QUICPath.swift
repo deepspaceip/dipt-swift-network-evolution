@@ -104,7 +104,7 @@ enum QUICPathState: CustomStringConvertible, CaseIterable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct PendingChallenge {
     let data = UInt64.random(in: 0..<UInt64.max)
 
@@ -112,7 +112,7 @@ struct PendingChallenge {
     let sentTime: NetworkClock.Instant
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct BandwidthDelayProduct {
     var currentBDP: Int = 0
     var count: Int = 0
@@ -120,7 +120,7 @@ struct BandwidthDelayProduct {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class QUICPath: MultiplexingDatagramPath<QUICConnection>, Equatable, PrefixedLoggable {
     // Initial probe interval for resending PATH_CHALLENGE is 250 ms
     // Further probes will follow exponential backoff.
@@ -623,7 +623,7 @@ public final class QUICPath: MultiplexingDatagramPath<QUICConnection>, Equatable
 }
 
 // Congestion Control access
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICPath {
     @inline(__always)
     var congestionControlWindow: UInt64 {

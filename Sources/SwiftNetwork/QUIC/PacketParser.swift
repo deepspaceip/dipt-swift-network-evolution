@@ -26,7 +26,7 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct PacketParser: ~Copyable, PrefixedLoggable {
     var log: LogPrefixer
 
@@ -698,7 +698,7 @@ struct PacketParser: ~Copyable, PrefixedLoggable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Deserializer where Factory: ~Escapable {
     mutating func packetNumber(_ value: inout PacketNumber, pnSize: UInt8) throws(DeserializationError) {
         switch pnSize {

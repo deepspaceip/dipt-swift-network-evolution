@@ -16,14 +16,14 @@
 ///
 /// Each linkage is paired with a matching linkage.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol ProtocolLinkage {
     associatedtype PairedLinkage: ProtocolLinkage
     init(reference: ProtocolInstanceReference)
     var reference: ProtocolInstanceReference { get }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolLinkage {
     public var isDetached: Bool {
         self.reference.isNone
@@ -31,7 +31,7 @@ extension ProtocolLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol UpperProtocolLinkage: ProtocolLinkage where PairedLinkage: LowerProtocolLinkage {
     func deliverConnectedEvent(_ from: ProtocolInstanceReference)
     func deliverDisconnectedEvent(_ from: ProtocolInstanceReference, error: NetworkError?)
@@ -42,7 +42,7 @@ public protocol UpperProtocolLinkage: ProtocolLinkage where PairedLinkage: Lower
     )
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension UpperProtocolLinkage {
     public func deliverConnectedEvent(_ from: ProtocolInstanceReference) {
         from.deliverEventToUpperProtocol(event: .connected(from, self.reference))
@@ -62,13 +62,13 @@ extension UpperProtocolLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol InboundDataLinkage: UpperProtocolLinkage where PairedLinkage: OutboundDataLinkage {
     func deliverInboundDataAvailableEvent(_ from: ProtocolInstanceReference)
     func deliverOutboundRoomAvailableEvent(_ from: ProtocolInstanceReference)
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension InboundDataLinkage {
     public func deliverInboundDataAvailableEvent(_ from: ProtocolInstanceReference) {
         from.deliverEventToUpperProtocol(event: .inboundDataAvailable(from, self.reference))
@@ -79,7 +79,7 @@ extension InboundDataLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol InboundFlowLinkage: UpperProtocolLinkage where PairedLinkage: ListenerLinkage {
     associatedtype DataLinkage: OutboundDataLinkage
     func deliverNewInboundFlowEvent(
@@ -89,7 +89,7 @@ public protocol InboundFlowLinkage: UpperProtocolLinkage where PairedLinkage: Li
     )
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension InboundFlowLinkage {
     public func deliverNewInboundFlowEvent(
         _ from: ProtocolInstanceReference,
@@ -103,7 +103,7 @@ extension InboundFlowLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol ListenerLinkage: LowerProtocolLinkage where PairedLinkage: InboundFlowLinkage {
     #if !NETWORK_EMBEDDED
     func invokeAttachUpperProtocolToNewFlow(
@@ -121,7 +121,7 @@ public protocol ListenerLinkage: LowerProtocolLinkage where PairedLinkage: Inbou
     #endif
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ListenerLinkage {
     #if !NETWORK_EMBEDDED
     public func invokeAttachUpperProtocolToNewFlow(
@@ -153,11 +153,11 @@ extension ListenerLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OutboundDataLinkage: LowerProtocolLinkage where PairedLinkage: InboundDataLinkage {}
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol LowerProtocolLinkage: ProtocolLinkage where PairedLinkage: UpperProtocolLinkage {
     var isConnected: Bool { get }
     func invokeConnect(_ from: ProtocolInstanceReference)
@@ -176,7 +176,7 @@ public protocol LowerProtocolLinkage: ProtocolLinkage where PairedLinkage: Upper
     func invokeGetMetadata<P: NetworkProtocol>(_ from: ProtocolInstanceReference) -> ProtocolMetadata<P>?
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension LowerProtocolLinkage {
     public var isConnected: Bool {
         reference.isConnected
@@ -222,7 +222,7 @@ extension LowerProtocolLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct InboundDatagramLinkage: InboundDataLinkage {
     public typealias PairedLinkage = OutboundDatagramLinkage
     private(set) public var reference: ProtocolInstanceReference
@@ -231,7 +231,7 @@ public struct InboundDatagramLinkage: InboundDataLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct OutboundDatagramLinkage: OutboundDataLinkage {
     public typealias PairedLinkage = InboundDatagramLinkage
     private(set) public var reference: ProtocolInstanceReference
@@ -280,7 +280,7 @@ public struct OutboundDatagramLinkage: OutboundDataLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct InboundStreamLinkage: InboundDataLinkage {
     public typealias PairedLinkage = OutboundStreamLinkage
     private(set) public var reference: ProtocolInstanceReference
@@ -296,7 +296,7 @@ public struct InboundStreamLinkage: InboundDataLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct OutboundStreamLinkage: OutboundDataLinkage {
     public typealias PairedLinkage = InboundStreamLinkage
     private(set) public var reference: ProtocolInstanceReference
@@ -347,7 +347,7 @@ public struct OutboundStreamLinkage: OutboundDataLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct InboundDatagramFlowLinkage: InboundFlowLinkage {
     public typealias PairedLinkage = DatagramListenerLinkage
     public typealias DataLinkage = OutboundDatagramLinkage
@@ -357,7 +357,7 @@ public struct InboundDatagramFlowLinkage: InboundFlowLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct DatagramListenerLinkage: ListenerLinkage {
     public typealias PairedLinkage = InboundDatagramFlowLinkage
     private(set) public var reference: ProtocolInstanceReference
@@ -408,7 +408,7 @@ public struct DatagramListenerLinkage: ListenerLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct InboundStreamFlowLinkage: InboundFlowLinkage {
     public typealias PairedLinkage = StreamListenerLinkage
     public typealias DataLinkage = OutboundStreamLinkage
@@ -419,7 +419,7 @@ public struct InboundStreamFlowLinkage: InboundFlowLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct StreamListenerLinkage: ListenerLinkage {
     public typealias PairedLinkage = InboundStreamFlowLinkage
     private(set) public var reference: ProtocolInstanceReference

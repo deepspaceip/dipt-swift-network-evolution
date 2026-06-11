@@ -34,7 +34,7 @@ internal import os
 ///
 /// For data handling, see `ProtocolDatagramHandlers` and `ProtocolStreamHandlers`.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol ProtocolInstance: ~Copyable {
 
     /// The scheduling context on which the protocol instance must run.
@@ -47,7 +47,7 @@ public protocol ProtocolInstance: ~Copyable {
     var eventManager: ProtocolEventManager { get set }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstance where Self: ~Copyable {
 
     /// Schedules an asynchronous block from within a protocol implementation.
@@ -76,7 +76,7 @@ extension ProtocolInstance where Self: ~Copyable {
 
 /// Indicates that a network protocol can be scheduled using a timer.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol TimerSchedulable: ~Copyable, ProtocolInstance {
     /// Handles a wakeup from a timer.
     func wakeup()
@@ -85,13 +85,13 @@ public protocol TimerSchedulable: ~Copyable, ProtocolInstance {
 // MARK: Loggable Protocol
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol LoggableProtocol: ~Copyable, ProtocolInstance {
     var log: NetworkLoggerState { get set }
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct NetworkLoggerState: ~Copyable {
     public var logPrefix: String
 
@@ -231,7 +231,7 @@ public struct NetworkLoggerState: ~Copyable {
 // MARK: Protocol Instance Errors
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum ProtocolInstanceError: Error {
     case invalidUpperProtocol
     case invalidLowerProtocol
@@ -245,7 +245,7 @@ public enum ProtocolInstanceError: Error {
 /// Conform to `ProtocolInstanceContainer` to implement a custom protocol.
 /// Use the index to host multiple protocols within one object.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol ProtocolInstanceContainer: AnyObject {
     #if !NETWORK_EMBEDDED
     func accessInstance<R, E: Error>(at index: Int?, _ body: (inout any ProtocolInstance) throws(E) -> R) throws(E) -> R
@@ -328,7 +328,7 @@ public protocol ProtocolInstanceContainer: AnyObject {
 }
 
 #if !NETWORK_EMBEDDED
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer {
     public func accessLower<R, E: Error>(
         at index: Int?,
@@ -442,7 +442,7 @@ extension ProtocolInstanceContainer {
         fatalError("Unimplemented container function")
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: ProtocolInstance {
     var reference: ProtocolInstanceReference { ProtocolInstanceReference(custom: self) }
 
@@ -454,7 +454,7 @@ extension ProtocolInstanceContainer where Self: ProtocolInstance {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: LowerProtocolHandler {
     public func accessLower<R, E: Error>(
         at index: Int?,
@@ -464,7 +464,7 @@ extension ProtocolInstanceContainer where Self: LowerProtocolHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: TimerSchedulable {
     public func accessTimerSchedulable<R, E: Error>(
         at index: Int?,
@@ -474,7 +474,7 @@ extension ProtocolInstanceContainer where Self: TimerSchedulable {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: UpperProtocolHandler {
     public func accessUpper<R, E: Error>(
         at index: Int?,
@@ -484,7 +484,7 @@ extension ProtocolInstanceContainer where Self: UpperProtocolHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: ManyToManyProtocolHandler {
     public func accessManyToMany<R, E: Error>(
         at index: Int?,
@@ -494,7 +494,7 @@ extension ProtocolInstanceContainer where Self: ManyToManyProtocolHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: InboundFlowHandler {
     public func accessInboundFlowHandler<R, E: Error>(
         at index: Int?,
@@ -504,7 +504,7 @@ extension ProtocolInstanceContainer where Self: InboundFlowHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: ListenerHandler {
     public func accessListenerHandler<R, E: Error>(
         at index: Int?,
@@ -514,7 +514,7 @@ extension ProtocolInstanceContainer where Self: ListenerHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: DatagramListenerHandler {
     public func accessDatagramListenerHandler<R, E: Error>(
         at index: Int?,
@@ -524,7 +524,7 @@ extension ProtocolInstanceContainer where Self: DatagramListenerHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: StreamListenerHandler {
     public func accessStreamListenerHandler<R, E: Error>(
         at index: Int?,
@@ -534,7 +534,7 @@ extension ProtocolInstanceContainer where Self: StreamListenerHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: InboundDataHandler {
     public func accessInboundDataHandler<R, E: Error>(
         at index: Int?,
@@ -544,7 +544,7 @@ extension ProtocolInstanceContainer where Self: InboundDataHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: InboundDatagramHandler {
     public func accessInboundDatagramHandler<R, E: Error>(
         at index: Int?,
@@ -554,7 +554,7 @@ extension ProtocolInstanceContainer where Self: InboundDatagramHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: InboundStreamHandler {
     public func accessInboundStreamHandler<R, E: Error>(
         at index: Int?,
@@ -564,7 +564,7 @@ extension ProtocolInstanceContainer where Self: InboundStreamHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: OutboundDataHandler {
     public func accessOutboundDataHandler<R, E: Error>(
         at index: Int?,
@@ -574,7 +574,7 @@ extension ProtocolInstanceContainer where Self: OutboundDataHandler {
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: OutboundDatagramHandler {
     public func accessOutboundDatagramHandler<R: ~Copyable, E: Error>(
         at index: Int?,
@@ -592,7 +592,7 @@ extension ProtocolInstanceContainer where Self: OutboundDatagramHandler {
         return try body(&selfAccess, value)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: OutboundStreamHandler {
     public func accessOutboundStreamHandler<R: ~Copyable, E: Error>(
         at index: Int?,
@@ -610,7 +610,7 @@ extension ProtocolInstanceContainer where Self: OutboundStreamHandler {
         return try body(&selfAccess, value)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: OutboundStreamUnidirectionalAbortHandler {
     public func accessOutboundStreamUnidirectionalAbortHandler<R, E: Error>(
         at index: Int?,
@@ -620,7 +620,7 @@ extension ProtocolInstanceContainer where Self: OutboundStreamUnidirectionalAbor
         return try body(&selfAccess)
     }
 }
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceContainer where Self: OutboundStreamEarlyDataHandler {
     public func accessOutboundStreamEarlyDataHandler<R, T: ~Copyable, E: Error>(
         at index: Int?,
@@ -634,7 +634,7 @@ extension ProtocolInstanceContainer where Self: OutboundStreamEarlyDataHandler {
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Parameters {
     public func applicationOptions(for instance: ProtocolInstanceReference) -> ProtocolStack.ApplicationProtocol? {
         let stack = self.defaultStack

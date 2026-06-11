@@ -28,7 +28,7 @@ internal import Synchronization
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct TimerReference: Equatable, Hashable {
     var index: Int?
 
@@ -38,7 +38,7 @@ public struct TimerReference: Equatable, Hashable {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol NetworkContextProtocol: AnyObject, Hashable {
     init(identifier: String)
     var identifier: String { get }
@@ -48,7 +48,7 @@ public protocol NetworkContextProtocol: AnyObject, Hashable {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class NetworkContext: NetworkContextProtocol, @unchecked Sendable {
     public func hash(into hasher: inout Hasher) {
         #if !NETWORK_EMBEDDED
@@ -229,7 +229,7 @@ public final class NetworkContext: NetworkContextProtocol, @unchecked Sendable {
 // MARK: - Globals
 
 #if !NETWORK_PRIVATE && !NETWORK_STANDALONE && canImport(Dispatch) && !NETWORK_EMBEDDED
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkContext {
     struct TimerEntry: ~Copyable, NetworkComparable {
         var targetTime: DispatchTime
@@ -370,7 +370,7 @@ extension NetworkContext {
 
 // MARK: - Async
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkContext {
 
     var queue: DispatchQueue {
@@ -394,7 +394,7 @@ extension NetworkContext {
 
 // MARK: - Timers
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkContext {
 
     enum FutureTime {

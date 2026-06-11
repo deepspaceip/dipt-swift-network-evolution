@@ -18,7 +18,7 @@ import Foundation
 
 #if !NETWORK_PRIVATE
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class EndpointParent: Hashable, Equatable {
     public func hash(into hasher: inout Hasher) {}
     static public func == (lhs: EndpointParent, rhs: EndpointParent) -> Bool {
@@ -31,7 +31,7 @@ public class EndpointParent: Hashable, Equatable {
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class Endpoint: EndpointParent, EndpointProtocol {
     public enum EndpointType {
         case address(AddressEndpoint)

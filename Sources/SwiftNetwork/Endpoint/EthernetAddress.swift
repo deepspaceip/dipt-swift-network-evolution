@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct EthernetAddress: Hashable, CustomDebugStringConvertible {
 
     public static var broadcast: EthernetAddress {

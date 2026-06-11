@@ -13,13 +13,13 @@
 //===----------------------------------------------------------------------===//
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol InboundDataHandler: ~Copyable, UpperProtocolHandler {
     mutating func handleInboundDataAvailableEvent(_ from: ProtocolInstanceReference)
     mutating func handleOutboundRoomAvailableEvent(_ from: ProtocolInstanceReference)
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceReference {
     func handleInboundDataAvailableEvent(_ from: ProtocolInstanceReference) {
         switch reference {
@@ -75,5 +75,5 @@ extension ProtocolInstanceReference {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OutboundDataHandler: ~Copyable, LowerProtocolHandler {}

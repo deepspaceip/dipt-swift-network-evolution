@@ -22,7 +22,7 @@ internal import os
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICStatelessResetToken: Equatable, Sendable, CustomStringConvertible {
     typealias TokenStorage = [16 of UInt8]
     private let _token: TokenStorage
@@ -91,7 +91,7 @@ public struct QUICStatelessResetToken: Equatable, Sendable, CustomStringConverti
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICStatelessResetToken.TokenStorage {
     fileprivate static var emptyToken: QUICStatelessResetToken.TokenStorage {
         QUICStatelessResetToken.TokenStorage(repeating: 0)

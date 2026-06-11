@@ -28,7 +28,7 @@ internal import os
 internal import Synchronization
 #endif
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 final class EndpointFlow: CustomDebugStringConvertible {
 
     /// State used to emit logs on the data path.

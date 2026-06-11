@@ -25,7 +25,7 @@ internal import os
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum PathReason: Sendable {
     case none
     case requiresHelper
@@ -151,7 +151,7 @@ public enum PathReason: Sendable {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum PathStatus: Sendable, CustomStringConvertible {
 
     case invalid
@@ -175,7 +175,7 @@ enum PathEvaluationError: Error {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct PathProperties: CustomStringConvertible {
 
     var overrideInterface: Interface? = nil

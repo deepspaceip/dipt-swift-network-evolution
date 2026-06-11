@@ -28,7 +28,7 @@ internal import Synchronization
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICConnectionProtocol: NetworkProtocol {
 
     public typealias Options = QUICConnectionOptions

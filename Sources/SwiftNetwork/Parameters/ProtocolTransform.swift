@@ -17,7 +17,7 @@ import BasicContainers
 internal import DequeModule
 #endif
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct ProtocolTransform: Hashable {
     var transformStack: ProtocolStack?
     var trafficClass: UInt32?

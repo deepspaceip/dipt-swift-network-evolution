@@ -22,7 +22,7 @@ internal import DequeModule
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum SerializationError: Error, CustomStringConvertible {
     case bufferTooShort
     case invalidParameter
@@ -36,7 +36,7 @@ public enum SerializationError: Error, CustomStringConvertible {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum SerializationResult: CustomStringConvertible, Equatable, Sendable {
     case success(writtenBytes: Int, remainingBytes: Int)
     case error(SerializationError)
@@ -65,7 +65,7 @@ public enum SerializationResult: CustomStringConvertible, Equatable, Sendable {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum Serializable {
     case uint8(_ value: UInt8)
     case uint16(_ value: UInt16)
@@ -136,7 +136,7 @@ public enum Serializable {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 @resultBuilder
 public struct Serializer {
     public static func buildExpression(_ expression: UInt8) -> Serializable {
@@ -265,7 +265,7 @@ public struct Serializer {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 @resultBuilder
 public struct SerializeCounter {
     public static func buildExpression(_ expression: Int) -> Int {
@@ -354,7 +354,7 @@ public struct SerializeCounter {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct InPlaceSerializer<Factory: SerializerSpanFactory & ~Copyable & ~Escapable>: ~Escapable, ~Copyable {
     private var factory: Factory
     private var currentSpan: MutableRawSpan
@@ -614,7 +614,7 @@ public struct InPlaceSerializer<Factory: SerializerSpanFactory & ~Copyable & ~Es
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct FrameSerializer: ~Copyable {
     private var currentBuffer: NetworkUniqueArray<UInt8>? = nil
     private var cursor = 0
@@ -818,7 +818,7 @@ public struct FrameSerializer: ~Copyable {
     #endif
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Serializer {
 
     public static func serialize<T: SerializerSpanFactory & ~Copyable & ~Escapable>(

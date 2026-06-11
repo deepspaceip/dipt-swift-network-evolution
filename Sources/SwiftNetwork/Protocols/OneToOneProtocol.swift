@@ -25,7 +25,7 @@ internal import os
 ///
 /// Conform to `OneToOneStreamProtocol`, `OneToOneDatagramProtocol`, or `OneToOneStreamToDatagramProtocol`.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OneToOneProtocolHandler: ~Copyable, OutboundDataHandler, InboundDataHandler, LoggableProtocol {
 
     /// The type of upper protocol (toward the app) that you can attach.
@@ -92,7 +92,7 @@ public protocol OneToOneProtocolHandler: ~Copyable, OutboundDataHandler, Inbound
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum HandleNetworkEventResult {
     /// The protocol handled and consumed the event, and the system shouldn't automatically pass it on to the next protocol.
     case consumed
@@ -102,7 +102,7 @@ public enum HandleNetworkEventResult {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneProtocolHandler where Self: ~Copyable {
     /// Indicates to the upper protocol that this protocol is connected.
     ///
@@ -127,7 +127,7 @@ extension OneToOneProtocolHandler where Self: ~Copyable {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OneToOneDatapathProtocol: ~Copyable, OneToOneProtocolHandler
 where UpperProtocol: InboundDataLinkage, LowerProtocol: OutboundDataLinkage {
 
@@ -144,7 +144,7 @@ where UpperProtocol: InboundDataLinkage, LowerProtocol: OutboundDataLinkage {
 
 /// One-to-one protocol with an upper stream linkage and a lower stream linkage.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OneToOneStreamProtocol: ~Copyable, OneToOneDatapathProtocol
 where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundStreamLinkage {
 
@@ -176,7 +176,7 @@ where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundStreamLink
 
 /// One-to-one protocol with an upper stream linkage and a lower datagram linkage.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OneToOneStreamToDatagramProtocol: ~Copyable, OneToOneDatapathProtocol
 where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundDatagramLinkage {
 
@@ -198,7 +198,7 @@ where UpperProtocol == InboundStreamLinkage, LowerProtocol == OutboundDatagramLi
 
 /// One-to-one protocol with an upper datagram linkage and a lower datagram linkage.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OneToOneDatagramProtocol: ~Copyable, OneToOneDatapathProtocol
 where UpperProtocol == InboundDatagramLinkage, LowerProtocol == OutboundDatagramLinkage {
 
@@ -223,7 +223,7 @@ where UpperProtocol == InboundDatagramLinkage, LowerProtocol == OutboundDatagram
 
 // MARK: - One-to-One Protocol Implementation Details
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneProtocolHandler where Self: ~Copyable {
     var asUpper: LowerProtocol.PairedLinkage { .init(reference: reference) }
     var asLower: UpperProtocol.PairedLinkage { .init(reference: reference) }
@@ -401,7 +401,7 @@ extension OneToOneProtocolHandler where Self: ~Copyable {
 }
 
 // Default implementations, to be overridden as necessary
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneProtocolHandler where Self: ~Copyable {
     public mutating func setup(
         remote: Endpoint?,
@@ -433,7 +433,7 @@ extension OneToOneProtocolHandler where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneProtocolHandler where Self: ~Copyable {
     @inline(__always)
     var effectiveSelfReference: ProtocolInstanceReference {
@@ -445,7 +445,7 @@ extension OneToOneProtocolHandler where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneDatapathProtocol where Self: ~Copyable {
     public mutating func handleInboundDataAvailableEvent(_ from: ProtocolInstanceReference) {
         do { try validate(lower: from, #function) } catch { return }
@@ -468,7 +468,7 @@ extension OneToOneDatapathProtocol where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneDatapathProtocol where Self: ~Copyable {
     // Default implementations, to be overridden as necessary
     public mutating func handleInboundDataAvailableEvent() {
@@ -480,7 +480,7 @@ extension OneToOneDatapathProtocol where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneProtocolHandler where Self: ~Copyable, UpperProtocol == InboundDatagramLinkage {
     public mutating func attachUpperDatagramProtocol(
         _ from: ProtocolInstanceReference,
@@ -518,7 +518,7 @@ extension OneToOneProtocolHandler where Self: ~Copyable, UpperProtocol == Inboun
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneProtocolHandler where Self: ~Copyable, UpperProtocol == InboundStreamLinkage {
     public mutating func attachUpperStreamProtocol(
         _ from: ProtocolInstanceReference,
@@ -551,7 +551,7 @@ extension OneToOneProtocolHandler where Self: ~Copyable, UpperProtocol == Inboun
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundDatagramLinkage {
     public mutating func attachLowerDatagramProtocol(
         _ lowerProtocol: ProtocolInstanceReference,
@@ -596,7 +596,7 @@ extension OneToOneProtocolHandler where Self: ~Copyable, LowerProtocol == Outbou
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneDatagramProtocol where Self: ~Copyable {
     public mutating func receiveDatagrams(
         _ from: ProtocolInstanceReference,
@@ -634,7 +634,7 @@ extension OneToOneDatagramProtocol where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundStreamLinkage {
     public mutating func attachLowerStreamProtocol(
         _ lowerProtocol: ProtocolInstanceReference,
@@ -680,7 +680,7 @@ extension OneToOneProtocolHandler where Self: ~Copyable, LowerProtocol == Outbou
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneStreamToDatagramProtocol where Self: ~Copyable {
     public mutating func receiveStreamData(
         _ from: ProtocolInstanceReference,
@@ -714,7 +714,7 @@ extension OneToOneStreamToDatagramProtocol where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension OneToOneStreamProtocol where Self: ~Copyable {
     public mutating func receiveStreamData(
         _ from: ProtocolInstanceReference,

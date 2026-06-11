@@ -20,7 +20,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 final class SwiftNetworkEthernetTests: NetTestCase {
 
     func testEthernetHeaders() {

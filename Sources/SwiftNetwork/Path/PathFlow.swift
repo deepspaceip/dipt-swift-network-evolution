@@ -18,7 +18,7 @@ internal import DequeModule
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct PathFlow: CustomDebugStringConvertible, Equatable {
 
     public var nexusKey: [UInt8]? = nil

@@ -17,7 +17,7 @@ internal import SwiftSystem
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 @resultBuilder
 public struct StreamDeserializationBuilder<
     T: ~Copyable,
@@ -66,7 +66,7 @@ public struct StreamDeserializationBuilder<
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol StreamDeserializerState: ~Copyable {
 
     /// An associated type that defines hashable identifiers for state-machine steps.
@@ -79,7 +79,7 @@ public protocol StreamDeserializerState: ~Copyable {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct StreamDeserializer<
     T: ~Copyable,
     StateIdentifier: Hashable & Sendable,
@@ -418,7 +418,7 @@ public struct StreamDeserializer<
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension StreamDeserializer
 where T: StreamDeserializerState & ~Copyable, Factory: DeserializerSpanFactory & ~Copyable & ~Escapable {
     public static func beginState(_ stateIdentifier: StateIdentifier) -> [Step] {
@@ -433,7 +433,7 @@ where T: StreamDeserializerState & ~Copyable, Factory: DeserializerSpanFactory &
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension StreamDeserializer where T: ~Copyable, Factory == FrameArraySpanFactory {
     public mutating func handleFrames(_ frames: inout FrameArray) throws(DeserializationError) -> T? {
         try handleInputInternal(
@@ -461,7 +461,7 @@ extension StreamDeserializer where T: ~Copyable, Factory == FrameArraySpanFactor
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension StreamDeserializer where T: ~Copyable, Factory == SingleSpanFactory {
     public mutating func handleSpan(_ span: RawSpan) throws(DeserializationError) -> T? {
         try handleInputInternal(
@@ -485,7 +485,7 @@ extension StreamDeserializer where T: ~Copyable, Factory == SingleSpanFactory {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension StreamDeserializer where Factory: ~Copyable & ~Escapable, T: ~Copyable, StateIdentifier == Int {
     public static func parser(
         @StreamDeserializationBuilder<T, StateIdentifier, Factory> _ builder: (_ stream: StreamDeserializer.Type) ->
@@ -499,7 +499,7 @@ extension StreamDeserializer where Factory: ~Copyable & ~Escapable, T: ~Copyable
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension StreamDeserializer where Factory: ~Copyable & ~Escapable, T: StreamDeserializerState & ~Copyable {
     public static func parser(
         @StreamDeserializationBuilder<T, T.StateMachineStepIdentifier, Factory> _ builder: (
@@ -515,13 +515,13 @@ extension StreamDeserializer where Factory: ~Copyable & ~Escapable, T: StreamDes
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public typealias FrameArrayStreamDeserializer<T: StreamDeserializerState & ~Copyable> = StreamDeserializer<
     T, T.StateMachineStepIdentifier, FrameArraySpanFactory
 >
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public typealias SpanStreamDeserializer<T: StreamDeserializerState & ~Copyable> = StreamDeserializer<
     T, T.StateMachineStepIdentifier, SingleSpanFactory
 >

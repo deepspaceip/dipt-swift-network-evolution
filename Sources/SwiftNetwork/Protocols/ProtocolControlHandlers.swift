@@ -14,7 +14,7 @@
 
 /// A protocol closer to the app, with a linkage to a lower protocol toward the network.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol UpperProtocolHandler<LowerProtocol>: ~Copyable, ProtocolInstance {
     associatedtype LowerProtocol: LowerProtocolLinkage
 
@@ -33,7 +33,7 @@ public protocol UpperProtocolHandler<LowerProtocol>: ~Copyable, ProtocolInstance
     mutating func handleNetworkProtocolEvent(_ from: ProtocolInstanceReference, event: NetworkProtocolEvent)
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceReference {
     func handleConnectedEvent(_ from: ProtocolInstanceReference) {
         switch reference {
@@ -122,7 +122,7 @@ extension ProtocolInstanceReference {
 
 /// A protocol closer to the network, with a linkage to an upper protocol toward the app.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol LowerProtocolHandler<UpperProtocol>: ~Copyable, ProtocolInstance {
     associatedtype UpperProtocol: UpperProtocolLinkage
 
@@ -145,7 +145,7 @@ public protocol LowerProtocolHandler<UpperProtocol>: ~Copyable, ProtocolInstance
     func getMetadata<P: NetworkProtocol>(_ from: ProtocolInstanceReference) -> ProtocolMetadata<P>?
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceReference {
     func connect(_ from: ProtocolInstanceReference) {
         guard !isNone else { return }

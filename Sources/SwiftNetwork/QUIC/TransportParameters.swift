@@ -22,7 +22,7 @@ internal import os
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum TransportParameterTypes: UInt64, CaseIterable {
     case originalDCID = 0
     case maxIdleTimeout = 1
@@ -58,7 +58,7 @@ enum TransportParameterEncodeErrors: Int, Error {
     case invalidValue
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 enum TransportParameter: Equatable {
     case originalDCID(
         _ type: TransportParameterTypes = .originalDCID,
@@ -685,7 +685,7 @@ enum TransportParameter: Equatable {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct TransportParameters: PrefixedLoggable {
     var log: LogPrefixer
     public static let minUDPPayloadSize = 1200

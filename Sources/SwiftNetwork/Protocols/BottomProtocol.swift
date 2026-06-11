@@ -25,7 +25,7 @@ internal import os
 ///
 /// Conform to `BottomStreamProtocol` or `BottomDatagramProtocol`.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol BottomProtocolHandler: ~Copyable, OutboundDataHandler {
 
     /// The type of upper protocol (toward the app) that you can attach.
@@ -69,7 +69,7 @@ public protocol BottomProtocolHandler: ~Copyable, OutboundDataHandler {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension BottomProtocolHandler where Self: ~Copyable {
     /// Indicates to the upper protocol that this protocol is connected.
     ///
@@ -89,7 +89,7 @@ extension BottomProtocolHandler where Self: ~Copyable {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol: InboundDataLinkage {
     /// Indicates to the upper protocol that this protocol has data available to read.
     public func deliverInboundDataAvailableEvent() {
@@ -121,7 +121,7 @@ extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol: InboundDat
 
 /// Bottom protocol with an upper stream linkage.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol BottomStreamProtocol: ~Copyable, BottomProtocolHandler, OutboundStreamHandler
 where UpperProtocol == InboundStreamLinkage {
 
@@ -143,7 +143,7 @@ where UpperProtocol == InboundStreamLinkage {
 
 /// Bottom protocol with an upper datagram linkage.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol BottomDatagramProtocol: ~Copyable, BottomProtocolHandler, OutboundDatagramHandler
 where UpperProtocol == InboundDatagramLinkage {
 
@@ -168,7 +168,7 @@ where UpperProtocol == InboundDatagramLinkage {
 
 // MARK: - Bottom Protocol Implementation Details
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension BottomProtocolHandler where Self: ~Copyable {
     var asLower: UpperProtocol.PairedLinkage { .init(reference: reference) }
 
@@ -257,7 +257,7 @@ extension BottomProtocolHandler where Self: ~Copyable {
 }
 
 // Default implementations, to be overridden as necessary
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension BottomProtocolHandler where Self: ~Copyable {
     public func setup(
         remote: Endpoint?,
@@ -283,7 +283,7 @@ extension BottomProtocolHandler where Self: ~Copyable {
     #endif
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol == InboundDatagramLinkage {
     public mutating func attachUpperDatagramProtocol(
         _ from: ProtocolInstanceReference,
@@ -308,7 +308,7 @@ extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol == InboundD
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol == InboundStreamLinkage {
     public mutating func attachUpperStreamProtocol(
         _ from: ProtocolInstanceReference,
@@ -333,7 +333,7 @@ extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol == InboundS
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension BottomDatagramProtocol where Self: ~Copyable {
     public mutating func receiveDatagrams(
         _ from: ProtocolInstanceReference,
@@ -371,7 +371,7 @@ extension BottomDatagramProtocol where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension BottomStreamProtocol where Self: ~Copyable {
     public mutating func receiveStreamData(
         _ from: ProtocolInstanceReference,

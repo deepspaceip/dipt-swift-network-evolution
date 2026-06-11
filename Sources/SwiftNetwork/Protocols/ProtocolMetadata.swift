@@ -17,7 +17,7 @@ internal import Synchronization
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol PerProtocolMetadata: Equatable {
     func isEqual(to: Self, for: ProtocolCompareMode) -> Bool
     #if NETWORK_PRIVATE
@@ -26,7 +26,7 @@ public protocol PerProtocolMetadata: Equatable {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class AbstractProtocolMetadata: PerProtocolMetadata {
     public static func == (lhs: AbstractProtocolMetadata, rhs: AbstractProtocolMetadata) -> Bool {
         lhs.isEqual(to: rhs, for: .equal)
@@ -58,7 +58,7 @@ public class AbstractProtocolMetadata: PerProtocolMetadata {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class ProtocolMetadata<P: NetworkProtocol>: AbstractProtocolMetadata, @unchecked Sendable {
     private let lock = NetworkMutex(())
     private var _perProtocolMetadata: P.Metadata? = nil

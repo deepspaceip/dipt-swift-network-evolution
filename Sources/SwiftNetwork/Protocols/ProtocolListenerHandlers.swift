@@ -13,7 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol InboundFlowHandler: ~Copyable, UpperProtocolHandler {
     func handleNewInboundFlowEvent(
         _ from: ProtocolInstanceReference,
@@ -22,7 +22,7 @@ public protocol InboundFlowHandler: ~Copyable, UpperProtocolHandler {
     )
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceReference {
     func handleNewInboundFlowEvent(
         _ from: ProtocolInstanceReference,
@@ -49,7 +49,7 @@ extension ProtocolInstanceReference {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol ListenerHandler: ~Copyable, LowerProtocolHandler where UpperProtocol: InboundFlowLinkage {
     #if !NETWORK_EMBEDDED
     // Create a new flow
@@ -70,7 +70,7 @@ public protocol ListenerHandler: ~Copyable, LowerProtocolHandler where UpperProt
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol DatagramListenerHandler: ~Copyable, ListenerHandler
 where UpperProtocol.DataLinkage == OutboundDatagramLinkage {
     mutating func attachNewDatagramFlowProtocol(
@@ -98,7 +98,7 @@ where UpperProtocol.DataLinkage == OutboundDatagramLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol StreamListenerHandler: ~Copyable, ListenerHandler
 where UpperProtocol.DataLinkage == OutboundStreamLinkage {
     mutating func attachNewStreamFlowProtocol(
@@ -126,12 +126,12 @@ where UpperProtocol.DataLinkage == OutboundStreamLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol HeterogeneousListenerHandler: ~Copyable, ListenerHandler {
     associatedtype SecondaryUpperProtocol: InboundFlowLinkage
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceReference {
     #if !NETWORK_EMBEDDED
     func attachUpperProtocolToNewFlow<Linkage: LowerProtocolLinkage>(

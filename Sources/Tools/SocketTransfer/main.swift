@@ -24,7 +24,7 @@ internal import os
 
 // MARK: - IP address parsing
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 func parseIPv4(_ string: String) -> IPv4Address? {
     let parts = string.split(separator: ".")
     guard parts.count == 4 else { return nil }
@@ -36,7 +36,7 @@ func parseIPv4(_ string: String) -> IPv4Address? {
     return IPv4Address(bytes)
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 func parseIPv6(_ string: String) -> IPv6Address? {
     var addr = in6_addr()
     guard string.withCString({ inet_pton(AF_INET6, $0, &addr) }) == 1 else {
@@ -48,19 +48,19 @@ func parseIPv6(_ string: String) -> IPv6Address? {
 
 // MARK: - Helpers
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 func makeParams(localEndpoint: Endpoint) -> ParametersBuilder<UDP> {
     let builder = ParametersBuilder<UDP>.parameters { UDP() }
         .localEndpoint(localEndpoint)
     return builder
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 func makeConnection(to remote: Endpoint, localEndpoint: Endpoint) -> NetworkConnection<UDP> {
     NetworkConnection(to: remote, using: makeParams(localEndpoint: localEndpoint))
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 func parseEndpoints(ipString: String, port: UInt16, localPort: UInt16) -> (remote: Endpoint, local: Endpoint)? {
     if let v4 = parseIPv4(ipString) {
         return (
@@ -78,7 +78,7 @@ func parseEndpoints(ipString: String, port: UInt16, localPort: UInt16) -> (remot
 
 // MARK: - SocketTransfer
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 final class SocketTransfer {
 
     static let NSEC_PER_MSEC = UInt64(Duration.milliseconds(1) / Duration.nanoseconds(1))
@@ -236,7 +236,7 @@ final class SocketTransfer {
 
 // MARK: - Argument parsing helper
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 func parseArg<T>(_ arguments: [String], _ flag: String, parse: (String) -> T?) -> T? {
     guard let index = arguments.firstIndex(of: flag),
         arguments.count > index + 1

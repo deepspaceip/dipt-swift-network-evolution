@@ -35,7 +35,7 @@ internal import os
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum QUICConnectionState: CustomStringConvertible {
     case invalid
 
@@ -155,7 +155,7 @@ public enum QUICConnectionState: CustomStringConvertible {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class QUICConnection: ManyToManyApplicationStreamProtocol,
     ManyToManyApplicationDatagramProtocol, ManyToManyOutboundDatagramProtocol,
     StreamListenerHandler, HeterogeneousManyToManyProtocolHandler, TimerSchedulable,
@@ -4409,7 +4409,7 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
 
 // MARK: Flow Control - Inbound Frame Processing
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
 
     // Process an incoming NEW_TOKEN frame
@@ -4830,7 +4830,7 @@ extension QUICConnection {
 
 // MARK: Flow Control - Outbound Frame Processing
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
 
     // Prepare and send maxStreamsBidirectional
@@ -5088,7 +5088,7 @@ extension QUICConnection {
 
 // MARK: Flow Control - Stream
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
     func withMutableQUICStreams(unidirectional: Bool, closure: (inout QUICStreamIDState) -> Void) {
         if unidirectional {
@@ -5200,7 +5200,7 @@ extension QUICConnection {
 
 // MARK: Inbound stream creation
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
 
     // Support QUICStreamIDState being ~Copyable
@@ -5379,7 +5379,7 @@ extension QUICConnection {
 
 // MARK: Datagram flow handling
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
     // Handle new outbound datagrams being available.
     public func serviceDatagramsToSend(flow flowID: MultiplexedFlowIdentifier) {
@@ -5490,7 +5490,7 @@ extension QUICConnection {
 
 // MARK: Frame Processing helpers
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
     func processFrame(
         _ frame: consuming QUICFrame,
@@ -5576,7 +5576,7 @@ extension QUICConnection {
 }
 
 // MARK: Frame Acknowledgement helpers
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
     func acknowledged(
         _ packet: borrowing SentPacketRecord,
@@ -5692,7 +5692,7 @@ extension QUICConnection {
 
 // MARK: Connection Idle / Reuse
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
 
     fileprivate func handleConnectionIdleForFlow(_ flowID: MultiplexedFlowIdentifier) {
@@ -5775,7 +5775,7 @@ extension QUICConnection {
 
 // MARK: Connection ID Lifecycle
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
 
     public func handleApplicationEvent(
@@ -6106,7 +6106,7 @@ extension QUICConnection {
 
 // MARK: Path Challenge processing
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
     @discardableResult
     func handlePathChallengeFrame(
@@ -6129,7 +6129,7 @@ extension QUICConnection {
 
 #else
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class QUICConnection: ProtocolInstance, ProtocolInstanceContainer {
     public private(set) var context: NetworkContext
     public init(context: NetworkContext) { self.context = context }

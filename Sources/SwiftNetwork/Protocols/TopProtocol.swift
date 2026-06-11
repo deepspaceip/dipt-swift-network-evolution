@@ -25,7 +25,7 @@ internal import os
 ///
 /// Conform to `TopStreamProtocol` or `TopDatagramProtocol`.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol TopProtocolHandler: ~Copyable, InboundDataHandler {
 
     /// The type of lower protocol (toward the network) that you can attach.
@@ -48,7 +48,7 @@ public protocol TopProtocolHandler: ~Copyable, InboundDataHandler {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol TopDatapathProtocol: ~Copyable, TopProtocolHandler where LowerProtocol: OutboundDataLinkage {
 
     /// A function the framework calls when the lower protocol has inbound data available to read.
@@ -63,7 +63,7 @@ public protocol TopDatapathProtocol: ~Copyable, TopProtocolHandler where LowerPr
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopProtocolHandler where Self: ~Copyable {
     /// Requests that the lower protocol start connecting.
     public func invokeConnect() {
@@ -105,7 +105,7 @@ extension TopProtocolHandler where Self: ~Copyable {
 
 /// Top protocol with a lower stream linkage.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol TopStreamProtocol: ~Copyable, TopDatapathProtocol, InboundStreamHandler
 where LowerProtocol == OutboundStreamLinkage {
     /// A function the framework calls when the lower protocol reports that inbound stream data is aborted.
@@ -120,7 +120,7 @@ where LowerProtocol == OutboundStreamLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopStreamProtocol where Self: ~Copyable {
     /// Receives stream data from the lower protocol.
     public func invokeReceiveStreamData(minimumBytes: Int, maximumBytes: Int) throws(NetworkError) -> FrameArray? {
@@ -153,14 +153,14 @@ extension TopStreamProtocol where Self: ~Copyable {
 
 /// Top protocol with a lower datagram linkage.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol TopDatagramProtocol: ~Copyable, TopDatapathProtocol, InboundDatagramHandler
 where LowerProtocol == OutboundDatagramLinkage {
 
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopDatagramProtocol where Self: ~Copyable, Self: ~Copyable {
     /// Receives datagrams from the lower protocol.
     public func invokeReceiveDatagrams(maximumDatagramCount: Int) throws(NetworkError) -> FrameArray? {
@@ -195,7 +195,7 @@ extension TopDatagramProtocol where Self: ~Copyable, Self: ~Copyable {
 
 // MARK: - Top Protocol Implementation Details
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopProtocolHandler where Self: ~Copyable {
     var asUpper: LowerProtocol.PairedLinkage { .init(reference: reference) }
 
@@ -249,7 +249,7 @@ extension TopProtocolHandler where Self: ~Copyable {
 }
 
 // Default implementations, to be overridden as necessary
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopProtocolHandler where Self: ~Copyable {
     public func handleConnectedEvent() {}
 
@@ -258,7 +258,7 @@ extension TopProtocolHandler where Self: ~Copyable {
     public func handleNetworkProtocolEvent(_ event: NetworkProtocolEvent) {}
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopDatapathProtocol where Self: ~Copyable {
     public func handleInboundDataAvailableEvent(_ from: ProtocolInstanceReference) {
         do { try validate(lower: from, #function) } catch { return }
@@ -271,7 +271,7 @@ extension TopDatapathProtocol where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopDatapathProtocol where Self: ~Copyable {
     // Default implementations, to be overridden as necessary
     public func handleInboundDataAvailableEvent() {}
@@ -279,7 +279,7 @@ extension TopDatapathProtocol where Self: ~Copyable {
     public func handleOutboundRoomAvailableEvent() {}
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundDatagramLinkage {
     public mutating func attachLowerDatagramProtocol(
         _ lowerProtocol: ProtocolInstanceReference,
@@ -301,7 +301,7 @@ extension TopProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundDat
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundStreamLinkage {
     public mutating func attachLowerStreamProtocol(
         _ lowerProtocol: ProtocolInstanceReference,
@@ -323,7 +323,7 @@ extension TopProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundStr
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopStreamProtocol where Self: ~Copyable {
     public func handleInboundAbortedEvent(_ from: ProtocolInstanceReference, error: NetworkError?) {
         do { try validate(lower: from, #function) } catch { return }
@@ -336,7 +336,7 @@ extension TopStreamProtocol where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension TopStreamProtocol where Self: ~Copyable {
     // Default implementations, to be overridden as necessary
     public func handleInboundAbortedEvent(error: NetworkError?) {}

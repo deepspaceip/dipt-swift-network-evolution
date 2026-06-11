@@ -27,13 +27,13 @@ internal import os
 #if !NETWORK_NO_SWIFT_QUIC && !NETWORK_NO_TESTING_HARNESS
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol UpperHarnessProtocol: TopDatapathProtocol, LoggableProtocol {
     func teardown()
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class UpperHarness<LinkageType: InboundDataLinkage>: UpperHarnessProtocol {
     public typealias LowerProtocol = LinkageType.PairedLinkage
 
@@ -263,7 +263,7 @@ public class UpperHarness<LinkageType: InboundDataLinkage>: UpperHarnessProtocol
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class DatagramUpperHarness: UpperHarness<InboundDatagramLinkage>, TopDatagramProtocol {
 
     override public var reference: ProtocolInstanceReference { ProtocolInstanceReference(datagramUpperHarness: self) }
@@ -381,7 +381,7 @@ public class DatagramUpperHarness: UpperHarness<InboundDatagramLinkage>, TopData
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class StreamUpperHarness: UpperHarness<InboundStreamLinkage>, TopStreamProtocol {
 
     override public var reference: ProtocolInstanceReference { ProtocolInstanceReference(streamUpperHarness: self) }
@@ -589,7 +589,7 @@ public class StreamUpperHarness: UpperHarness<InboundStreamLinkage>, TopStreamPr
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class LowerHarness<LinkageType: OutboundDataLinkage>: BottomProtocolHandler, LoggableProtocol
 where LinkageType == LinkageType.PairedLinkage.PairedLinkage {
     public typealias UpperProtocol = LinkageType.PairedLinkage
@@ -676,7 +676,7 @@ where LinkageType == LinkageType.PairedLinkage.PairedLinkage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class DatagramLowerHarness: LowerHarness<OutboundDatagramLinkage>, BottomDatagramProtocol {
     public var maximumOutputSize = 1500
 
@@ -707,7 +707,7 @@ public class DatagramLowerHarness: LowerHarness<OutboundDatagramLinkage>, Bottom
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class StreamLowerHarness: LowerHarness<OutboundStreamLinkage>, BottomStreamProtocol {
 
     override public var reference: ProtocolInstanceReference { ProtocolInstanceReference(streamLowerHarness: self) }
@@ -726,7 +726,7 @@ public class StreamLowerHarness: LowerHarness<OutboundStreamLinkage>, BottomStre
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class NewFlowHarness<LinkageType: InboundFlowLinkage, HarnessType: UpperHarnessProtocol>: InboundFlowHandler,
     LoggableProtocol
 {
@@ -929,7 +929,7 @@ public class NewFlowHarness<LinkageType: InboundFlowLinkage, HarnessType: UpperH
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class NewDatagramFlowHarness: NewFlowHarness<InboundDatagramFlowLinkage, DatagramUpperHarness> {
 
     override public var reference: ProtocolInstanceReference { ProtocolInstanceReference(newDatagramFlowHarness: self) }
@@ -998,7 +998,7 @@ public class NewDatagramFlowHarness: NewFlowHarness<InboundDatagramFlowLinkage, 
     }
 }
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class NewStreamFlowHarness: NewFlowHarness<InboundStreamFlowLinkage, StreamUpperHarness> {
 
     override public var reference: ProtocolInstanceReference { ProtocolInstanceReference(newStreamFlowHarness: self) }

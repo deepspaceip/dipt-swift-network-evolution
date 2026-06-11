@@ -22,11 +22,11 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 func setAckFrame(_: PacketNumberSpace, _: consuming QUICFrame, _: Bool) {
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Ack {
     // only required by the test currently
     func size(
@@ -41,10 +41,10 @@ extension Ack {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 let ackTestsLogPrefixer: LogPrefixer = LogPrefixer("[AckTests]")
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 final class AckTests: XCTestCase {
     var ack = Ack(logPrefixer: ackTestsLogPrefixer)
 

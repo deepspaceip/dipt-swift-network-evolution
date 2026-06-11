@@ -4,36 +4,6 @@
 import PackageDescription
 import Foundation
 
-// Availability Macros
-
-let availabilityTags: [_Availability] = [
-    _Availability("Network")  // Default Network availability
-]
-let versionNumbers = ["0.1.0"]
-
-// Availability Macro Utilities
-
-enum _OSAvailability: String {
-    // The OS versions in which `Network 0.1.0` APIs first became available.
-    case alwaysAvailable = "macOS 26, iOS 26, tvOS 26, watchOS 26, visionOS 26"
-    // Use 10000 for future availability to avoid compiler magic around the 9999 version number but ensure it is greater than 9999
-    case future = "macOS 10000, iOS 10000, tvOS 10000, watchOS 10000, visionOS 10000"
-}
-struct _Availability {
-    let name: String
-    let osAvailability: _OSAvailability
-
-    init(_ name: String, availability: _OSAvailability = .alwaysAvailable) {
-        self.name = name
-        self.osAvailability = availability
-    }
-}
-let availabilityMacros: [SwiftSetting] = versionNumbers.flatMap { version in
-    availabilityTags.map {
-        .enableExperimentalFeature("AvailabilityMacro=\($0.name) \(version):\($0.osAvailability.rawValue)")
-    }
-}
-
 var packageDependencies = [PackageDescription.Package.Dependency]()
 var targetDependencies = [PackageDescription.Target.Dependency]()
 
@@ -127,7 +97,7 @@ let package = Package(
         .target(
             name: "SwiftNetwork",
             dependencies: targetDependencies,
-            swiftSettings: availabilityMacros + settings
+            swiftSettings: settings
         ),
         .target(
             name: "SwiftNetworkLinuxShim",
@@ -140,52 +110,52 @@ let package = Package(
         .target(
             name: "SwiftNetworkBenchmarks",
             dependencies: targetDependencies + ["SwiftNetwork"],
-            swiftSettings: availabilityMacros + settings
+            swiftSettings: settings
         ),
         .testTarget(
             name: "SwiftNetworkTests",
             dependencies: ["SwiftNetwork"],
-            swiftSettings: availabilityMacros + settings
+            swiftSettings: settings
         ),
         .testTarget(
             name: "QUICTests",
             dependencies: ["SwiftNetwork"],
-            swiftSettings: availabilityMacros + settings
+            swiftSettings: settings
         ),
         .executableTarget(
             name: "QUICHandshake",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/QUICHandshake",
             exclude: ["README.md"],
-            swiftSettings: availabilityMacros + settings,
+            swiftSettings: settings,
         ),
         .executableTarget(
             name: "IPUDPTransfer",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/IPUDPTransfer",
             exclude: ["README.md"],
-            swiftSettings: availabilityMacros + settings
+            swiftSettings: settings
         ),
         .executableTarget(
             name: "QUICTransfer",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/QUICTransfer",
             exclude: ["README.md"],
-            swiftSettings: availabilityMacros + settings
+            swiftSettings: settings
         ),
         .executableTarget(
             name: "QUICStreamLoad",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/QUICStreamLoad",
             exclude: ["README.md"],
-            swiftSettings: availabilityMacros + settings
+            swiftSettings: settings
         ),
         .executableTarget(
             name: "SocketTransfer",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/SocketTransfer",
             exclude: ["README.md"],
-            swiftSettings: availabilityMacros + settings
+            swiftSettings: settings
         ),
     ]
 )

@@ -20,7 +20,7 @@ internal import os
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICTransportError: NetworkDomainSpecificError {
     public static var domain: NetworkError.Domain { .init(rawValue: "QUICTransportError") }
 
@@ -165,7 +165,7 @@ public struct QUICTransportError: NetworkDomainSpecificError {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICApplicationError: NetworkDomainSpecificError {
     public static var domain: NetworkError.Domain { .init(rawValue: "QUICApplicationError") }
 
@@ -196,7 +196,7 @@ public struct QUICApplicationError: NetworkDomainSpecificError {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkError {
     public init(quicTransportError: QUICTransportError) {
         self.init(quicTransportError)
@@ -247,7 +247,7 @@ extension NetworkError {
 // More granular error types are not used as embedded swift does not support untyped throws
 
 #if !NETWORK_NO_SWIFT_QUIC
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 enum QUICError: Error {
     case packet(QUICPacketError)
     case packetBuilder(PacketBuilderError)

@@ -85,7 +85,7 @@ enum PacketKeyState: Int, CaseIterable, CustomStringConvertible, Comparable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct SentPacketRecord: ~Copyable {
     var transmittedItems: TransmittedItems = TransmittedItems()
 
@@ -164,7 +164,7 @@ struct SentPacketRecord: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct Packet: ~Copyable {
     static let longHeaderBaseSize = 5
     static let shortHeaderBaseSize = 1
@@ -696,7 +696,7 @@ struct Packet: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension InPlaceSerializer where Factory: ~Escapable, Factory: ~Copyable {
 
     mutating func connectionID(_ value: QUICConnectionID) throws(SerializationError) {

@@ -26,7 +26,7 @@ internal import os
 /// Add conformance to `AutomaticLowerStreamProcessing` to automatically send and receive
 /// stream data from lower protocols.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol AutomaticLowerStreamProcessing: ~Copyable, InboundStreamHandler {
     var lower: LowerProtocol { get set }
 
@@ -50,7 +50,7 @@ public protocol AutomaticLowerStreamProcessing: ~Copyable, InboundStreamHandler 
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension AutomaticLowerStreamProcessing where Self: ~Copyable {
     /// Adds stream data to the lower send queue.
     ///
@@ -78,7 +78,7 @@ extension AutomaticLowerStreamProcessing where Self: ~Copyable {
 /// Add conformance to `AutomaticUpperStreamProcessing` to automatically process stream data
 /// from upper protocols.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol AutomaticUpperStreamProcessing: ~Copyable, OutboundStreamHandler {
     var upper: UpperProtocol { get set }
 
@@ -116,7 +116,7 @@ public protocol AutomaticUpperStreamProcessing: ~Copyable, OutboundStreamHandler
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension AutomaticUpperStreamProcessing where Self: ~Copyable {
     /// Adds stream data to the upper receive queue.
     ///
@@ -137,7 +137,7 @@ extension AutomaticUpperStreamProcessing where Self: ~Copyable {
 // MARK: Manual Stream Processing
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol InboundStreamHandler: ~Copyable, InboundDataHandler where LowerProtocol == OutboundStreamLinkage {
     mutating func attachLowerStreamProtocol(
         _ lowerProtocol: ProtocolInstanceReference,
@@ -152,7 +152,7 @@ public protocol InboundStreamHandler: ~Copyable, InboundDataHandler where LowerP
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OutboundStreamHandler: ~Copyable, OutboundDataHandler where UpperProtocol == InboundStreamLinkage {
 
     mutating func attachUpperStreamProtocol(
@@ -179,7 +179,7 @@ public protocol OutboundStreamHandler: ~Copyable, OutboundDataHandler where Uppe
 
 // Conform to this protocol to support unidirectional aborts
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OutboundStreamUnidirectionalAbortHandler: ~Copyable, OutboundStreamHandler {
     mutating func abortInbound(_ from: ProtocolInstanceReference, error: NetworkError?)
     mutating func abortOutbound(_ from: ProtocolInstanceReference, error: NetworkError?)
@@ -189,7 +189,7 @@ public protocol OutboundStreamUnidirectionalAbortHandler: ~Copyable, OutboundStr
 
 // Conform to this protocol to support sending early data
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OutboundStreamEarlyDataHandler: ~Copyable, OutboundStreamHandler {
     mutating func sendEarlyStreamData(
         _ from: ProtocolInstanceReference,
@@ -199,7 +199,7 @@ public protocol OutboundStreamEarlyDataHandler: ~Copyable, OutboundStreamHandler
 
 // MARK: Implementations
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension AutomaticLowerStreamProcessing where Self: ~Copyable {
     mutating func _readInboundStreamData() {
         var readCount = 0
@@ -225,7 +225,7 @@ extension AutomaticLowerStreamProcessing where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension AutomaticUpperStreamProcessing where Self: ~Copyable {
     internal func newOutboundFrame(_ dataSize: Int) -> Frame {
         Frame(count: dataSize)
@@ -267,7 +267,7 @@ extension AutomaticUpperStreamProcessing where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension AutomaticUpperStreamProcessing where Self: ~Copyable, Self: OutboundStreamEarlyDataHandler {
     mutating func sendEarlyStreamData(_ streamData: consuming FrameArray) throws(NetworkError) {
         upperSendQueue.add(frames: streamData)
@@ -275,7 +275,7 @@ extension AutomaticUpperStreamProcessing where Self: ~Copyable, Self: OutboundSt
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceReference {
     func receiveStreamData(
         _ from: ProtocolInstanceReference,

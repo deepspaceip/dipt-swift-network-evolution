@@ -13,14 +13,14 @@
 //===----------------------------------------------------------------------===//
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct NetworkEventDomain: Sendable, Hashable, CustomStringConvertible {
     let domain: String
     public var description: String { domain }
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 /// An extensible event that a lower protocol reports to upper protocols.
 public struct NetworkProtocolEvent: Sendable, Equatable, CustomStringConvertible {
     enum InternalEvent: Equatable {
@@ -105,7 +105,7 @@ public struct NetworkProtocolEvent: Sendable, Equatable, CustomStringConvertible
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 /// An extensible event from the app, sent from upper protocols to lower protocols.
 public struct ApplicationEvent: Sendable, Equatable, CustomStringConvertible {
     enum InternalEvent: Equatable {
@@ -183,13 +183,13 @@ public struct ApplicationEvent: Sendable, Equatable, CustomStringConvertible {
 
 #if !NETWORK_EMBEDDED
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol DomainSpecificNetworkProtocolEvent: Sendable, Equatable, CustomStringConvertible {
     var domain: NetworkEventDomain { get }
 }
 #else
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol DomainSpecificNetworkProtocolEvent: Sendable, Equatable {
     var domain: NetworkEventDomain { get }
 }
@@ -197,20 +197,20 @@ public protocol DomainSpecificNetworkProtocolEvent: Sendable, Equatable {
 
 #if !NETWORK_EMBEDDED
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol DomainSpecificApplicationEvent: Sendable, Equatable, CustomStringConvertible {
     var domain: NetworkEventDomain { get }
 }
 #else
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol DomainSpecificApplicationEvent: Sendable, Equatable {
     var domain: NetworkEventDomain { get }
 }
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum QUICEvent: DomainSpecificNetworkProtocolEvent {
     public var domain: NetworkEventDomain { .init(domain: "QUIC") }
 
@@ -256,7 +256,7 @@ public enum QUICEvent: DomainSpecificNetworkProtocolEvent {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkProtocolEvent {
     public var quicEvent: QUICEvent? {
         guard case .quic(let quicEvent) = internalEvent else {
@@ -267,7 +267,7 @@ extension NetworkProtocolEvent {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum QUICApplicationEvent: DomainSpecificApplicationEvent {
     public var domain: NetworkEventDomain { .init(domain: "QUICApplication") }
 
@@ -295,7 +295,7 @@ public enum QUICApplicationEvent: DomainSpecificApplicationEvent {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ApplicationEvent {
     public var quicEvent: QUICApplicationEvent? {
         guard case .quic(let quicEvent) = internalEvent else {

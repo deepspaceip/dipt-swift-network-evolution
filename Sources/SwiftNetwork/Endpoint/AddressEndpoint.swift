@@ -20,7 +20,7 @@ internal import os
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct AddressEndpoint: EndpointProtocol, EndpointCommonProtocol {
     public var common: EndpointCommon
     public enum AddressEndpointType: Equatable {

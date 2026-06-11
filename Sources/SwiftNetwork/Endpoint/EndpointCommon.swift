@@ -21,7 +21,7 @@ func redactedHash(_ value: String) -> String {
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct EndpointEqualityFlags: OptionSet, Sendable {
     public init(rawValue: Self.RawValue) {
         self.rawValue = rawValue
@@ -39,7 +39,7 @@ public struct EndpointEqualityFlags: OptionSet, Sendable {
     static public let all: EndpointEqualityFlags = [.interface, .parent, .proxyParent, .alternatives, .publicKeys]
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Endpoint.EndpointType {
     enum EndpointRawType: UInt32 {
         case invalid = 0
@@ -82,7 +82,7 @@ extension Endpoint.EndpointType {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 protocol EndpointProtocol: CustomStringConvertible {
     var interface: Interface? { get }
     func isEqual(to other: Self, flags: EndpointEqualityFlags) -> Bool
@@ -90,7 +90,7 @@ protocol EndpointProtocol: CustomStringConvertible {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct EndpointCommon: Equatable, Hashable {
     let interface: Interface?
     #if NETWORK_PRIVATE
@@ -128,13 +128,13 @@ public struct EndpointCommon: Equatable, Hashable {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol EndpointCommonProtocol: Hashable, Equatable {
     var common: EndpointCommon { get set }
 }
 
 #if !NETWORK_PRIVATE
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension EndpointCommonProtocol {
     var interface: Interface? {
         get { common.interface }
@@ -142,7 +142,7 @@ extension EndpointCommonProtocol {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension EndpointCommon {
     init?(_ data: inout [UInt8]) {
         self.interface = nil

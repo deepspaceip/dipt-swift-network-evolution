@@ -46,7 +46,7 @@ internal import os
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 final class SwiftNetworkQUICStatisticsTests: NetTestCase {
     func testQUICStatisticsForOneStream() throws {
         QUICTestHarness().runQUICTest(

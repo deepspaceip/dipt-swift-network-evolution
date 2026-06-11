@@ -25,7 +25,7 @@ internal import os
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class ProtocolStack: Hashable {
     public enum ApplicationProtocol: Hashable {
         case none

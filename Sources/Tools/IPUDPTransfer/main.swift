@@ -23,7 +23,7 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 final class IPUDPTransfer {
 
     // 169.254.156.146

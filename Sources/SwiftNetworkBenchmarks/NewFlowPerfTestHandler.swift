@@ -24,7 +24,7 @@ internal import os
 #if IMPORT_SWIFTTLS && canImport(SwiftTLS)
 
 @_spi(Essentials) @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class NewFlowPerfTestHandler: ProtocolInstanceContainer, InboundFlowHandler, LoggableProtocol {
 
     public typealias LowerProtocol = StreamListenerLinkage
@@ -186,7 +186,7 @@ public final class NewFlowPerfTestHandler: ProtocolInstanceContainer, InboundFlo
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NewFlowPerfTestHandler: UpperProtocolHandler {
     // Conform to UpperProtocolHandler but the function is unused
     public func attachLowerProtocol(

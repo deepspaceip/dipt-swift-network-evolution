@@ -32,10 +32,10 @@ enum QUICConnectionIDError: Int {
 }
 // QUICConnectionID is stored as an inline array of 20 bytes for performance reasons.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public typealias QUICConnectionIDStorage = [20 of UInt8]
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnectionIDStorage {
     static var empty: QUICConnectionIDStorage {
         QUICConnectionIDStorage(repeating: 0)
@@ -59,7 +59,7 @@ extension QUICConnectionIDStorage {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICConnectionID: Sendable, Equatable, CustomStringConvertible {
     static let maximumSize = 20
 
@@ -176,7 +176,7 @@ public struct QUICConnectionID: Sendable, Equatable, CustomStringConvertible {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnectionID: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(actualLength)
@@ -186,7 +186,7 @@ extension QUICConnectionID: Hashable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct ManagedConnectionID {
     let sequenceNumber: UInt64
     let connectionID: QUICConnectionID
@@ -223,7 +223,7 @@ struct ManagedConnectionID {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct QUICConnectionIDList: Sequence, IteratorProtocol {
     private(set) var managedConnectionIDs = Deque<ManagedConnectionID>()
 
@@ -377,7 +377,7 @@ struct QUICConnectionIDList: Sequence, IteratorProtocol {
 }
 
 // In QUIC, connection IDs are always serialized with a prefixed 8 bit length.
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Serializer {
     func connectionID(_ value: QUICConnectionID) -> Serializable {
         .buffer([UInt8(value.length)] + value.connectionID)

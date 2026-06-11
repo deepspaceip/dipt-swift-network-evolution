@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Array {
     init(copying span: Span<Element>, maxCount: Int) {
         let copyCount = Swift.min(span.count, maxCount)

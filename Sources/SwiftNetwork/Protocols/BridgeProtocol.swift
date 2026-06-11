@@ -24,7 +24,7 @@ internal import Synchronization
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct DatagramDrops: Equatable {
     private var dropRanges: [ClosedRange<Int>]
     private var datagramCount = 0
@@ -64,7 +64,7 @@ public struct DatagramDrops: Equatable {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct BridgeDatagramProtocol: NetworkProtocol {
     public typealias Options = BridgeOptions
     public typealias Metadata = BridgeMetadata
@@ -313,7 +313,7 @@ public struct BridgeDatagramProtocol: NetworkProtocol {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolOptions<BridgeDatagramProtocol> {
     public var linkDelay: NetworkDuration {
         get { perProtocolOptions!.linkDelay }
@@ -327,7 +327,7 @@ extension ProtocolOptions<BridgeDatagramProtocol> {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct BridgeStreamProtocol: NetworkProtocol {
     public typealias Options = BridgeOptions
     public typealias Metadata = BridgeMetadata

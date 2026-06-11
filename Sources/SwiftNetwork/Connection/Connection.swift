@@ -29,46 +29,46 @@ internal import Synchronization
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol NetworkFixedWidthInteger: FixedWidthInteger {
     init(bigEndian: Self)
     var bigEndian: Self { get }
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension UInt8: NetworkFixedWidthInteger {}
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension UInt16: NetworkFixedWidthInteger {}
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension UInt32: NetworkFixedWidthInteger {}
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension UInt64: NetworkFixedWidthInteger {}
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Int8: NetworkFixedWidthInteger {}
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Int16: NetworkFixedWidthInteger {}
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Int32: NetworkFixedWidthInteger {}
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Int64: NetworkFixedWidthInteger {}
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol ConnectionProtocol: Identifiable, Hashable {
     associatedtype ApplicationProtocolType: NetworkProtocolOptions
 }
@@ -76,12 +76,12 @@ public protocol ConnectionProtocol: Identifiable, Hashable {
 /// Types that conform to NetworkProtocolOptions can be used
 /// when configuring protocol stacks.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol NetworkMetadataProtocol {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol NetworkProtocolOptions {
     associatedtype BelowProtocol
     associatedtype ProtocolStorage: ConnectionStorage = DefaultProtocolStorage
@@ -92,7 +92,7 @@ public protocol NetworkProtocolOptions {
     func configure(parameters: Parameters)
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkProtocolOptions {
     public var belowProtocol: BelowProtocol {
         fatalError("This should not be called")
@@ -106,13 +106,13 @@ extension NetworkProtocolOptions {
 /// Types that conform to ConnectionStorage can be used as additional storage within
 /// a connection.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol ConnectionStorage {
     init()
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct DefaultProtocolStorage: ConnectionStorage, Sendable {
     public init() {}
 }
@@ -120,7 +120,7 @@ public struct DefaultProtocolStorage: ConnectionStorage, Sendable {
 /// Types that conform to OneToOneProtocol are allowed to be the top protocol
 /// in a network protocol stack for non-multiplexed connections.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OneToOneProtocol: NetworkProtocolOptions {
 }
 
@@ -131,19 +131,19 @@ public protocol OneToOneProtocol: NetworkProtocolOptions {
 /// send or receive methods. Instead, they expose methods to open
 /// and listen for multiplexed Subconnections which can send and receive.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol MultiplexProtocol: NetworkProtocolOptions {
 }
 
 /// Types that conform to the StreamProtocol protocol expose methods for
 /// sending and receiving byte streams.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol StreamProtocol: OneToOneProtocol {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension StreamProtocol {
 }
 
@@ -151,7 +151,7 @@ extension StreamProtocol {
 /// The conforming type is responsible for specifying its message-specific
 /// metadata.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol MessageProtocol: OneToOneProtocol {
     associatedtype ContentType
 }
@@ -159,14 +159,14 @@ public protocol MessageProtocol: OneToOneProtocol {
 /// Types that conform to DatagramProtocol send and receive messages
 /// with minimal or no metadata, usually constrained to a fixed maximum size.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol DatagramProtocol: MessageProtocol {
 }
 
 /// A resultBuilder for specifying and configuring protocol stacks in
 /// a declarative way
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 @resultBuilder
 public struct ProtocolStackBuilder<ApplicationProtocol: NetworkProtocolOptions> {
     static public func buildBlock(_ applicationProtocol: ApplicationProtocol) -> (ApplicationProtocol) {
@@ -177,7 +177,7 @@ public struct ProtocolStackBuilder<ApplicationProtocol: NetworkProtocolOptions> 
 /// Types that conform to the NWParametersProvider protocol can be used to
 /// generate an NWParameters.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol ParametersProvider {
     /// The generated NWParameters.
     var parameters: Parameters { get set }
@@ -326,7 +326,7 @@ public protocol ParametersProvider {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ParametersProvider {
     /// Require an interface when connecting, listening, and browsing.
     ///
@@ -557,7 +557,7 @@ extension ParametersProvider {
 
 /// An extension for Parameters that supports chainable configuration.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Parameters: ParametersProvider {
     public var parameters: Parameters {
         get {
@@ -571,7 +571,7 @@ extension Parameters: ParametersProvider {
 
 /// Send and receive unreliable datagrams over QUIC via RFC 9221
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICDatagram: DatagramProtocol {
     public typealias ContentType = [UInt8]
 
@@ -598,7 +598,7 @@ public struct QUICDatagram: DatagramProtocol {
 ///
 /// Supports sending and receiving encrypted byte streams.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct TLS: StreamProtocol {
     private var trustedRawPublicKeyCertificates: [[UInt8]]?
     private var rawPrivateKey: [UInt8]?
@@ -694,7 +694,7 @@ public struct TLS: StreamProtocol {
 ///
 /// Supports sending and receiving byte streams.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct TCP: StreamProtocol {
     private var noDelay: Bool?
     private var noPush: Bool?
@@ -965,7 +965,7 @@ public struct TCP: StreamProtocol {
 
 #if !NETWORK_EMBEDDED
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct DatagramBridge: DatagramProtocol {
     public typealias ContentType = Void
 
@@ -986,7 +986,7 @@ public struct DatagramBridge: DatagramProtocol {
 
 #if !NETWORK_EMBEDDED
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct StreamBridge: StreamProtocol {
     public typealias ContentType = Void
 
@@ -1006,7 +1006,7 @@ public struct StreamBridge: StreamProtocol {
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct NoTransport: StreamProtocol {
     public enum BelowProtocol {
         case void
@@ -1045,7 +1045,7 @@ public struct NoTransport: StreamProtocol {
 /// exposing configuration for a multiplexing instance of QUIC, which
 /// in turn exposes the ability to handle multiple streams of data over QUIC.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUIC: MultiplexProtocol {
     private var alpn: [String]
     private var trustedRawPublicKeyCertificates: [[UInt8]]?
@@ -1327,7 +1327,7 @@ public struct QUIC: MultiplexProtocol {
 ///
 /// > Note: This type is not intended to be inserted into the protocol stack manually; it is vended by connections that use QUIC.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICStream: StreamProtocol {
     public let belowProtocol: Void
 
@@ -1349,7 +1349,7 @@ public struct QUICStream: StreamProtocol {
 ///
 /// UDP supports sending and receiving datagrams.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct UDP: DatagramProtocol {
     public typealias ContentType = [UInt8]
 
@@ -1393,7 +1393,7 @@ public struct UDP: DatagramProtocol {
 /// > Note: Specifying IP is optional, and need only be included in a
 /// protocol stack when configuring IP options.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct IP: NetworkProtocolOptions {
     public enum BelowProtocol {
         case void
@@ -1544,14 +1544,14 @@ public struct IP: NetworkProtocolOptions {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension DatagramProtocol {
 }
 
 // An opaque class that is responsible for creating and configuring NWParameters based on
 /// the parameterized protocol stack.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct ParametersBuilder<Top: NetworkProtocolOptions>: ParametersProvider {
     public var parameters: Parameters
 
@@ -1594,7 +1594,7 @@ public struct ParametersBuilder<Top: NetworkProtocolOptions>: ParametersProvider
 /// required to transmit and receive user data. Connections may make multiple establishment
 /// attempts before the connection is ready.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class NetworkConnection<ApplicationProtocol: NetworkProtocolOptions>: NetworkChannel<ApplicationProtocol>,
     @unchecked Sendable
 {
@@ -1657,7 +1657,7 @@ public final class NetworkConnection<ApplicationProtocol: NetworkProtocolOptions
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class NetworkChannelBase {
     public enum State: Equatable, Sendable {
         /// The initial state prior to start
@@ -1748,7 +1748,7 @@ public class NetworkChannelBase {
 /// The interface exposed by this type (and any derived classes) is dependent on the
 /// generic ApplicationProtocol parameter.
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public class NetworkChannel<ApplicationProtocol: NetworkProtocolOptions>: NetworkChannelBase,
     CustomDebugStringConvertible, @unchecked Sendable
 {
@@ -1829,18 +1829,18 @@ public class NetworkChannel<ApplicationProtocol: NetworkProtocolOptions>: Networ
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkChannel: ConnectionProtocol {
     public typealias ApplicationProtocolType = ApplicationProtocol
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkChannel: Identifiable, Hashable {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkConnection where ApplicationProtocol: OneToOneProtocol {
     internal convenience init(kind: Kind, to endpoint: Endpoint, using parameters: Parameters, uuid: SystemUUID) {
         self.init(kind: kind, endpoint: endpoint, parameters: parameters, uuid: uuid)
@@ -1925,7 +1925,7 @@ extension NetworkConnection where ApplicationProtocol: OneToOneProtocol {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkConnection where ApplicationProtocol: MultiplexProtocol {
     internal convenience init(to endpoint: Endpoint, using parameters: Parameters, uuid: SystemUUID) {
         self.init(kind: .quic, endpoint: endpoint, parameters: parameters, uuid: uuid)
@@ -1964,7 +1964,7 @@ extension NetworkConnection where ApplicationProtocol: MultiplexProtocol {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUIC {
     public final class Stream<ApplicationProtocol: NetworkProtocolOptions>: NetworkChannel<ApplicationProtocol>,
         @unchecked Sendable
@@ -2034,7 +2034,7 @@ extension QUIC {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkConnection where ApplicationProtocol == QUIC {
     private enum ConnectionEvent {
         case newConnection(QUIC.Stream<QUICStream>)
@@ -2076,12 +2076,12 @@ extension NetworkConnection where ApplicationProtocol == QUIC {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkChannel where ApplicationProtocol: MessageProtocol {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkChannel where ApplicationProtocol: StreamProtocol {
     public struct StreamMessage {
         public static func message(content: [UInt8]? = nil, isComplete: Bool = false) -> StreamMessage {
@@ -2140,7 +2140,7 @@ extension NetworkChannel where ApplicationProtocol: StreamProtocol {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkChannel where ApplicationProtocol: DatagramProtocol {
     public struct DatagramMessage {
         public static func message(content: [UInt8]? = nil) -> DatagramMessage {

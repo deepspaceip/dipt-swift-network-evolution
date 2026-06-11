@@ -13,7 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct ProtocolInstanceReference: Hashable {
     enum _ProtocolInstanceReference {
         case none

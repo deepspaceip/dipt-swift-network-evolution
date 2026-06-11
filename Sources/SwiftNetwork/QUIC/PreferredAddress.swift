@@ -15,7 +15,7 @@
 #if !NETWORK_NO_SWIFT_QUIC
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct PreferredAddress: Equatable {
     let connectionID: QUICConnectionID
     let statelessResetToken: QUICStatelessResetToken

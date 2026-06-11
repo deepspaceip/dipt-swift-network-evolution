@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct IPv6Address: IPAddress, Hashable, CustomDebugStringConvertible {
 
     /// The IPv6 "any" address.

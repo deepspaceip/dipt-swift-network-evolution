@@ -23,7 +23,7 @@ internal import os
 import Dispatch
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class SocketDatagramProtocol: BottomDatagramProtocol, ProtocolInstanceContainer {
 
     public private(set) var context: NetworkContext

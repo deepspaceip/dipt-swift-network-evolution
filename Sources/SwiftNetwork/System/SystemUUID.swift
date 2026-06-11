@@ -24,7 +24,7 @@ internal import Synchronization
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct SystemUUID: Hashable, Equatable, CustomStringConvertible, Sendable, BitwiseCopyable {
 
     internal typealias UUIDStorage = [16 of UInt8]
@@ -145,7 +145,7 @@ extension UInt128 {
 }
 
 #if !NETWORK_STANDALONE
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension SystemUUID: Codable {
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()

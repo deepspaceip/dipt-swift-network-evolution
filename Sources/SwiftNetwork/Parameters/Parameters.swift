@@ -25,7 +25,7 @@ internal import os
 #endif
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct Parameters: Hashable, CustomStringConvertible {
     enum DataMode: UInt8, Hashable, CustomStringConvertible {
         case unspecified = 0
@@ -777,7 +777,7 @@ public struct Parameters: Hashable, CustomStringConvertible {
 
 // MARK: - Description
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Parameters {
     public var description: String {
         #if !NETWORK_EMBEDDED
@@ -881,7 +881,7 @@ extension Parameters {
 
 // MARK: - Accessors
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension Parameters {
     var processUUID: SystemUUID {
         get { pathParameters.processPathValue.processUUID }
@@ -1172,7 +1172,7 @@ extension Parameters {
 // MARK: - Parameters Storage
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class MutableParametersStorage: Hashable, CustomStringConvertible {
     internal var p: Parameters
 
@@ -1236,7 +1236,7 @@ public final class MutableParametersStorage: Hashable, CustomStringConvertible {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class ImmutableParametersStorage: Hashable, CustomStringConvertible {
     internal let p: Parameters
 

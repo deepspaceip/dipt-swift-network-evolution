@@ -36,7 +36,7 @@ internal import os
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICLoopbackState {
     public let context: NetworkContext
     public var clientApplicationLayers: [StreamUpperHarness]
@@ -68,7 +68,7 @@ public struct QUICLoopbackState {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICClientEndpointResult {
     public var instance: QUICConnection
     public var parameters: Parameters
@@ -78,7 +78,7 @@ public struct QUICClientEndpointResult {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct QUICServerEndpointResult {
     public var instance: QUICConnection
     public var parameters: Parameters
@@ -92,7 +92,7 @@ public enum BenchmarkError: Error {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class QUICBenchmarkUtility {
 
     // 127.0.0.1 (Just point both at loopback)
@@ -318,7 +318,7 @@ public struct LoggingHandle: CustomStringConvertible {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public final class DataBenchmarkUtility {
     @discardableResult
     public func loopOutputHandlerPackets(

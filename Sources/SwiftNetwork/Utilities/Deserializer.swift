@@ -21,7 +21,7 @@ internal import SwiftSystem
 #endif
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum DeserializationError: Error, CustomStringConvertible {
     case bufferTooShort
     case parsingFailed
@@ -37,7 +37,7 @@ public enum DeserializationError: Error, CustomStringConvertible {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum DeserializationResult: CustomStringConvertible, Equatable, Sendable {
     case success(parsedBytes: Int, remainingBytes: Int)
     case error(DeserializationError)
@@ -73,7 +73,7 @@ public enum DeserializationResult: CustomStringConvertible, Equatable, Sendable 
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct Deserializer<Factory: DeserializerSpanFactory & ~Copyable & ~Escapable>: ~Copyable, ~Escapable {
     private var factory: Factory
     private var currentSpan: RawSpan

@@ -15,7 +15,7 @@
 // MARK: - DeserializerSpanFactory
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol DeserializerSpanFactory: ~Copyable, ~Escapable {
     /// Returns the next span from the factory.
     @_lifetime(&self)
@@ -29,7 +29,7 @@ public protocol DeserializerSpanFactory: ~Copyable, ~Escapable {
 ///
 /// Use this factory when initializing a `Deserializer` directly from a `RawSpan`.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct SingleSpanFactory: ~Escapable, DeserializerSpanFactory {
     private var span: RawSpan
     private var consumed: Bool = false
@@ -54,7 +54,7 @@ public struct SingleSpanFactory: ~Escapable, DeserializerSpanFactory {
 // MARK: - SerializerSpanFactory
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol SerializerSpanFactory: ~Copyable, ~Escapable {
     /// Returns the next mutable span from the factory.
     @_lifetime(&self)
@@ -68,7 +68,7 @@ public protocol SerializerSpanFactory: ~Copyable, ~Escapable {
 ///
 /// Use this factory when initializing a `Serializer` directly from a `MutableRawSpan`.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct SingleMutableSpanFactory: ~Copyable, ~Escapable, SerializerSpanFactory {
     private var span: MutableSpan<UInt8>
     private var consumed: Bool = false
@@ -99,7 +99,7 @@ public struct SingleMutableSpanFactory: ~Copyable, ~Escapable, SerializerSpanFac
 /// Provides each frame's bytes as a span and optionally claims consumed bytes from each frame.
 /// Walks the frames in a `FrameArray`.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct FrameArraySpanFactory: ~Copyable, ~Escapable, DeserializerSpanFactory {
     private var frameArray: FrameArray
     private var spanIndex = 0

@@ -24,7 +24,7 @@ internal import os
 // MARK: FlowControlGlobals
 
 // FlowControlGlobals assumes that it is only setting a static collection of constants.
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct FlowControlGlobals: ~Copyable {
 
     // Flow Control Constants
@@ -132,7 +132,7 @@ struct FlowControlGlobals: ~Copyable {
 // Storage for flow control state
 // For streams, these values are per-stream byte counts.
 // For connections, these values are summed across all streams.
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct FlowControlState: ~Copyable {
 
     // Inbound values (receiving):
@@ -259,7 +259,7 @@ struct FlowControlState: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICConnection {
 
     // Offset in the stream from which to next send bytes
@@ -356,7 +356,7 @@ extension QUICConnection {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct FlowControlStreamState: ~Copyable {
     // time when the measurement period started
     fileprivate var receiveHighWaterMarkTime: NetworkClock.Instant = .zero
@@ -366,7 +366,7 @@ struct FlowControlStreamState: ~Copyable {
     fileprivate var receiveHighWaterMarkPreviousCount: UInt64 = 0
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension QUICStreamInstance {
 
     // Offset in the stream from which to next send bytes

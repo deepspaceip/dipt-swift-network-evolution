@@ -28,7 +28,7 @@ internal import os
 
 // MARK: - Sendable Items (Per-Frame Sending Logic)
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 protocol SendableItem: ~Copyable {
     static var isAckEliciting: Bool { get }
     static var isInFlightEligible: Bool { get }
@@ -57,7 +57,7 @@ protocol SendableItem: ~Copyable {
     ) throws(QUICError)
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension SendableItem where Self: ~Copyable {
     static var isAckEliciting: Bool { true }  // Default to true for most frames
     static var isInFlightEligible: Bool { isAckEliciting }  // Default to being the same as ack-eliciting
@@ -135,7 +135,7 @@ extension SendableItem where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FramePadding: SendableItem {
     static var isAckEliciting: Bool { false }
     static var isInFlightEligible: Bool { true }
@@ -192,7 +192,7 @@ extension FramePadding: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FramePing: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool { pendingItems.ping }
 
@@ -231,7 +231,7 @@ extension FramePing: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameAck: SendableItem {
     static var isAckEliciting: Bool { false }
 
@@ -286,7 +286,7 @@ extension FrameAck: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameResetStream: SendableItem {
     static var isRepeatable: Bool { true }
 
@@ -346,7 +346,7 @@ extension FrameResetStream: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameStopSending: SendableItem {
     static var isRepeatable: Bool { true }
 
@@ -402,7 +402,7 @@ extension FrameStopSending: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameCrypto: SendableItem {
     static var isRepeatable: Bool { true }
 
@@ -559,7 +559,7 @@ extension FrameCrypto: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameNewToken: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool {
         pendingItems.newToken
@@ -594,7 +594,7 @@ extension FrameNewToken: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameStreamSendMetadata: SendableItem {
     static var isRepeatable: Bool { true }
 
@@ -873,7 +873,7 @@ extension FrameStreamSendMetadata: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameDataBlocked: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool {
         pendingItems.dataBlocked
@@ -908,7 +908,7 @@ extension FrameDataBlocked: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameStreamDataBlocked: SendableItem {
     static var isRepeatable: Bool { true }
 
@@ -965,7 +965,7 @@ extension FrameStreamDataBlocked: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameStreamsBlockedBidirectional: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool {
         pendingItems.streamsBlockedBidirectional
@@ -1002,7 +1002,7 @@ extension FrameStreamsBlockedBidirectional: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameStreamsBlockedUnidirectional: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool {
         pendingItems.streamsBlockedUnidirectional
@@ -1039,7 +1039,7 @@ extension FrameStreamsBlockedUnidirectional: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameMaxData: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool { pendingItems.maxData }
 
@@ -1072,7 +1072,7 @@ extension FrameMaxData: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameMaxStreamData: SendableItem {
     static var isRepeatable: Bool { true }
 
@@ -1131,7 +1131,7 @@ extension FrameMaxStreamData: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameMaxStreamsBidirectional: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool {
         pendingItems.maxStreamsBidirectional
@@ -1169,7 +1169,7 @@ extension FrameMaxStreamsBidirectional: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameMaxStreamsUnidirectional: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool {
         pendingItems.maxStreamsUnidirectional
@@ -1209,7 +1209,7 @@ extension FrameMaxStreamsUnidirectional: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameNewConnectionID: SendableItem {
     static var isRepeatable: Bool { true }
 
@@ -1264,7 +1264,7 @@ extension FrameNewConnectionID: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameRetireConnectionID: SendableItem {
     static var isRepeatable: Bool { true }
 
@@ -1313,7 +1313,7 @@ extension FrameRetireConnectionID: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FramePathChallenge: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool {
         #if DEBUG
@@ -1353,7 +1353,7 @@ extension FramePathChallenge: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FramePathResponse: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool {
         #if DEBUG
@@ -1394,7 +1394,7 @@ extension FramePathResponse: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameConnectionClose: SendableItem {
     static var isAckEliciting: Bool { false }
 
@@ -1446,7 +1446,7 @@ extension FrameConnectionClose: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameApplicationClose: SendableItem {
     static var isAckEliciting: Bool { false }
 
@@ -1506,7 +1506,7 @@ extension FrameApplicationClose: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameHandshakeDone: SendableItem {
     static func isPresent(in pendingItems: borrowing PendingItems) -> Bool {
         pendingItems.handshakeDone
@@ -1540,7 +1540,7 @@ extension FrameHandshakeDone: SendableItem {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension FrameDatagram: SendableItem {
     static var isRepeatable: Bool { true }
 
@@ -1637,7 +1637,7 @@ extension FrameDatagram: SendableItem {
 
 // This list the priority order in which to send frames
 // Note: This list may be updated after review
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 enum PrioritizedSendableItems: CaseIterable {
     // Control frames come first so that they fit in the earliest outgoing frame
     case crypto
@@ -2204,7 +2204,7 @@ enum PrioritizedSendableItems: CaseIterable {
 
 // MARK: - PendingItems (State for pending send)
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct SimpleSendableItemsFlags: OptionSet {
     init(rawValue: Self.RawValue) {
         self.rawValue = rawValue
@@ -2236,7 +2236,7 @@ struct SimpleSendableItemsFlags: OptionSet {
     static let sendCrypto = SimpleSendableItemsFlags(rawValue: 1 << 24)
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct PendingItems: ~Copyable {
     let packetNumberSpace: PacketNumberSpace
 
@@ -2837,7 +2837,7 @@ struct PendingItems: ~Copyable {
 
 // MARK: - TransmittedItems (State for previous send)
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct TransmittedItems: ~Copyable {
     var simpleSendableItems = SimpleSendableItemsFlags(rawValue: 0)
     var ping: Bool {

@@ -19,7 +19,7 @@
 /// Add conformance to `AutomaticLowerDatagramProcessing` to automatically send and receive
 /// datagrams from lower protocols.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol AutomaticLowerDatagramProcessing: ~Copyable, InboundDatagramHandler {
     var lower: LowerProtocol { get set }
 
@@ -48,7 +48,7 @@ public protocol AutomaticLowerDatagramProcessing: ~Copyable, InboundDatagramHand
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension AutomaticLowerDatagramProcessing where Self: ~Copyable {
     /// Adds datagrams to the lower send queue.
     ///
@@ -76,7 +76,7 @@ extension AutomaticLowerDatagramProcessing where Self: ~Copyable {
 /// Add conformance to `AutomaticUpperDatagramProcessing` to automatically process datagrams
 /// from upper protocols.
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol AutomaticUpperDatagramProcessing: ~Copyable, OutboundDatagramHandler {
     var upper: UpperProtocol { get set }
 
@@ -107,7 +107,7 @@ public protocol AutomaticUpperDatagramProcessing: ~Copyable, OutboundDatagramHan
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension AutomaticUpperDatagramProcessing where Self: ~Copyable {
     /// Adds datagrams to the upper receive queue.
     ///
@@ -128,7 +128,7 @@ extension AutomaticUpperDatagramProcessing where Self: ~Copyable {
 // MARK: Manual Datagram Processing
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol InboundDatagramHandler: ~Copyable, InboundDataHandler where LowerProtocol == OutboundDatagramLinkage {
     mutating func attachLowerDatagramProtocol(
         _ lowerProtocol: ProtocolInstanceReference,
@@ -140,7 +140,7 @@ public protocol InboundDatagramHandler: ~Copyable, InboundDataHandler where Lowe
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol OutboundDatagramHandler: ~Copyable, OutboundDataHandler where UpperProtocol == InboundDatagramLinkage {
 
     mutating func attachUpperDatagramProtocol(
@@ -165,7 +165,7 @@ public protocol OutboundDatagramHandler: ~Copyable, OutboundDataHandler where Up
 
 // MARK: Implementation Details
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension AutomaticLowerDatagramProcessing where Self: ~Copyable {
     mutating func _readInboundDatagrams() {
         var readCount = 0
@@ -196,7 +196,7 @@ extension AutomaticLowerDatagramProcessing where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension AutomaticUpperDatagramProcessing where Self: ~Copyable {
     internal func newOutboundFrame(_ dataSize: Int) -> Frame {
         Frame(count: dataSize)
@@ -231,7 +231,7 @@ extension AutomaticUpperDatagramProcessing where Self: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension ProtocolInstanceReference {
     func receiveDatagrams(
         _ from: ProtocolInstanceReference,

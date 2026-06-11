@@ -13,7 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum ProtocolLevel: Sendable {
     case link
     case internet
@@ -23,7 +23,7 @@ public enum ProtocolLevel: Sendable {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public enum ProtocolMapping: Sendable {
     case oneToOne
     case manyToOne
@@ -31,7 +31,7 @@ public enum ProtocolMapping: Sendable {
 }
 
 @_spi(ProtocolProvider)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct ProtocolIdentifier: Hashable, Sendable {
     #if NETWORK_EMBEDDED
     public var name: String
@@ -204,7 +204,7 @@ public struct ProtocolIdentifier: Hashable, Sendable {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public protocol NetworkProtocol: Sendable {
     associatedtype Options: PerProtocolOptions
     associatedtype Metadata: PerProtocolMetadata
@@ -218,7 +218,7 @@ public protocol NetworkProtocol: Sendable {
 }
 
 @_spi(Essentials)
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 public struct ProtocolDefinition<P: NetworkProtocol>: Equatable, CustomStringConvertible, Sendable {
     let identifier: ProtocolIdentifier
     var networkProtocol: P

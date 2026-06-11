@@ -18,10 +18,10 @@ import XCTest
 @testable import SwiftNetwork
 #endif
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension String: NetworkComparable {}
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 final class SwiftNetworkPriorityQueueTests: XCTestCase {
 
     func testSomeStringsAsc() throws {
@@ -143,7 +143,7 @@ final class SwiftNetworkPriorityQueueTests: XCTestCase {
 }
 
 /// This data type is only partially ordered. Ie. from `a < b` and `a != b` we can't imply `a > b`.
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 struct SomePartiallyOrderedDataType: NetworkComparable, Equatable, CustomStringConvertible {
     public static func < (lhs: SomePartiallyOrderedDataType, rhs: SomePartiallyOrderedDataType) -> Bool {
         lhs.width < rhs.width && lhs.height < rhs.height
@@ -165,7 +165,7 @@ struct SomePartiallyOrderedDataType: NetworkComparable, Equatable, CustomStringC
     }
 }
 
-@available(Network 0.1.0, *)
+@available(anyAppleOS 26, *)
 extension NetworkPriorityQueue where Element: Equatable {
     public static func == (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         let arr = Array(lhs._heap)

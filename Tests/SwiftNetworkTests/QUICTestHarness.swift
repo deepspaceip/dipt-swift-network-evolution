@@ -1103,8 +1103,8 @@ final class QUICTestHarness {
                 var serverReports: NetworkMetrics?
                 let snapshotExpectation = XCTestExpectation(description: "Wait for QUIC connection to receive metrics")
                 context.async {
-                    clientReports = clientHarness.getMetrics(type: .dataTransferSnapshot)
-                    serverReports = serverHarness.getMetrics(type: .dataTransferSnapshot)
+                    clientReports = clientHarness.getMetrics(requestedNetworkMetric: .dataTransferSnapshot)
+                    serverReports = serverHarness.getMetrics(requestedNetworkMetric: .dataTransferSnapshot)
                     XCTAssertNotNil(clientReports)
                     XCTAssertNotNil(serverReports)
                     snapshotExpectation.fulfill()
@@ -1117,8 +1117,8 @@ final class QUICTestHarness {
                     description: "Wait for QUIC connection to receive metrics"
                 )
                 context.async {
-                    clientReports = clientHarness.getMetrics(type: .protocolEstablishmentReports)
-                    serverReports = serverHarness.getMetrics(type: .protocolEstablishmentReports)
+                    clientReports = clientHarness.getMetrics(requestedNetworkMetric: .protocolEstablishmentReports)
+                    serverReports = serverHarness.getMetrics(requestedNetworkMetric: .protocolEstablishmentReports)
                     XCTAssertNotNil(clientReports)
                     XCTAssertNotNil(serverReports)
                     protocolEstablishmentReportExpectation.fulfill()

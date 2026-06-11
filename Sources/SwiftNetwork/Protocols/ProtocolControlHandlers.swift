@@ -142,7 +142,10 @@ public protocol LowerProtocolHandler<UpperProtocol>: ~Copyable, ProtocolInstance
     mutating func handleApplicationEvent(_ from: ProtocolInstanceReference, event: ApplicationEvent)
 
     func getMetadata<P: NetworkProtocol>(_ from: ProtocolInstanceReference) -> ProtocolMetadata<P>?
-    func getMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics?
+    func getMetrics(
+        _ from: ProtocolInstanceReference,
+        requestedNetworkMetric: RequestedNetworkMetrics
+    ) -> NetworkMetrics?
 }
 
 extension ProtocolInstanceReference {
@@ -890,27 +893,39 @@ extension ProtocolInstanceReference {
         }
     }
 
-    public func getMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics? {
+    public func getMetrics(
+        _ from: ProtocolInstanceReference,
+        requestedNetworkMetric: RequestedNetworkMetrics
+    ) -> NetworkMetrics? {
         self.handleCallFromUpperProtocol {
             switch self.reference {
             case .none: return nil
-            case .udp(let index): return context.udpInstances[index].getMetrics(from, type: type)
-            case .ip(let index): return context.ipInstances[index].getMetrics(from, type: type)
-            case .tcp(let instance): return instance.getMetrics(from, type: type)
-            case .tls(let instance): return instance.getMetrics(from, type: type)
+            case .udp(let index):
+                return context.udpInstances[index].getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
+            case .ip(let index):
+                return context.ipInstances[index].getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
+            case .tcp(let instance): return instance.getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
+            case .tls(let instance): return instance.getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
             #if !NETWORK_NO_SWIFT_QUIC
-            case .quic(let instance): return instance.getMetrics(from, type: type)
-            case .quicStream(let instance): return instance.getMetrics(from, type: type)
-            case .quicDatagram(let instance): return instance.getMetrics(from, type: type)
-            case .quicCrypto(let instance): return instance.getMetrics(from, type: type)
+            case .quic(let instance): return instance.getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
+            case .quicStream(let instance):
+                return instance.getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
+            case .quicDatagram(let instance):
+                return instance.getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
+            case .quicCrypto(let instance):
+                return instance.getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
             #if !NETWORK_NO_TESTING_HARNESS
-            case .datagramLowerHarness(let instance): return instance.getMetrics(from, type: type)
-            case .streamLowerHarness(let instance): return instance.getMetrics(from, type: type)
+            case .datagramLowerHarness(let instance):
+                return instance.getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
+            case .streamLowerHarness(let instance):
+                return instance.getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
             #endif
             #endif
             #if !NETWORK_EMBEDDED
             case .custom(let container, let index):
-                return container.accessLower(at: index) { $0.getMetrics(from, type: type) }
+                return container.accessLower(at: index) {
+                    $0.getMetrics(from, requestedNetworkMetric: requestedNetworkMetric)
+                }
             #endif
             default: fatalError("Protocol cannot accept getMetrics call")
             }

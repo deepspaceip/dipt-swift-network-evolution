@@ -296,8 +296,11 @@ extension ManyToManyProtocolHandler {
     public func updateDataTransferSnapshot(flow: MultiplexedFlowIdentifier, _ snapshot: inout DataTransferSnapshot) {}
     public var protocolEstablishmentReport: ProtocolEstablishmentReport? { nil }
 
-    public func getMetrics(flow: MultiplexedFlowIdentifier, type: RequestedNetworkMetrics) -> NetworkMetrics? {
-        switch type {
+    public func getMetrics(
+        flow: MultiplexedFlowIdentifier,
+        requestedNetworkMetric: RequestedNetworkMetrics
+    ) -> NetworkMetrics? {
+        switch requestedNetworkMetric {
         case .protocolEstablishmentReports:
             guard let report = protocolEstablishmentReport else { return nil }
             return .protocolEstablishmentReports([report])
@@ -308,8 +311,11 @@ extension ManyToManyProtocolHandler {
         }
     }
 
-    public func getMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics? {
-        getMetrics(flow: .allFlows, type: type)
+    public func getMetrics(
+        _ from: ProtocolInstanceReference,
+        requestedNetworkMetric: RequestedNetworkMetrics
+    ) -> NetworkMetrics? {
+        getMetrics(flow: .allFlows, requestedNetworkMetric: requestedNetworkMetric)
     }
 
     public func handleInboundDataAvailableEvent(path: MultiplexingPathIdentifier) {}
@@ -1232,9 +1238,12 @@ extension MultiplexedFlow {
         return parentProtocol.getMetadata(flow: identifier)
     }
 
-    public func getMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics? {
+    public func getMetrics(
+        _ from: ProtocolInstanceReference,
+        requestedNetworkMetric: RequestedNetworkMetrics
+    ) -> NetworkMetrics? {
         do { try validate(upper: from, #function) } catch { return nil }
-        return parentProtocol.getMetrics(flow: identifier, type: type)
+        return parentProtocol.getMetrics(flow: identifier, requestedNetworkMetric: requestedNetworkMetric)
     }
 
     fileprivate func deliverConnectedEvent() {

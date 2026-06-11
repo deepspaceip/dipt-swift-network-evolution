@@ -385,10 +385,16 @@ extension OneToOneProtocolHandler where Self: ~Copyable {
         #endif
     }
 
-    public func getMetrics(_ from: ProtocolInstanceReference, type: RequestedNetworkMetrics) -> NetworkMetrics? {
+    public func getMetrics(
+        _ from: ProtocolInstanceReference,
+        requestedNetworkMetric: RequestedNetworkMetrics
+    ) -> NetworkMetrics? {
         do { try validate(upper: from, #function) } catch { return nil }
-        let lowerMetrics = lower.invokeGetMetrics(effectiveSelfReference, type: type)
-        switch type {
+        let lowerMetrics = lower.invokeGetMetrics(
+            effectiveSelfReference,
+            requestedNetworkMetric: requestedNetworkMetric
+        )
+        switch requestedNetworkMetric {
         case .protocolEstablishmentReports:
             var reports = [ProtocolEstablishmentReport]()
             if case .protocolEstablishmentReports(let protocolEstablishmentReports) = lowerMetrics {

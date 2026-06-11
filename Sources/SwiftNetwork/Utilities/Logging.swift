@@ -53,7 +53,6 @@ extension Logger {
 }
 #endif
 
-#if !(os(Linux) || (NETWORK_EMBEDDED && !NETWORK_DRIVERKIT))
 #if canImport(os) || NETWORK_DRIVERKIT
 @available(macOS 11, iOS 14, tvOS 14, watchOS 7, *)
 extension Logger {
@@ -82,5 +81,4 @@ extension Logger {
     static let tls = Logger(subsystem: "com.apple.security.swifttls", category: "SwiftTLSProtocol")
     static let migration = Logger(subsystem: "com.apple.network", category: "migration")
 }
-#endif
 #endif

@@ -16,6 +16,7 @@ var settings: [SwiftSetting] = [
     .define("SWIFTTLS_CERTIFICATE_VERIFICATION"),
     .unsafeFlags(["-Xfrontend", "-experimental-spi-only-imports"]),
     .enableExperimentalFeature("Lifetimes"),
+    .enableExperimentalFeature("AnyAppleOSAvailability"),
     .enableUpcomingFeature("ExistentialAny"),
 ]
 

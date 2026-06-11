@@ -1120,7 +1120,8 @@ struct FrameResetStream: ~Copyable, QUICFrameProtocol {
                 return true
             }
             guard let flowID = connection.knownFlows[streamID],
-                  let created = connection.flow(for: flowID) else {
+                let created = connection.flow(for: flowID)
+            else {
                 Logger.proto.error(
                     "stream \(streamID.value) is not a QUICStreamInstance after createInboundStreams"
                 )

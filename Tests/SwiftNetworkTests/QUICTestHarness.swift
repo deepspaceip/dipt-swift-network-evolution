@@ -1340,6 +1340,65 @@ final class QUICTestHarness {
         stop()
     }
 
+    /// `RESET_STREAM` is the very first frame the server sees for a fresh
+    /// peer-initiated bidi stream — no preceding `STREAM` frame. The server
+    /// must still create the inbound flow and deliver the inbound-aborted
+    /// event for the reset to be observable end-to-end.
+    func runQUICResetStreamFirstFrameOnNewStream(
+        applicationError: UInt64 = 42,
+        timeout: TimeInterval = 4.0
+    ) {
+        do {
+            try quicHandshake()
+        } catch {
+            XCTFail("Handshake failed: \(error)")
+            return
+        }
+
+        guard let clientStream = createNewStream(identifier: "C1") else {
+            XCTFail("Failed to create client stream")
+            return
+        }
+
+        let serverFlowExpectation = XCTestExpectation(description: "Server sees new flow")
+        let serverAbortExpectation = XCTestExpectation(description: "Server sees inbound abort event")
+        var serverStream: StreamUpperHarness?
+
+        context.async {
+            self.state?.serverHarness.waitForNewFlow {
+                guard let stream = self.state?.serverHarness.upperHarnesses.last else {
+                    XCTFail("Server flow missing")
+                    serverFlowExpectation.fulfill()
+                    return
+                }
+                serverStream = stream
+                stream.waitForInboundAborted { error in
+                    XCTAssertNotNil(error, "Server should see inbound abort from RESET_STREAM")
+                    XCTAssertEqual(
+                        error?.quicApplicationError,
+                        Int64(applicationError),
+                        "Application error code should be propagated from RESET_STREAM"
+                    )
+                    serverAbortExpectation.fulfill()
+                }
+                serverFlowExpectation.fulfill()
+            }
+        }
+
+        // Reset with no prior write so the only frame the client emits for
+        // this stream id is RESET_STREAM. There is no STREAM frame to
+        // stride-create the flow ahead of the reset.
+        context.async {
+            clientStream.abortOutbound(error: .init(quicApplicationError: applicationError))
+        }
+
+        wait(for: [serverFlowExpectation], timeout: timeout)
+        wait(for: [serverAbortExpectation], timeout: timeout)
+
+        _ = serverStream  // silence unused-warning; harness keeps strong ref
+        stop()
+    }
+
     func runQUICServerTestForPendingBidirectional(
         identifier: String = #function,
         dataBlock: [UInt8],

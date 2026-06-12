@@ -362,6 +362,10 @@ final class SwiftNetworkQUICHarnessTests: NetTestCase {
         QUICTestHarness().runQUICNewStreamWithImmediateAbort(abortKind: .stopSending)
     }
 
+    func testQUICResetStreamFirstFrameOnNewStream() {
+        QUICTestHarness().runQUICResetStreamFirstFrameOnNewStream()
+    }
+
     func testQUICResetStreamDoesNotAffectOppositeDirection() {
         QUICTestHarness().runQUICTest(
             streamCount: 1,

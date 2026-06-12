@@ -22,7 +22,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `Frame`/`ReassemblyQueue`)
+@available(anyAppleOS 26, *)
 extension ReassemblyQueue {
     @discardableResult
     fileprivate mutating func append(
@@ -34,7 +35,8 @@ extension ReassemblyQueue {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `Frame`/`ReassemblyQueue`)
+@available(anyAppleOS 26, *)
 final class ReassemblyQueueTests: XCTestCase {
     var reassemblyQueue: ReassemblyQueue = ReassemblyQueue()
 

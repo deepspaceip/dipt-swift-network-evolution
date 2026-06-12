@@ -67,7 +67,8 @@ extension IPv6Address {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `IPv6Address` (used in pseudo-header methods)
+@available(anyAppleOS 26, *)
 struct Checksum: ~Copyable {
 
     // Compute IPv6 pseudo-header checksum

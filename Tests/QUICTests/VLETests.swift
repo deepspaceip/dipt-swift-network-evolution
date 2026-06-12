@@ -22,7 +22,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `UInt64.variableLengthSize` (`macOS 11, iOS 14, tvOS 14, watchOS 7`)
+@available(anyAppleOS 26, *)
 final class VLESize: XCTestCase {
     func test0() {
         let n: UInt64 = 0
@@ -66,7 +67,8 @@ final class VLESize: XCTestCase {
     #endif
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `UInt64.variableLengthEncodeInto` (`macOS 11, iOS 14, tvOS 14, watchOS 7`)
+@available(anyAppleOS 26, *)
 final class VLEEncoding: XCTestCase {
     func test0() throws {
         let n: UInt64 = 0
@@ -118,7 +120,8 @@ final class VLEEncoding: XCTestCase {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `Span` (via `Deserializer`)
+@available(anyAppleOS 26, *)
 final class VLEDecoding: XCTestCase {
     func testEmpty() throws {
         let c = [UInt8]()
@@ -212,7 +215,8 @@ final class VLEDecoding: XCTestCase {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `Span` (via `Deserializer`)
+@available(anyAppleOS 26, *)
 final class VLEValidation: XCTestCase {
     func test0() throws {
         let n: UInt64 = 0

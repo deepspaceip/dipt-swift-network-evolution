@@ -26,7 +26,8 @@ extension Frame {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Frame`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkFrameCustomFinalizerTests: NetTestCase {
 
     private let bufferSize = 128

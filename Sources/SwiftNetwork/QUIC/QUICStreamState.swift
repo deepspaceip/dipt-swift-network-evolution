@@ -22,7 +22,8 @@ internal import os
 #endif
 
 // Note: This is CaseIterable only so that tests can ensure it checks all states
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICStreamInstance`/`QUICConnection`)
+@available(anyAppleOS 26, *)
 enum QUICSendStreamState: UInt8, CaseIterable, CustomStringConvertible {
     case invalid
     case ready
@@ -88,7 +89,8 @@ enum QUICSendStreamState: UInt8, CaseIterable, CustomStringConvertible {
 }
 
 // Note: It is CaseIterable only so that tests can ensure it checks all states
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICStreamInstance`/`QUICConnection`)
+@available(anyAppleOS 26, *)
 enum QUICReceiveStreamState: CaseIterable, CustomStringConvertible {
     case invalid
     case receive

@@ -17,7 +17,8 @@ import BasicContainers
 internal import DequeModule
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `BasicContainers`'s `UniqueArray` (via `NetworkUniqueArray`)
+@available(anyAppleOS 26, *)
 internal struct NetworkHeap<Element: NetworkComparable & ~Copyable>: ~Copyable {
     internal var storage: NetworkUniqueArray<Element>
 
@@ -152,7 +153,8 @@ internal struct NetworkHeap<Element: NetworkComparable & ~Copyable>: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `NetworkHeap`
+@available(anyAppleOS 26, *)
 extension NetworkHeap where Element: ~Copyable {
     var startIndex: Int {
         self.storage.startIndex
@@ -189,11 +191,13 @@ extension NetworkHeap where Element: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `NetworkHeap`
+@available(anyAppleOS 26, *)
 extension NetworkHeap {
     func copy() -> NetworkHeap<Element> {
         NetworkHeap(self.storage.clone())
     }
 }
-@available(Network 0.1.0, *)
+// Availability due to `NetworkHeap`
+@available(anyAppleOS 26, *)
 extension NetworkHeap: Sendable where Element: Sendable & ~Copyable {}

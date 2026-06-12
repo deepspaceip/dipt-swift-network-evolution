@@ -104,7 +104,8 @@ enum QUICPathState: CustomStringConvertible, CaseIterable {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `NetworkClock`
+@available(anyAppleOS 26, *)
 struct PendingChallenge {
     let data = UInt64.random(in: 0..<UInt64.max)
 
@@ -112,7 +113,8 @@ struct PendingChallenge {
     let sentTime: NetworkClock.Instant
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `NetworkClock`
+@available(anyAppleOS 26, *)
 struct BandwidthDelayProduct {
     var currentBDP: Int = 0
     var count: Int = 0

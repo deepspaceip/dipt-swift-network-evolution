@@ -21,7 +21,8 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via QUIC subsystem)
+@available(anyAppleOS 26, *)
 extension System {
     static func isHighMemory() -> Bool {
         #if NETWORK_EMBEDDED

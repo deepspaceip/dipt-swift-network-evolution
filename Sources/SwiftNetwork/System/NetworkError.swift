@@ -30,6 +30,7 @@ internal import os
 ///
 /// See `NetworkPOSIXError` and `HTTP2Error` as two examples of `NetworkDomainSpecificError`.
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 public protocol NetworkDomainSpecificError: Error, Sendable, CustomStringConvertible {
     static var domain: NetworkError.Domain { get }
     var code: Int64 { get }
@@ -48,6 +49,7 @@ public protocol NetworkDomainSpecificError: Error, Sendable, CustomStringConvert
 /// emit an error that protocols can translate into different error codes — for example,
 /// HTTP/2 `ENHANCE_YOUR_CALM` versus `H3_EXCESSIVE_LOAD`.
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 public struct NetworkError: Error, Sendable, Hashable, CustomStringConvertible {
     private let domain: Domain?
     private let code: Int64?
@@ -129,12 +131,16 @@ public struct NetworkError: Error, Sendable, Hashable, CustomStringConvertible {
 }
 
 #if !NETWORK_EMBEDDED
+@available(Network 0.1.0, *)
 extension NetworkError: Codable {}
+@available(Network 0.1.0, *)
 extension NetworkError.Domain: Codable {}
+@available(Network 0.1.0, *)
 extension NetworkError.CommonCategory: Codable {}
 #endif
 
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 public struct NetworkPOSIXError: NetworkDomainSpecificError {
     public static var domain: NetworkError.Domain { .init(rawValue: "POSIX") }
 
@@ -168,12 +174,14 @@ public struct NetworkPOSIXError: NetworkDomainSpecificError {
     }
 }
 
+@available(Network 0.1.0, *)
 extension NetworkError {
     public static func posix(_ errorCode: Int32) -> Self {
         .init(NetworkPOSIXError(errorCode: errorCode))
     }
 }
 
+@available(Network 0.1.0, *)
 extension NetworkError.CommonCategory {
     enum HTTP {
         public static var http1FallbackRequested: NetworkError.CommonCategory {
@@ -182,6 +190,8 @@ extension NetworkError.CommonCategory {
     }
 }
 
+// Availability due to conformance to `NetworkDomainSpecificError`
+@available(anyAppleOS 26, *)
 enum HTTP2Error: Int64, NetworkDomainSpecificError {
     static var domain: NetworkError.Domain { .init(rawValue: "HTTP2") }
 
@@ -254,6 +264,8 @@ enum HTTP2Error: Int64, NetworkDomainSpecificError {
     }
 }
 
+// Availability due to conformance to `NetworkDomainSpecificError`
+@available(anyAppleOS 26, *)
 enum TLSNetworkError: Int64, NetworkDomainSpecificError {
     static var domain: NetworkError.Domain { .init(rawValue: "tls") }
 
@@ -291,6 +303,7 @@ enum TLSNetworkError: Int64, NetworkDomainSpecificError {
     }
 }
 
+@available(Network 0.1.0, *)
 extension NetworkError {
     static func tls(_ tlsError: TLSNetworkError) -> NetworkError {
         .init(tlsError)

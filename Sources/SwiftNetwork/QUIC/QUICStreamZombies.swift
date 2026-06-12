@@ -28,7 +28,8 @@ internal import os
  * in the process table waiting for the parent to read its exit code.
  */
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICConnection`)
+@available(anyAppleOS 26, *)
 struct QUICStreamZombie {
     let streamID: QUICStreamID
     let logIDString: String
@@ -92,7 +93,8 @@ struct QUICStreamZombie {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICStreamZombie`)
+@available(anyAppleOS 26, *)
 struct QUICStreamZombieList {
     private var zombies: [QUICStreamZombie] = []
 

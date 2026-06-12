@@ -22,7 +22,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `BasicContainers`'s `UniqueArray` (via `Cubic`/`CongestionControlProtocol`)
+@available(anyAppleOS 26, *)
 final class CubicTests: XCTestCase {
 
     var rtt: RTT!

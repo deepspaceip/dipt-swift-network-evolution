@@ -22,7 +22,8 @@ import XCTest
 import Foundation
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Endpoint` and `ApplicationServiceEndpoint`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkEndpointTests: NetTestCase {
 
     func testApplicationServiceEndpointCreation() {

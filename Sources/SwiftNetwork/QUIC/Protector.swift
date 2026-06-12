@@ -28,6 +28,7 @@ internal import SwiftSystem
 
 #if canImport(CryptoKit)
 internal import CryptoKit
+// Availability due to `CryptoKit`'s `SymmetricKey`
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 typealias SymmetricKey = CryptoKit.SymmetricKey
 #elseif canImport(Crypto)
@@ -59,13 +60,16 @@ internal import DequeModule
 #endif
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `InlineArray` (`[12 of UInt8]`)
+@available(anyAppleOS 26, *)
 typealias ProtectorNonce = [12 of UInt8]
-@available(Network 0.1.0, *)
+// Availability due to Swift's `InlineArray` (`[12 of UInt8]`)
+@available(anyAppleOS 26, *)
 typealias ProtectorIV = [12 of UInt8]
 
 // Crypto returns an IV in SymmetricKey format, but to speed up performance, we convert it to an InlineArray.
-@available(Network 0.1.0, *)
+// Availability due to `CryptoKit`/`Crypto`'s `SymmetricKey`
+@available(anyAppleOS 26, *)
 extension ProtectorIV {
     init(_ key: SymmetricKey) {
         precondition(key.bitCount == 96)
@@ -83,7 +87,8 @@ enum SecFramerError: Int, Error {
     case openFailed
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSOptions.EncryptionLevel`
+@available(anyAppleOS 26, *)
 enum TLSEncryptionLevel: CaseIterable {
     case initial
     case earlyData
@@ -149,7 +154,8 @@ enum TLSCipherSuite: CaseIterable {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `CryptoKit`/`Crypto`'s `SymmetricKey`
+@available(anyAppleOS 26, *)
 struct SecFramerKeys: ~Copyable {
     enum KeyType {
         case aesGCM
@@ -201,7 +207,8 @@ struct SecFramerKeys: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `CryptoKit`/`Crypto`'s `SymmetricKey`
+@available(anyAppleOS 26, *)
 protocol SecFramerProtocol: ~Copyable {
     static func createKeyStorage(
         key: SymmetricKey,
@@ -234,7 +241,8 @@ protocol SecFramerProtocol: ~Copyable {
     ) throws(QUICError)
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `CryptoKit`/`Crypto`'s `AES.GCM`
+@available(anyAppleOS 26, *)
 struct SecFramerAESGCM: ~Copyable, SecFramerProtocol {
 
     static func createKeyStorage(
@@ -425,7 +433,8 @@ struct SecFramerAESGCM: ~Copyable, SecFramerProtocol {
 }
 
 #if !NETWORK_EMBEDDED
-@available(Network 0.1.0, *)
+// Availability due to `CryptoKit`/`Crypto`'s `ChaChaPoly`
+@available(anyAppleOS 26, *)
 struct SecFramerChaChaPoly: ~Copyable, SecFramerProtocol {
     static func createKeyStorage(
         key: SymmetricKey,
@@ -586,7 +595,8 @@ struct SecFramerChaChaPoly: ~Copyable, SecFramerProtocol {
 }
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `CryptoKit`/`Crypto`'s `AES.GCM` (and `SymmetricKey`)
+@available(anyAppleOS 26, *)
 struct Protector: ~Copyable, PrefixedLoggable {
     var log: LogPrefixer
 
@@ -1355,7 +1365,8 @@ struct Protector: ~Copyable, PrefixedLoggable {
 #else
 
 // Stub implementation
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Packet`/`Frame` (matches the non-stub `Protector` API)
+@available(anyAppleOS 26, *)
 struct Protector: ~Copyable, PrefixedLoggable {
     var log: LogPrefixer
     private let isClient: Bool
@@ -1420,6 +1431,7 @@ struct Protector: ~Copyable, PrefixedLoggable {
 #endif
 #endif
 
+// Availability due to Swift's `RawSpan` type
 @available(macOS 10.14.4, iOS 12.2, tvOS 12.2, watchOS 5.2, *)
 extension RawSpan {
     subscript(index: Int) -> UInt8 {
@@ -1427,7 +1439,8 @@ extension RawSpan {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `MutableRawSpan` type
+@available(macOS 10.14.4, iOS 12.2, tvOS 12.2, watchOS 5.2, *)
 extension MutableRawSpan {
     subscript(index: Int) -> UInt8 {
         get { unsafeLoad(fromByteOffset: index, as: UInt8.self) }
@@ -1435,6 +1448,7 @@ extension MutableRawSpan {
     }
 }
 
+// Availability due to Swift's `RawSpan` type
 @available(macOS 10.14.4, iOS 12.2, tvOS 12.2, watchOS 5.2, *)
 extension Array where Element == UInt8 {
     /// Copies the bytes of the given raw span into this array.

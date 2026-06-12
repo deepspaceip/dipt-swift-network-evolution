@@ -22,10 +22,12 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `InlineArray` (via QUIC's `QUICConnectionIDStorage`)
+@available(anyAppleOS 26, *)
 let quicStreamTestsLogPrefixer = LogPrefixer("[QUICStreamTests]")
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `InlineArray` (via QUIC's `QUICConnectionIDStorage`)
+@available(anyAppleOS 26, *)
 final class QUICStreamTests: XCTestCase {
     var stream: QUICStreamInstance!
     var connection = QUICConnection(context: NetworkContext.implicitContext)
@@ -54,7 +56,8 @@ final class QUICStreamTests: XCTestCase {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `InlineArray` (via QUIC's `QUICConnectionIDStorage`)
+@available(anyAppleOS 26, *)
 final class QUICStreamIDStateTests: XCTestCase {
     var streamsState = QUICStreamIDState(.unidirectional)
     var connection = QUICConnection(context: NetworkContext.implicitContext)
@@ -90,7 +93,8 @@ final class QUICStreamIDStateTests: XCTestCase {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `InlineArray` (via QUIC's `QUICConnectionIDStorage`)
+@available(anyAppleOS 26, *)
 final class QUICStreamListTests: XCTestCase {
     var connection = QUICConnection(context: NetworkContext.implicitContext)
     var logPrefix = LogPrefixer("[QUICStreamListTests]")

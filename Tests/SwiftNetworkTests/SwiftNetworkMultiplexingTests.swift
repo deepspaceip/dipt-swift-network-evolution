@@ -22,7 +22,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) import Network
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Parameters` and multiplexing protocol APIs
+@available(anyAppleOS 26, *)
 final class SwiftNetworkMultiplexingTests: NetTestCase {
 
     static let outputMessage: [UInt8] = [0x0a, 0x0b, 0x0c, 0x0d]

@@ -23,7 +23,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `InlineArray` (via QUIC's `QUICConnectionIDStorage`)
+@available(anyAppleOS 26, *)
 class QUICConnectionIDTests: XCTestCase {
     func testEmptyConnectionID() {
         let connectionID = QUICConnectionID([])

@@ -20,7 +20,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Serializer` and `Frame`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkSerializerTests: NetTestCase {
 
     let arrayCount = 10

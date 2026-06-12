@@ -26,19 +26,22 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `Timer` (which uses `BasicContainers`'s `UniqueDeque`)
+@available(anyAppleOS 26, *)
 protocol TimerUser {
     var timerID: Timer.TimerID? { get set }
     func timerFired(timeNow: NetworkClock.Instant)
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `Timer` (which uses `BasicContainers`'s `UniqueDeque`)
+@available(anyAppleOS 26, *)
 protocol NonCopyableTimerUser: ~Copyable {
     var timerID: Timer.TimerID? { get set }
     mutating func timerFired(timeNow: NetworkClock.Instant)
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `Timer` (which uses `BasicContainers`'s `UniqueDeque`)
+@available(anyAppleOS 26, *)
 private struct TimerEntry: ~Copyable {
     let identifier: Timer.TimerID
     var deadline: NetworkClock.Instant = .zero
@@ -63,7 +66,8 @@ private struct TimerEntry: ~Copyable {
 }
 
 // TODO: convert timer to ~Copyable
-@available(Network 0.1.0, *)
+// Availability due to `BasicContainers`'s `UniqueDeque` (`NetworkUniqueDeque<TimerEntry>`)
+@available(anyAppleOS 26, *)
 final class Timer: PrefixedLoggable {
     typealias TimerID = UInt8
 

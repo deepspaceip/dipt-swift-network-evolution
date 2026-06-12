@@ -15,7 +15,8 @@
 import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import SwiftNetwork
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `NetworkMutex` and `NetworkContext`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkMutexTests: NetTestCase {
     func testMutexWithoutStorage() throws {
         let context = NetworkContext.implicitContext

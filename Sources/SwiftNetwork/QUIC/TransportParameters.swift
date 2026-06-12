@@ -58,7 +58,8 @@ enum TransportParameterEncodeErrors: Int, Error {
     case invalidValue
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `QUICStatelessResetToken` (which uses Swift's inline array `[16 of UInt8]`)
+@available(anyAppleOS 26, *)
 enum TransportParameter: Equatable {
     case originalDCID(
         _ type: TransportParameterTypes = .originalDCID,

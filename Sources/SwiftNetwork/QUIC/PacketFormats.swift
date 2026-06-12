@@ -21,7 +21,8 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `QUICConnectionID` (used by callers in this file)
+@available(anyAppleOS 26, *)
 private struct PacketFormatConstants {
     static let preambleLength = MemoryLayout<UInt8>.size
 }
@@ -32,14 +33,16 @@ extension QUICConnectionID {
     static let headerCIDLength = 1
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `QUICError` (file-internal error type)
+@available(anyAppleOS 26, *)
 enum QUICPacketFormatsError: Int, Error {
     case serializationBufferTooSmall
     case unexpectedLength
     case sealingFailure
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `SerializationResult`
+@available(anyAppleOS 26, *)
 private func validateSerializationResult(_ result: SerializationResult) throws(QUICError) {
     guard result.isValid else {
         throw QUICError.packetFormats(QUICPacketFormatsError.serializationBufferTooSmall)
@@ -47,7 +50,8 @@ private func validateSerializationResult(_ result: SerializationResult) throws(Q
 }
 
 // MARK: - Version Negotiation
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Frame` (uses `swift-collections` `BasicContainers.UniqueArray`)
+@available(anyAppleOS 26, *)
 struct QUICVersionNegotiation: ~Copyable {
     // 0                   1                   2                   3
     // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -124,7 +128,8 @@ struct QUICVersionNegotiation: ~Copyable {
 }
 
 // Retry Packet
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Protector.sealRetry` (Crypto-backed)
+@available(anyAppleOS 26, *)
 struct QUICRetryPacket: ~Copyable {
     // 0                   1                   2                   3
     // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -210,7 +215,8 @@ struct QUICRetryPacket: ~Copyable {
 }
 
 // https://www.rfc-editor.org/rfc/rfc9001.html#name-retry-packet-integrity
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `QUICConnectionID`
+@available(anyAppleOS 26, *)
 struct QUICPseudoRetry: ~Copyable {
     static func assemble(
         firstByte: UInt8,
@@ -231,7 +237,8 @@ struct QUICPseudoRetry: ~Copyable {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Frame` (uses `swift-collections` `BasicContainers.UniqueArray`)
+@available(anyAppleOS 26, *)
 struct QUICStatelessResetPacket: ~Copyable {
 
     // This design ensures that a Stateless Reset is -- to the extent possible -- indistinguishable from a regular packet with a short header

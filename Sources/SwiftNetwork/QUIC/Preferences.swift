@@ -16,7 +16,6 @@
 
 #if NETWORK_EMBEDDED
 // QUICPreferences for Embedded is small subset of preferences based on what is currently used in the stack otherwise.
-@available(Network 0.1.0, *)
 struct QUICPreferences {
     static let shared = QUICPreferences()
     let ackCompressionEnabled: Bool = true
@@ -34,7 +33,8 @@ struct QUICPreferences {
     private init() {}
 }
 #else
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Ack`/`Migration` (file-internal QUIC defaults)
+@available(anyAppleOS 26, *)
 struct QUICPreferences: ~Copyable, Sendable {
     static let shared = QUICPreferences()
 

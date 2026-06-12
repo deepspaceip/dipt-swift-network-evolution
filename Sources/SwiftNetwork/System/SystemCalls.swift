@@ -73,7 +73,8 @@ extension IOResult where T: FixedWidthInteger {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's typed throws (`throws(NetworkError)`)
+@available(anyAppleOS 26, *)
 extension System {
 
     #if !NETWORK_STANDALONE || NETWORK_DRIVERKIT

@@ -26,7 +26,8 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `SentPacketRecord`/QUIC subsystem)
+@available(anyAppleOS 26, *)
 struct PacketContainerEntry: ~Copyable, NetworkComparable {
     var packet: SentPacketRecord
     var sentTime: NetworkClock.Instant
@@ -46,7 +47,8 @@ struct PacketContainerEntry: ~Copyable, NetworkComparable {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `PacketContainerEntry`/QUIC subsystem)
+@available(anyAppleOS 26, *)
 struct Recovery: ~Copyable, PrefixedLoggable, NonCopyableTimerUser {
     struct InnerState: ~Copyable, PrefixedLoggable {
         var log: LogPrefixer

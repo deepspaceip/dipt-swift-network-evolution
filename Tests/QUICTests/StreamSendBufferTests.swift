@@ -30,7 +30,8 @@ extension Frame {
     }
 }
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `Span` (via `Frame`/`StreamSendBuffer`)
+@available(anyAppleOS 26, *)
 final class StreamSendBufferTests: XCTestCase {
     var sendBuf = StreamSendBuffer()
     let log = NetworkLoggerState("[StreamSendBufferTests]")
@@ -389,7 +390,8 @@ final class StreamSendBufferTests: XCTestCase {
     #endif
 }
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `Span` (via `Frame`/`FrameArrayQueue`)
+@available(anyAppleOS 26, *)
 final class FrameArrayQueueTests: XCTestCase {
     var frameQueue = FrameArrayQueue()
 

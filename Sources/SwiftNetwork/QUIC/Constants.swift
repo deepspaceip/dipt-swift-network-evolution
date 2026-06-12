@@ -14,7 +14,8 @@
 //  Constants for QUIC
 
 #if !NETWORK_NO_SWIFT_QUIC
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `PacketNumber` → `QUICError`); also uses `NetworkDuration` and `QUICVersion`
+@available(anyAppleOS 26, *)
 enum Constants {
     static let initialMSS = 1200
     static let streamIDDatagramMask: UInt64 = 0x8000_0000_0000_0000

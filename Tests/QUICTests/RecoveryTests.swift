@@ -27,10 +27,12 @@ import BasicContainers
 internal import DequeModule
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `LogPrefixer`/QUIC subsystem)
+@available(anyAppleOS 26, *)
 let recoveryTestsLogPrefixer: LogPrefixer = LogPrefixer("[RecoveryTests]")
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICConnection`/`Recovery`)
+@available(anyAppleOS 26, *)
 final class RecoveryTests: XCTestCase {
     var connection = QUICConnection(context: .implicitContext)
     var path: QUICPath! = nil

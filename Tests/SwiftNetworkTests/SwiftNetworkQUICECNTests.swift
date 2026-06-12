@@ -46,7 +46,8 @@ internal import os
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
 #if !NETWORK_PRIVATE
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS` (used by QUIC handshake) and `SwiftNetwork`'s `QUICTestHarness`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkQUICECNTests: NetTestCase {
     func testQUICTestECNMarkedPacketsSentAndACKed() throws {
         QUICTestHarness().runQUICTest(

@@ -46,7 +46,8 @@ internal import CryptoKit
 #endif
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSProtocol.SwiftTLSInstance`
+@available(anyAppleOS 26, *)
 final class QUICCrypto {
     var eventManager = ProtocolEventManager()
 
@@ -206,7 +207,8 @@ final class QUICCrypto {
 
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSQUICInstance`
+@available(anyAppleOS 26, *)
 extension QUICCrypto: SwiftTLSQUICInstance {
     func getLowerLinkage(
         for level: SwiftTLSOptions.EncryptionLevel,
@@ -351,7 +353,8 @@ extension QUICCrypto: SwiftTLSQUICInstance {
 #endif
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSProtocol.SwiftTLSInstance`
+@available(anyAppleOS 26, *)
 extension QUICCrypto: TopStreamProtocol, ProtocolInstanceContainer {
     var context: NetworkContext { parentConnection!.context }
 
@@ -475,7 +478,8 @@ extension QUICCrypto: TopStreamProtocol, ProtocolInstanceContainer {
 }
 
 // Per-Level Sending Callbacks
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSProtocol.SwiftTLSInstance`
+@available(anyAppleOS 26, *)
 extension QUICCrypto: OutboundStreamHandler {
     #if !NETWORK_EMBEDDED
     func attachUpperProtocol<Linkage: LowerProtocolLinkage>(

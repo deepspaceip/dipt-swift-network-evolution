@@ -19,7 +19,6 @@ internal import DequeModule
 
 // This index is used to refer to a location (as in NetworkGappyArray) without
 // exposing numeric properties
-@available(Network 0.1.0, *)
 struct NetworkStateIndex: Hashable {
     fileprivate let index: Int
     fileprivate init(index: Int) {
@@ -36,7 +35,8 @@ struct NetworkStateIndex: Hashable {
 // This type does not convey any particular order, but is used to be a condensed
 // way of holding elements that have fast lookup. This is similar to how
 // interface indices (if_index) is used in kernel networking stacks.
-@available(Network 0.1.0, *)
+// Availability due to `BasicContainers`'s `UniqueArray` (via `NetworkUniqueArray`)
+@available(anyAppleOS 26, *)
 struct NetworkGappyArray<Element: ~Copyable>: ~Copyable {
 
     // Array of elements, which may have gaps

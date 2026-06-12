@@ -49,7 +49,8 @@ internal import os
 
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS` (used by QUIC handshake) and `SwiftNetwork`'s `QUICProtocol`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkQUICUngracefulCloseTests: NetTestCase {
     func testQUICServerUnreachable() throws {
         let clientOptions = QUICProtocol.options()

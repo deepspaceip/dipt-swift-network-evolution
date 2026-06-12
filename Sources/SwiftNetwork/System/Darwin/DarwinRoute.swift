@@ -58,7 +58,8 @@ public let RTA_DST: Int32 = 0x1
 public let RTF_IFSCOPE: Int32 = 0x1000000
 
 /// A set of Darwin system APIs for interacting with the system interface.
-@available(Network 0.1.0, *)
+// Availability due to `IPAddress`, `SystemSocket`, and typed throws on `NetworkError`
+@available(anyAppleOS 26, *)
 internal enum SystemRoute {
 
     static func routeGetInterfaceIndex(dst: any IPAddress, scopedIndex: UInt32 = 0) throws -> UInt32 {

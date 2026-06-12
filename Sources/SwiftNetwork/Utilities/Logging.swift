@@ -54,6 +54,7 @@ extension Logger {
 #endif
 
 #if canImport(os) || NETWORK_DRIVERKIT
+// Availability due to `os`'s `Logger`
 @available(macOS 11, iOS 14, tvOS 14, watchOS 7, *)
 extension Logger {
 

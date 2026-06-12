@@ -22,7 +22,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) import Network
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `UDP` and connection APIs
+@available(anyAppleOS 26, *)
 final class SwiftNetworkUDPTests: NetTestCase {
 
     // 10.0.0.20

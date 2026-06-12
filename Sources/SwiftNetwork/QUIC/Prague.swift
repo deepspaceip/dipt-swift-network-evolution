@@ -35,7 +35,8 @@ enum RTTControlType: UInt8 {
     case rateEquivalence
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `NetworkClock`
+@available(anyAppleOS 26, *)
 struct Prague: CongestionControlProtocol, CubicLikeProtocol {
     let log: LogPrefixer
 

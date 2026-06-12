@@ -22,7 +22,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICConnection`/`QUICStreamZombieList`)
+@available(anyAppleOS 26, *)
 final class QUICStreamZombieListTests: XCTestCase {
     var zombieList = QUICStreamZombieList()
 

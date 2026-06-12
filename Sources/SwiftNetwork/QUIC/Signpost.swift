@@ -23,7 +23,8 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `os`'s `OSSignposter`, plus `PacketNumber` (transitively `BasicContainers`)
+@available(anyAppleOS 26, *)
 struct QUICSignpost {
     typealias IntervalState = OSSignpostIntervalState
     private static let signposter = OSSignposter(logger: Logger.proto)
@@ -115,7 +116,8 @@ struct QUICSignpost {
 }
 #else
 // Signposts are not enabled unless the `SignpostOutput` package trait is enabled.
-@available(Network 0.1.0, *)
+// Availability due to `PacketNumber` (transitively `BasicContainers`'s `UniqueDeque`)
+@available(anyAppleOS 26, *)
 struct QUICSignpost {
     typealias IntervalState = Int
     static func makeSignpostID() -> Int { 0 }

@@ -14,7 +14,8 @@
 
 #if !NETWORK_NO_SWIFT_QUIC
 
-@available(Network 0.1.0, *)
+// Availability due to `BasicContainers`'s `UniqueDeque` (transitively via `Packet`)
+@available(anyAppleOS 26, *)
 struct ShorthandPacket: ShorthandLogEntry {
     let delta: NetworkDuration
     let keyState: PacketKeyState?

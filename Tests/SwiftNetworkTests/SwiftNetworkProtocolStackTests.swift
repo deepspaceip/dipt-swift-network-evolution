@@ -18,7 +18,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import SwiftNetwork
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `IPProtocol` and `ProtocolOptions`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkProtocolStackTests: NetTestCase {
     func testIPOptions() {
         let ipOptions = IPProtocol.definition.protocolOptions()

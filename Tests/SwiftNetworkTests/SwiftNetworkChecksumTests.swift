@@ -18,7 +18,8 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import SwiftNetwork
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `Checksum` and `IPv4Address`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkChecksumTests: NetTestCase {
     func testIPv4PsuedoHeaderChecksum() {
         let expectedValue = UInt16(15870)

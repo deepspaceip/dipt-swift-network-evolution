@@ -29,7 +29,8 @@ import Glibc
 internal import SwiftNetworkLinuxShim
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `SystemUUID`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkUUIDTests: NetTestCase {
 
     func testUUIDCreation() {

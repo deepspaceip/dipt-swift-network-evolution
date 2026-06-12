@@ -26,7 +26,8 @@ internal import Logging
 internal import os
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `Frame`/QUIC subsystem)
+@available(anyAppleOS 26, *)
 struct ReassemblyQueueItem: ~Copyable {
     var offset: Int
     var frame: Frame
@@ -41,7 +42,8 @@ struct ReassemblyQueueItem: ~Copyable {
     static let itemSize = MemoryLayout<ReassemblyQueueItem>.size
 }
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `ReassemblyQueueItem`/QUIC subsystem)
+@available(anyAppleOS 26, *)
 struct ReassemblyQueue: ~Copyable {
     var log: NetworkLoggerState
     #if QUIC_REASSQ_TRACE

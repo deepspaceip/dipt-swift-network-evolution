@@ -28,6 +28,7 @@ internal import CryptoKit
 @preconcurrency internal import Crypto
 #endif
 
+// Availability due to `SwiftCrypto`'s `SymmetricKey`
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension SymmetricKey {
     var bytes: RawSpan {
@@ -41,6 +42,7 @@ extension SymmetricKey {
     }
 }
 
+// Availability due to `SwiftCrypto`'s `AES.GCM.Nonce`
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension AES.GCM.Nonce {
     init(copying bytes: RawSpan) throws(CryptoKitMetaError) {
@@ -50,6 +52,7 @@ extension AES.GCM.Nonce {
     }
 }
 
+// Availability due to `SwiftCrypto`'s `AES.GCM`
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension AES.GCM {
     static func seal(
@@ -119,6 +122,7 @@ extension AES.GCM {
     }
 }
 
+// Availability due to `SwiftCrypto`'s `ChaChaPoly.Nonce`
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension ChaChaPoly.Nonce {
     init(copying bytes: RawSpan) throws(CryptoKitMetaError) {
@@ -128,6 +132,7 @@ extension ChaChaPoly.Nonce {
     }
 }
 
+// Availability due to `SwiftCrypto`'s `ChaChaPoly`
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension ChaChaPoly {
     static func seal(

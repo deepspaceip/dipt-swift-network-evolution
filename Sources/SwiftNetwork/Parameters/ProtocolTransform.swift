@@ -17,7 +17,8 @@ import BasicContainers
 internal import DequeModule
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to Swift's `InlineArray` (via `SystemUUID` reachable from `Endpoint`)
+@available(anyAppleOS 26, *)
 struct ProtocolTransform: Hashable {
     var transformStack: ProtocolStack?
     var trafficClass: UInt32?

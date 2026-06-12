@@ -24,7 +24,8 @@ import XCTest
 #endif
 #endif
 
-@available(Network 0.1.0, *)
+// Availability due to `SwiftNetwork`'s `ParametersBuilder`, `UDP`, and `Endpoint`
+@available(anyAppleOS 26, *)
 final class SwiftNetworkSocketTests: NetTestCase {
 
     // MARK: - Helpers

@@ -13,7 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 #if !NETWORK_NO_SWIFT_QUIC
-@available(Network 0.1.0, *)
+// Availability due to `BasicContainers`'s `UniqueArray` (via `QUICConnection` and `Timer`)
+@available(anyAppleOS 26, *)
 struct Migration: ~Copyable {
     static let defaultMigrationVersion = 7
     static let defaultPTOThreshold = 3

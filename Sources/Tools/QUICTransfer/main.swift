@@ -224,44 +224,49 @@ final class QUICTransfer {
                     maximumBurst: 10
                 )
             }
-            // Transfer all of the data
-            for _ in 0..<iterations {
-                group.enter()
-                let writeSuccess = clientInput.write(payload)
-                guard writeSuccess else {
+            // Process all of the reads until finished
+            func runNextIteration(_ iterationIndex: Int, readDataSize: Int) {
+                guard iterationIndex < iterations else {
+                    clientInput.stop()
+                    clientInput.teardown()
+                    serverInput.stop()
+                    serverInput.teardown()
                     group.leave()
-                    print("Issue took place writing to the client")
-                    break
+                    return
                 }
-                var payloadReceived = false
-                var readDataSize = 0
-                while !payloadReceived {
-                    let _ = self.dataBenchmarkUtility.loopOutputHandlerPackets(
-                        sender: clientOutput,
-                        receiver: serverOutput,
-                        maximumBurst: 50
-                    )
-                    let _ = self.dataBenchmarkUtility.loopOutputHandlerPackets(
-                        sender: serverOutput,
-                        receiver: clientOutput,
-                        maximumBurst: 50
-                    )
-
-                    if let readBytes = serverInput.upperHarnesses.first?.readAndDrop() {
-                        readDataSize += readBytes
-                        if readDataSize == sendSize {
-                            payloadReceived = true
-                        }
+                // Just write the whole payload when read size is 0
+                if readDataSize == 0 {
+                    group.enter()
+                    guard clientInput.write(payload) else {
+                        group.leave()
+                        print("Issue took place writing to the client")
+                        return
                     }
                 }
-                index += 1
-                group.leave()
+                let _ = self.dataBenchmarkUtility.loopOutputHandlerPackets(
+                    sender: clientOutput,
+                    receiver: serverOutput,
+                    maximumBurst: 50
+                )
+                let _ = self.dataBenchmarkUtility.loopOutputHandlerPackets(
+                    sender: serverOutput,
+                    receiver: clientOutput,
+                    maximumBurst: 50
+                )
+                context.async {
+                    let newBytes = serverInput.upperHarnesses.first?.readAndDrop() ?? 0
+                    let totalRead = readDataSize + newBytes
+                    if totalRead >= sendSize {
+                        index += 1
+                        group.leave()
+                        // Finish here
+                        runNextIteration(iterationIndex + 1, readDataSize: 0)
+                    } else {
+                        runNextIteration(iterationIndex, readDataSize: totalRead)
+                    }
+                }
             }
-            clientInput.stop()
-            clientInput.teardown()
-            serverInput.stop()
-            serverInput.teardown()
-            group.leave()
+            runNextIteration(0, readDataSize: 0)
         }
         group.wait()
         print("Completed \(index) / \(iterations) transfers")

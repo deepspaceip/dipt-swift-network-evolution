@@ -161,7 +161,7 @@ struct StreamSendBuffer: ~Copyable {
         return totalLengthCopied
     }
 
-    var acknowledgedDataRanges = RangeSet<StreamOffset>()
+    var acknowledgedDataRanges = AcknowledgedRanges()
 
     mutating private func acknowledgedSendDataInner(
         offset acknowledgedOffset: StreamOffset,
@@ -192,7 +192,34 @@ struct StreamSendBuffer: ~Copyable {
             acknowledgedOffset = storageStartOffset
         }
 
-        // Record the newly acked range
+        // ACK is contiguous with storageStartOffset and in-order
+        if acknowledgedOffset == storageStartOffset {
+            var newStartOffset = totalAcknowledgedOffset
+            var consumed = 0
+            while consumed < acknowledgedDataRanges.ranges.count
+                && acknowledgedDataRanges.ranges[consumed].lowerBound <= newStartOffset
+            {
+                newStartOffset = max(newStartOffset, acknowledgedDataRanges.ranges[consumed].upperBound)
+                consumed += 1
+            }
+            // Remove the consumed in one shot
+            if consumed > 0 {
+                acknowledgedDataRanges.ranges.removeSubrange(0..<consumed)
+            }
+            let difference = newStartOffset - storageStartOffset
+            storageStartOffset = newStartOffset
+            if !storage.isEmpty {
+                guard storage.claim(fromStart: Int(difference)) else {
+                    log.fault(
+                        "Failed to claim \(difference) bytes from start of stream send buffer storage"
+                    )
+                    return
+                }
+            }
+            return
+        }
+
+        // Out of order ACK, buffer it and check if the gap is closed.
         acknowledgedDataRanges.insert(contentsOf: acknowledgedOffset..<totalAcknowledgedOffset)
 
         guard acknowledgedDataRanges.ranges[0].lowerBound == storageStartOffset else {
@@ -200,25 +227,22 @@ struct StreamSendBuffer: ~Copyable {
             return
         }
 
-        // The first acked data range is contiguous with previous data. The end of that
-        // range will be the new start offset.
+        // The first buffered range is now contiguous with storageStartOffset.
+        // Consume any subsequent ranges that are also contiguous.
         let oldStartOffset = storageStartOffset
-        let newStartOffset = acknowledgedDataRanges.ranges[0].upperBound
-
-        guard newStartOffset > oldStartOffset else {
-            // No change, ignore
-            return
+        var newStartOffset = acknowledgedDataRanges.ranges[0].upperBound
+        var consumed = 1
+        while consumed < acknowledgedDataRanges.ranges.count
+            && acknowledgedDataRanges.ranges[consumed].lowerBound <= newStartOffset
+        {
+            newStartOffset = max(newStartOffset, acknowledgedDataRanges.ranges[consumed].upperBound)
+            consumed += 1
         }
+        acknowledgedDataRanges.ranges.removeSubrange(0..<consumed)
 
-        // Update stored ranges
-        acknowledgedDataRanges.remove(contentsOf: oldStartOffset..<newStartOffset)
-
-        // Update offset cursor
         storageStartOffset = newStartOffset
-
+        let difference = newStartOffset - oldStartOffset
         if !storage.isEmpty {
-            // Drop frame data for newly acked data
-            let difference = newStartOffset - oldStartOffset
             guard storage.claim(fromStart: Int(difference)) else {
                 log.fault("Failed to claim \(difference) bytes from start of stream send buffer storage")
                 return
@@ -237,6 +261,55 @@ struct StreamSendBuffer: ~Copyable {
         let allDataAcknowledged = (storage.isEmpty && hasLast)
         log.datapath("All data acknowleged: \(allDataAcknowledged)")
         return allDataAcknowledged
+    }
+}
+
+// Sorted list of ACK byte ranges. Used to track out of order ACKs.
+struct AcknowledgedRanges {
+    var ranges: [Range<StreamOffset>] = []
+
+    var isEmpty: Bool {
+        ranges.isEmpty
+    }
+
+    // Insert a range and merge with any overlapping or adjacent existing ranges.
+    mutating func insert(contentsOf newRange: Range<StreamOffset>) {
+        guard !newRange.isEmpty else { return }
+
+        let lower = newRange.lowerBound
+        let upper = newRange.upperBound
+
+        // startIndex is the first range where upperBound >= lower.
+        var low = 0
+        var high = ranges.count
+        while low < high {
+            let mid = low + (high - low) / 2
+            if ranges[mid].upperBound < lower {
+                low = mid + 1
+            } else {
+                high = mid
+            }
+        }
+        let startIndex = low
+
+        // endIndex is the first range where lowerBound > upper.
+        low = startIndex
+        high = ranges.count
+        while low < high {
+            let mid = low + (high - low) / 2
+            if ranges[mid].lowerBound <= upper {
+                low = mid + 1
+            } else {
+                high = mid
+            }
+        }
+        let endIndex = low
+
+        // Merge the new range with all existing ranges in [startIndex, endIndex) by
+        // taking the minimum lower bound and maximum upper bound across the whole set.
+        let mergedLower = startIndex < endIndex ? min(lower, ranges[startIndex].lowerBound) : lower
+        let mergedUpper = startIndex < endIndex ? max(upper, ranges[endIndex - 1].upperBound) : upper
+        ranges.replaceSubrange(startIndex..<endIndex, with: CollectionOfOne(mergedLower..<mergedUpper))
     }
 }
 

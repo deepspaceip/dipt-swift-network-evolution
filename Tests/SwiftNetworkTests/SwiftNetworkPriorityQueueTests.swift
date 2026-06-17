@@ -18,12 +18,10 @@ import XCTest
 @testable import SwiftNetwork
 #endif
 
-// Availability due to `SwiftNetwork`'s `NetworkComparable`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension String: NetworkComparable {}
 
-// Availability due to `SwiftNetwork`'s `NetworkPriorityQueue`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class SwiftNetworkPriorityQueueTests: XCTestCase {
 
     func testSomeStringsAsc() throws {
@@ -145,8 +143,7 @@ final class SwiftNetworkPriorityQueueTests: XCTestCase {
 }
 
 /// This data type is only partially ordered. Ie. from `a < b` and `a != b` we can't imply `a > b`.
-// Availability due to `SwiftNetwork`'s `NetworkComparable`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct SomePartiallyOrderedDataType: NetworkComparable, Equatable, CustomStringConvertible {
     public static func < (lhs: SomePartiallyOrderedDataType, rhs: SomePartiallyOrderedDataType) -> Bool {
         lhs.width < rhs.width && lhs.height < rhs.height
@@ -168,8 +165,7 @@ struct SomePartiallyOrderedDataType: NetworkComparable, Equatable, CustomStringC
     }
 }
 
-// Availability due to `SwiftNetwork`'s `NetworkPriorityQueue`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension NetworkPriorityQueue where Element: Equatable {
     public static func == (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         let arr = Array(lhs._heap)

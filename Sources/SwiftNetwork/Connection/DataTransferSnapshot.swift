@@ -13,8 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 #if !NETWORK_EMBEDDED
-// Availability due to `NetworkDuration`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct DataTransferSnapshot: Equatable {
     var interfaceIndex: UInt64?
 

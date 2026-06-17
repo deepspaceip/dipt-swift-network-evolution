@@ -26,8 +26,7 @@ internal import Logging
 internal import os
 #endif
 
-// Availability due to `SwiftNetwork`'s `Frame`/`Packet` (uses `swift-collections` `BasicContainers.UniqueArray`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct PacketParser: ~Copyable, PrefixedLoggable {
     var log: LogPrefixer
 

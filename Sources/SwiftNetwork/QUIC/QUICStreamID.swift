@@ -34,8 +34,7 @@ enum QUICStreamType: CustomStringConvertible {
 #if !NETWORK_NO_SWIFT_QUIC
 // RFC9000 2.1 Stream Types and Identifiers. We use specific type to ensure type
 // safe operations, instead of extending UInt64 for example.
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `TransportParameters`/`QUICConnection`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct QUICStreamID: Comparable, Hashable {
     // UInt64: A stream ID is a 62-bit integer that is unique for all streams on a connection.
     private(set) var value: UInt64
@@ -138,8 +137,7 @@ struct QUICStreamID: Comparable, Hashable {
 
 // MARK: QUICStreamID computations
 
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `TransportParameters`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension QUICStreamID {
     static func computeRemoteMaxStreamIDBidirectional(
         server: Bool,
@@ -250,16 +248,14 @@ extension QUICStreamID {
 
 }
 
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICStreamID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension QUICStreamID {
     var variableLengthSize: Int {
         self.value.variableLengthSize
     }
 }
 
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICStreamID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension QUICStreamID {
     // Returns the next available Stream ID
     static func nextAvailableStreamID(
@@ -298,8 +294,7 @@ extension QUICStreamID {
     }
 }
 
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICStreamID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension QUICStreamID: Strideable {
     func advanced(by n: Int) -> QUICStreamID {
         QUICStreamID(self.value + UInt64(n))!
@@ -310,8 +305,7 @@ extension QUICStreamID: Strideable {
     }
 }
 
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICStreamID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension QUICStreamID {
     static let strideLengthToNextOfSameTypeAndInitiator = 4
     // Advance to next stream ID of same type and initiator.
@@ -323,8 +317,7 @@ extension QUICStreamID {
     }
 }
 
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICStreamID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension QUICStreamID: CustomStringConvertible {
     var description: String {
         String(value)

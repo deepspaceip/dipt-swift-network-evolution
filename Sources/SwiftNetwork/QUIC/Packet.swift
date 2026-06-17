@@ -85,8 +85,7 @@ enum PacketKeyState: Int, CaseIterable, CustomStringConvertible, Comparable {
     }
 }
 
-// Availability due to `swift-collections`'s `BasicContainers.UniqueArray` (via `TransmittedItems`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct SentPacketRecord: ~Copyable {
     var transmittedItems: TransmittedItems = TransmittedItems()
 
@@ -165,8 +164,7 @@ struct SentPacketRecord: ~Copyable {
     }
 }
 
-// Availability due to `swift-collections`'s `DequeModule.UniqueDeque`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct Packet: ~Copyable {
     static let longHeaderBaseSize = 5
     static let shortHeaderBaseSize = 1

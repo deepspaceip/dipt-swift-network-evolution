@@ -186,8 +186,7 @@ extension QUICConnectionID: Hashable {
     }
 }
 
-// Availability due to Swift's `InlineArray` (via `QUICConnectionID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct ManagedConnectionID {
     let sequenceNumber: UInt64
     let connectionID: QUICConnectionID
@@ -224,8 +223,7 @@ struct ManagedConnectionID {
     }
 }
 
-// Availability due to Swift's `InlineArray` (via `ManagedConnectionID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct QUICConnectionIDList: Sequence, IteratorProtocol {
     private(set) var managedConnectionIDs = Deque<ManagedConnectionID>()
 

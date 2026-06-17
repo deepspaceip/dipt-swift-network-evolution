@@ -75,8 +75,7 @@ enum ECNState {
 }
 
 // Global explicit congestion notification state
-// Availability due to `BasicContainers`'s `RigidArray`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct ECN: ~Copyable, PrefixedLoggable {
     let log: LogPrefixer
 
@@ -199,8 +198,7 @@ struct ECN: ~Copyable, PrefixedLoggable {
 }
 
 // Per path explicit congestion notification state
-// Availability due to `BasicContainers`'s `UniqueArray` (via `ECNCounters` and ack/loss state)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct ECNPathState: ~Copyable, PrefixedLoggable {
     let log: LogPrefixer
 

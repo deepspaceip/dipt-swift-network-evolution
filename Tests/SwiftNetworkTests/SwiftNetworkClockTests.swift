@@ -15,8 +15,7 @@
 import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import SwiftNetwork
 
-// Availability due to `SwiftNetwork`'s `NetworkClock` and `NetworkDuration`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class SwiftNetworkClockTests: NetTestCase {
 
     func testSize() throws {

@@ -19,14 +19,12 @@ internal import Logging
 internal import os
 #endif
 
-// Availability due to `InboundDataHandler` and `LoggableProtocol`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 protocol AbstractEndpointFlowProtocol: InboundDataHandler, LoggableProtocol {
     func teardown()
 }
 
-// Availability due to `UpperProtocolHandler`/`InboundDataHandler`/`NetworkContext`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 class EndpointFlowProtocol<LinkageType: InboundDataLinkage>: ProtocolInstanceContainer, AbstractEndpointFlowProtocol {
     typealias LowerProtocol = LinkageType.PairedLinkage
 
@@ -251,8 +249,7 @@ class EndpointFlowProtocol<LinkageType: InboundDataLinkage>: ProtocolInstanceCon
     }
 }
 
-// Availability inherited via `EndpointFlowProtocol`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class DatagramEndpointFlowProtocol: EndpointFlowProtocol<InboundDatagramLinkage>, InboundDatagramHandler {
 
     override var reference: ProtocolInstanceReference { ProtocolInstanceReference(datagramEndpointFlow: self) }
@@ -381,8 +378,7 @@ final class DatagramEndpointFlowProtocol: EndpointFlowProtocol<InboundDatagramLi
     }
 }
 
-// Availability inherited via `EndpointFlowProtocol`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class StreamEndpointFlowProtocol: EndpointFlowProtocol<InboundStreamLinkage>, InboundStreamHandler {
 
     override var reference: ProtocolInstanceReference { ProtocolInstanceReference(streamEndpointFlow: self) }

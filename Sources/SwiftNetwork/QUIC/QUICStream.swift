@@ -28,8 +28,7 @@ internal import os
 
 // MARK: QUIC StreamID state
 // Keeps track of the QUICStreamID state for local and remote uni/bidi streams
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICStreamInstance`/`QUICConnection`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct QUICStreamIDState: ~Copyable {
     let logContext: String
     let streamType: QUICStreamType
@@ -324,8 +323,7 @@ struct StreamListMembership: OptionSet {
 // Note that QUICStreamList only holds the flow identifiers that are used to lookup
 // the actual streams held in the multiplexedFlows dictionary already.
 // Also note that a flow identifier can exist in multiple lists at one time.
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `QUICConnection`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct QUICStreamList: ~Copyable {
     private var list: [MultiplexedFlowIdentifier] = []
     private let name: StaticString

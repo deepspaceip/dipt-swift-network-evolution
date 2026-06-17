@@ -22,8 +22,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-// Availability due to Swift's `InlineArray` (via QUIC's `QUICConnectionIDStorage`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class FlowControlTests: XCTestCase {
     func testOutboundFlowControl() {
         let logPrefixer = LogPrefixer("[FlowControlTests]")

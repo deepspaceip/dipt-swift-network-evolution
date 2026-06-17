@@ -247,8 +247,7 @@ extension NetworkError {
 // More granular error types are not used as embedded swift does not support untyped throws
 
 #if !NETWORK_NO_SWIFT_QUIC
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via the QUIC subsystem's `QUICConnection`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 enum QUICError: Error {
     case packet(QUICPacketError)
     case packetBuilder(PacketBuilderError)

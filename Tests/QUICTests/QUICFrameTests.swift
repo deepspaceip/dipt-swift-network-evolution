@@ -32,8 +32,7 @@ extension Frame {
     }
 }
 
-// Availability due to Swift's `Span` (via `frame.span`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension FrameCrypto {
     fileprivate var data: [UInt8] {
         guard let span = frame.span else { return [] }
@@ -41,8 +40,7 @@ extension FrameCrypto {
     }
 }
 
-// Availability due to Swift's `Span` (via `frame.span`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension FrameStreamReceived {
     fileprivate var data: [UInt8] {
         guard let span = frame.span else { return [] }
@@ -50,8 +48,7 @@ extension FrameStreamReceived {
     }
 }
 
-// Availability due to Swift's `Span` (via `frame.span`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension FrameDatagram {
     fileprivate var data: [UInt8] {
         guard let span = frame.span else { return [] }
@@ -59,8 +56,7 @@ extension FrameDatagram {
     }
 }
 
-// Availability due to Swift's `InlineArray` (via QUIC's `QUICConnectionIDStorage`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 class QUICFrameTests: XCTestCase {
 
     var stats: Statistics!

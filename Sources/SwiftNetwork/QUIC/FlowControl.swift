@@ -24,8 +24,7 @@ internal import os
 // MARK: FlowControlGlobals
 
 // FlowControlGlobals assumes that it is only setting a static collection of constants.
-// Availability due to `BasicContainers`'s `UniqueArray` (via `QUICPreferences` → `Ack`/`Migration`); also uses `System.isHighMemory()`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct FlowControlGlobals: ~Copyable {
 
     // Flow Control Constants
@@ -133,8 +132,7 @@ struct FlowControlGlobals: ~Copyable {
 // Storage for flow control state
 // For streams, these values are per-stream byte counts.
 // For connections, these values are summed across all streams.
-// Availability due to `BasicContainers`'s `UniqueArray` (via `QUICPreferences` → `Ack`/`Migration`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct FlowControlState: ~Copyable {
 
     // Inbound values (receiving):
@@ -358,8 +356,7 @@ extension QUICConnection {
     }
 }
 
-// Availability due to `SwiftNetwork`'s `System.Time` (via `NetworkClock`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct FlowControlStreamState: ~Copyable {
     // time when the measurement period started
     fileprivate var receiveHighWaterMarkTime: NetworkClock.Instant = .zero

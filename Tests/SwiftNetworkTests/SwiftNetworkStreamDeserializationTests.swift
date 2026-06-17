@@ -20,8 +20,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-// Availability due to `SwiftNetwork`'s `StreamDeserializerState` and stream APIs
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class SwiftNetworkStreamDeserializationTests: NetTestCase {
 
     // Simple TLV protocol that uses variable-length integers

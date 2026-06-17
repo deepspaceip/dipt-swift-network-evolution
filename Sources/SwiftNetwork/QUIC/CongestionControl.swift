@@ -21,8 +21,7 @@ internal import Logging
 internal import os
 #endif
 
-// Availability due to `BasicContainers`'s `UniqueArray`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 enum CongestionControl {
     case cubic(algorithm: Cubic)
     #if !NETWORK_EMBEDDED
@@ -285,8 +284,7 @@ enum CongestionControl {
     }
 }
 
-// Availability due to `BasicContainers`'s `UniqueArray`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 protocol CongestionControlProtocol: PrefixedLoggable {
     var congestionWindow: UInt64 { get set }
     var bytesInFlight: UInt64 { get set }
@@ -348,8 +346,7 @@ protocol CongestionControlProtocol: PrefixedLoggable {
     mutating func packetsAcked(bytesAcked: Int, sentTime: NetworkClock.Instant)
 }
 
-// Availability due to `BasicContainers`'s `UniqueArray`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension CongestionControlProtocol {
     var congestionWindowValidationSamples: Int {
         3

@@ -29,8 +29,7 @@ internal import DriverKitRuntime.Mach.mach_time
 #endif
 #endif
 
-// Availability due to extensions that use typed throws on `NetworkError`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 internal struct System {
 
     struct Time {

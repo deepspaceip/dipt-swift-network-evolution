@@ -22,12 +22,10 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `LogPrefixer`/QUIC subsystem)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 let tpTestsLogPrefixer = LogPrefixer("[TransportParametersTests]")
 
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `TransportParameters`/QUIC subsystem)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class TransportParametersTests: XCTestCase {
     var transportParameters = TransportParameters(logPrefixer: tpTestsLogPrefixer)
 

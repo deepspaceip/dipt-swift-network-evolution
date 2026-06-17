@@ -24,7 +24,6 @@ internal import os
 
 // MARK: - IP address parsing
 
-// Availability due to `SwiftNetwork`'s `IPv4Address` (parseIPv4 helper for the SocketTransfer tool)
 @available(Network 0.1.0, *)
 func parseIPv4(_ string: String) -> IPv4Address? {
     let parts = string.split(separator: ".")
@@ -37,7 +36,6 @@ func parseIPv4(_ string: String) -> IPv4Address? {
     return IPv4Address(bytes)
 }
 
-// Availability due to `SwiftNetwork`'s `IPv6Address` (parseIPv6 helper for the SocketTransfer tool)
 @available(Network 0.1.0, *)
 func parseIPv6(_ string: String) -> IPv6Address? {
     var addr = in6_addr()
@@ -50,7 +48,6 @@ func parseIPv6(_ string: String) -> IPv6Address? {
 
 // MARK: - Helpers
 
-// Availability due to `SwiftTLS`'s `SwiftTLSProtocol` (via `Parameters` referenced through `ParametersBuilder<UDP>`)
 @available(Network 0.1.0, *)
 func makeParams(localEndpoint: Endpoint) -> ParametersBuilder<UDP> {
     let builder = ParametersBuilder<UDP>.parameters { UDP() }
@@ -58,13 +55,11 @@ func makeParams(localEndpoint: Endpoint) -> ParametersBuilder<UDP> {
     return builder
 }
 
-// Availability due to `Synchronization`'s `Mutex` (via `NetworkConnection` -> `NetworkChannel` -> `NetworkChannelBase`)
 @available(Network 0.1.0, *)
 func makeConnection(to remote: Endpoint, localEndpoint: Endpoint) -> NetworkConnection<UDP> {
     NetworkConnection(to: remote, using: makeParams(localEndpoint: localEndpoint))
 }
 
-// Availability due to `EthernetAddress`'s `Span` storage and `Foundation`'s `URL` (via `Endpoint`)
 @available(Network 0.1.0, *)
 func parseEndpoints(ipString: String, port: UInt16, localPort: UInt16) -> (remote: Endpoint, local: Endpoint)? {
     if let v4 = parseIPv4(ipString) {
@@ -85,8 +80,7 @@ func parseEndpoints(ipString: String, port: UInt16, localPort: UInt16) -> (remot
 
 
 
-// Availability due to `Synchronization`'s `Mutex` (via `NetworkConnection`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class SocketTransfer {
 
     static let NSEC_PER_MSEC = UInt64(Duration.milliseconds(1) / Duration.nanoseconds(1))

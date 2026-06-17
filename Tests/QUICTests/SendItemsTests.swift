@@ -22,8 +22,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-// Availability due to `SwiftTLS`'s `SwiftTLSHandshaker` (via `PendingItems`/`QUICConnection`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class SendItemsTests: XCTestCase {
 
     func testHasFrames() {

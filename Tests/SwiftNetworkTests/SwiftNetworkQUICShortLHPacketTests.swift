@@ -45,8 +45,7 @@ internal import os
 
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
-// Availability due to `SwiftTLS` (used by QUIC handshake) and `SwiftNetwork`'s `QUICProtocol`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class SwiftNetworkQUICShortLHPacketTests: NetTestCase {
 
     var serverSigningKey = P256.Signing.PrivateKey()

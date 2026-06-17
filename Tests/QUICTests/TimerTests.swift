@@ -18,20 +18,17 @@ import XCTest
 
 #if canImport(SwiftNetwork)
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import SwiftNetwork
-// Availability due to `SwiftNetwork`'s `NetworkClock` (via `Timer`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 typealias QUICTimer = SwiftNetwork.Timer
 #elseif canImport(Network)
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 typealias QUICTimer = Network.Timer
 #endif
 
-// Availability due to `SwiftNetwork`'s `NetworkClock` (via `LogPrefixer`/QUIC subsystem)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 let timerTestsLogPrefixer = LogPrefixer("[TimerTests]")
 
-// Availability due to `SwiftNetwork`'s `NetworkClock` (via `Timer`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class TimerTests: XCTestCase {
 
     func testOneTimer() {

@@ -44,8 +44,7 @@ enum PacketBuilderError: Int, Error {
     }
 }
 
-// Availability due to `swift-collections`'s `DequeModule.UniqueDeque` (via `Packet`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension Packet {
     static func build(
         into outboundFrame: inout Frame,

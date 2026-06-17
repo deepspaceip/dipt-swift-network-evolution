@@ -190,8 +190,7 @@ extension NetworkError.CommonCategory {
     }
 }
 
-// Availability due to conformance to `NetworkDomainSpecificError`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 enum HTTP2Error: Int64, NetworkDomainSpecificError {
     static var domain: NetworkError.Domain { .init(rawValue: "HTTP2") }
 
@@ -264,8 +263,7 @@ enum HTTP2Error: Int64, NetworkDomainSpecificError {
     }
 }
 
-// Availability due to conformance to `NetworkDomainSpecificError`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 enum TLSNetworkError: Int64, NetworkDomainSpecificError {
     static var domain: NetworkError.Domain { .init(rawValue: "tls") }
 

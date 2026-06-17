@@ -24,8 +24,7 @@ internal import Logging
 internal import os
 #endif
 
-// Availability due to Swift's `InlineArray` (via `SystemUUID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct PathParameters: Hashable, CustomStringConvertible {
     struct ProcessPathValue: Hashable {
         // Parameters that influence path selection for process delegation, by value, that
@@ -366,8 +365,7 @@ struct PathParameters: Hashable, CustomStringConvertible {
 }
 
 // MARK: - Copying and comparing
-// Availability due to Swift's `InlineArray` (via `SystemUUID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension PathParameters {
     init(deepCopy other: PathParameters) {
         self = other
@@ -455,8 +453,7 @@ extension PathParameters {
 }
 
 // MARK: - Description and logging
-// Availability due to Swift's `InlineArray` (via `SystemUUID`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension PathParameters {
     var description: String {
         #if !NETWORK_EMBEDDED

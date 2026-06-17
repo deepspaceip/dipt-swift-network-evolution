@@ -22,8 +22,7 @@ internal import Logging
 internal import os
 #endif
 
-// Availability due to `SwiftNetwork`'s `Interface`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class SwiftNetworkInterfaceTests: NetTestCase {
 
     // Create interface with bad index, Darwin will abort on index 0 so this is guarded

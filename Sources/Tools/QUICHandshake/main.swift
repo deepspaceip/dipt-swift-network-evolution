@@ -25,8 +25,7 @@ internal import os
 
 #if IMPORT_SWIFTTLS && canImport(SwiftTLS)
 
-// Availability due to `SwiftTLS`'s `TLSContext` (via `QUICProtocol.Instance` and `QUICBenchmarkUtility`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class QUICHandshake {
 
     let quicBenchmarkUtility = QUICBenchmarkUtility()

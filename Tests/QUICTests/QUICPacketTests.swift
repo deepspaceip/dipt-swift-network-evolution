@@ -27,8 +27,7 @@ import BasicContainers
 internal import DequeModule
 #endif
 
-// Availability due to Swift's `InlineArray` (via QUIC's `QUICConnectionIDStorage`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class PacketTests: XCTestCase {
     func testRequiresLongHeader() {
         for keyState in PacketKeyState.allCases {

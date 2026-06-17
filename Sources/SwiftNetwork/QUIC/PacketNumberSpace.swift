@@ -26,8 +26,7 @@ internal import Logging
 internal import os
 #endif
 
-// Availability due to `SwiftNetwork`'s `PacketNumber` (file-internal type)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct PacketIdentifier: Comparable {
     static func < (lhs: PacketIdentifier, rhs: PacketIdentifier) -> Bool {
         if lhs.space == rhs.space {
@@ -94,8 +93,7 @@ struct EncodedPacketNumber {
     }
 }
 
-// Availability due to `SwiftNetwork`'s `QUICError` (used by `encode`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct PacketNumber: Comparable, ExpressibleByIntegerLiteral, Hashable, CustomStringConvertible {
 
     init(integerLiteral value: Int64) {
@@ -244,8 +242,7 @@ struct PacketNumber: Comparable, ExpressibleByIntegerLiteral, Hashable, CustomSt
     }
 }
 
-// Availability due to `SwiftNetwork`'s `PacketKeyState` (used by `fromKeyState`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 enum PacketNumberSpace: UInt8, Comparable, CaseIterable {
     case initial = 0
     case handshake = 1
@@ -265,8 +262,7 @@ enum PacketNumberSpace: UInt8, Comparable, CaseIterable {
     }
 }
 
-// Availability due to `swift-collections`'s `BasicContainers.RigidArray` (via `NetworkRigidArray`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension NetworkRigidArray {
     // This extension is used to subscript an array by a PacketNumberSpace's rawValue
     // This ensures the performance of the lookup in the data path

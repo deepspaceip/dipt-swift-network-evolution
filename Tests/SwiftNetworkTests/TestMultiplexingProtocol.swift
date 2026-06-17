@@ -27,20 +27,17 @@ internal import Logging
 internal import os
 #endif
 
-// Availability due to `SwiftNetwork`'s `MultiplexedDatagramFlow`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class TestDatagramFlow: MultiplexedDatagramFlow<TestMultiplexingProtocol> {
 
 }
 
-// Availability due to `SwiftNetwork`'s `MultiplexingDatagramPath`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class TestDatagramPath: MultiplexingDatagramPath<TestMultiplexingProtocol> {
 
 }
 
-// Availability due to `SwiftNetwork`'s `ManyToManyApplicationDatagramProtocol` and related multiplexing protocols
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class TestMultiplexingProtocol: ManyToManyApplicationDatagramProtocol, ManyToManyOutboundDatagramProtocol,
     DatagramListenerHandler, HomogeneousManyToManyProtocolHandler, ProtocolInstanceContainer
 {

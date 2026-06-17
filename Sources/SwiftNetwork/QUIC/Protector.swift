@@ -68,8 +68,7 @@ typealias ProtectorNonce = [12 of UInt8]
 typealias ProtectorIV = [12 of UInt8]
 
 // Crypto returns an IV in SymmetricKey format, but to speed up performance, we convert it to an InlineArray.
-// Availability due to `CryptoKit`/`Crypto`'s `SymmetricKey`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension ProtectorIV {
     init(_ key: SymmetricKey) {
         precondition(key.bitCount == 96)
@@ -87,8 +86,7 @@ enum SecFramerError: Int, Error {
     case openFailed
 }
 
-// Availability due to `SwiftTLS`'s `SwiftTLSOptions.EncryptionLevel`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 enum TLSEncryptionLevel: CaseIterable {
     case initial
     case earlyData
@@ -154,8 +152,7 @@ enum TLSCipherSuite: CaseIterable {
     }
 }
 
-// Availability due to `CryptoKit`/`Crypto`'s `SymmetricKey`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct SecFramerKeys: ~Copyable {
     enum KeyType {
         case aesGCM
@@ -207,8 +204,7 @@ struct SecFramerKeys: ~Copyable {
     }
 }
 
-// Availability due to `CryptoKit`/`Crypto`'s `SymmetricKey`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 protocol SecFramerProtocol: ~Copyable {
     static func createKeyStorage(
         key: SymmetricKey,
@@ -241,8 +237,7 @@ protocol SecFramerProtocol: ~Copyable {
     ) throws(QUICError)
 }
 
-// Availability due to `CryptoKit`/`Crypto`'s `AES.GCM`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct SecFramerAESGCM: ~Copyable, SecFramerProtocol {
 
     static func createKeyStorage(
@@ -433,8 +428,7 @@ struct SecFramerAESGCM: ~Copyable, SecFramerProtocol {
 }
 
 #if !NETWORK_EMBEDDED
-// Availability due to `CryptoKit`/`Crypto`'s `ChaChaPoly`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct SecFramerChaChaPoly: ~Copyable, SecFramerProtocol {
     static func createKeyStorage(
         key: SymmetricKey,
@@ -595,8 +589,7 @@ struct SecFramerChaChaPoly: ~Copyable, SecFramerProtocol {
 }
 #endif
 
-// Availability due to `CryptoKit`/`Crypto`'s `AES.GCM` (and `SymmetricKey`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct Protector: ~Copyable, PrefixedLoggable {
     var log: LogPrefixer
 
@@ -1365,8 +1358,7 @@ struct Protector: ~Copyable, PrefixedLoggable {
 #else
 
 // Stub implementation
-// Availability due to `SwiftNetwork`'s `Packet`/`Frame` (matches the non-stub `Protector` API)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct Protector: ~Copyable, PrefixedLoggable {
     var log: LogPrefixer
     private let isClient: Bool

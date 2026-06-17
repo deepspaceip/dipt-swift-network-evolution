@@ -22,8 +22,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-// Availability due to `SwiftNetwork`'s `NetworkClock` (via `RTT`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class RTTTests: XCTestCase {
     var rtt: RTT!
 

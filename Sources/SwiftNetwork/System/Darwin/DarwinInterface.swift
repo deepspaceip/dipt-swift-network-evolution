@@ -20,8 +20,7 @@ import Darwin
 #endif
 
 /// A set of Darwin system APIs for interacting with the system interface.
-// Availability due to `Interface` and `System` (transitively, typed throws on `NetworkError`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 internal enum SystemInterface {
 
     enum Constants {

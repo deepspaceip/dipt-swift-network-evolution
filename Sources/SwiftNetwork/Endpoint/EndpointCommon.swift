@@ -82,8 +82,7 @@ extension Endpoint.EndpointType {
     }
 }
 
-// Availability due to `Interface` and `EndpointEqualityFlags`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 protocol EndpointProtocol: CustomStringConvertible {
     var interface: Interface? { get }
     func isEqual(to other: Self, flags: EndpointEqualityFlags) -> Bool

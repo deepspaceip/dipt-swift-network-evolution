@@ -47,8 +47,7 @@ extension CubicLikeProtocol {
     }
 }
 
-// Availability due to `BasicContainers`'s `UniqueArray` (via `CongestionControlProtocol`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 struct Cubic: CongestionControlProtocol, CubicLikeProtocol {
     var log: LogPrefixer
 

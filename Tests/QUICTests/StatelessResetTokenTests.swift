@@ -22,8 +22,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
-// Availability due to Swift's `Span` and inline arrays (via `QUICStatelessResetToken`)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 class StatelessResetTokenTests: XCTestCase {
     func testRandomInit() {
         let token1 = QUICStatelessResetToken()

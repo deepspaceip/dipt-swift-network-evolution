@@ -27,8 +27,7 @@ internal import errno_h
 /// An extension that adds system-interface APIs.
 ///
 /// Extends `System` with system-interface functions.
-// Availability due to `Interface`, `IPAddress`, and `SystemRoute`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 extension System {
 
     static func interfaceGetMTU(socket: Int32, name: String) throws -> Int {

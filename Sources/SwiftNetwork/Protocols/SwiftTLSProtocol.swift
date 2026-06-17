@@ -49,8 +49,7 @@ internal import SwiftSystem
 public typealias TLSProtocol = SwiftTLSProtocol
 #endif
 
-// Availability due to `SwiftTLS`'s `SwiftTLSOptions`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 protocol SwiftTLSQUICInstance: AnyObject {
     func getLowerLinkage(
         for level: SwiftTLSOptions.EncryptionLevel,
@@ -68,8 +67,7 @@ let SwiftTLSRecordProtocolMaxOutstandingReadBytes: Int = (8 * 1024 * 1024)  // 8
 
 // Wrapper to send a value. Ensures that the value is only accessed
 // from the context and fails otherwise.
-// Availability due to `SwiftTLS`'s `SwiftTLSOptions`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 private struct ContextBound<Value>: @unchecked Sendable {
     public let context: NetworkContext
 
@@ -867,8 +865,7 @@ public struct SwiftTLSOptions {
     public init() {}
 }
 
-// Availability due to `SwiftTLS`'s `SwiftTLSOptions`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 class SwiftTLSHandshaker {
     public static func createClientHandshake() -> SwiftTLSHandshaker {
         SwiftTLSHandshaker()

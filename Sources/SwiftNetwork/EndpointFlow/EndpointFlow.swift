@@ -28,8 +28,7 @@ internal import os
 internal import Synchronization
 #endif
 
-// Availability due to `NetworkContext` and the QUIC datapath types (transitively SwiftTLS)
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class EndpointFlow: CustomDebugStringConvertible {
 
     /// State used to emit logs on the data path.

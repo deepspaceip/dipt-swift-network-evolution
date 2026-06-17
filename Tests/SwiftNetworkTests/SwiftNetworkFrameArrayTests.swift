@@ -18,8 +18,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import SwiftNetwork
 #endif
 
-// Availability due to `SwiftNetwork`'s `FrameArray` and `Frame`
-@available(anyAppleOS 26, *)
+@available(Network 0.1.0, *)
 final class SwiftNetworkFrameArrayTests: NetTestCase {
     func testEmptyFrameArray() {
         let array = FrameArray()

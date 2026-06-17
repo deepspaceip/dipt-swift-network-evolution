@@ -413,7 +413,13 @@ extension CongestionControlProtocol {
     }
 
     mutating func decrementBytesInFlight(_ bytes: UInt64) {
-        bytesInFlight -= bytes
+        let result = bytesInFlight.subtractingReportingOverflow(bytes)
+        if result.overflow {
+            log.fault("undeflow, \(bytes) decremented from \(bytesInFlight)")
+            bytesInFlight = 0
+        } else {
+            bytesInFlight = result.partialValue
+        }
         log.datapath("bytes in flight updated to \(bytesInFlight)")
         QUICSignpost.bytesInFlight(bytesInFlight: Int(bytesInFlight))
     }

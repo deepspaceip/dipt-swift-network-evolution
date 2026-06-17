@@ -364,7 +364,7 @@ extension QUICCrypto: TopStreamProtocol, ProtocolInstanceContainer {
 
     func handleConnectedEvent() {
         guard let parentConnection else { return }
-        parentConnection.log.info("connected: TLS finished")
+        parentConnection.log.info("Connected: TLS finished")
         parentConnection.fromExternal {
             parentConnection.reportReady()
         }
@@ -512,6 +512,12 @@ extension QUICCrypto: OutboundStreamHandler {
     ) {}
     func getMetadata<P>(_ from: ProtocolInstanceReference) -> ProtocolMetadata<P>?
     where P: NetworkProtocol { nil }
+    func getMetrics(
+        _ from: ProtocolInstanceReference,
+        requestedNetworkMetric: RequestedNetworkMetrics
+    ) -> NetworkMetrics? {
+        nil
+    }
     func levelForReference(_ from: ProtocolInstanceReference) -> SwiftTLSOptions.EncryptionLevel? {
         if from == initialLinkage.reference { return .initial }
         if from == earlyDataLinkage.reference { return .earlyData }

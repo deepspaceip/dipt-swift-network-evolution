@@ -66,6 +66,12 @@ public protocol BottomProtocolHandler: ~Copyable, OutboundDataHandler {
     /// The metadata state for this protocol.
     var metadata: AbstractProtocolMetadata? { get }
     #endif
+
+    /// Update this protocols contribution to a data transfer snapshot.
+    func updateDataTransferSnapshot(_ snapshot: inout DataTransferSnapshot)
+
+    /// Fetch this protocols establishment report entry
+    var protocolEstablishmentReport: ProtocolEstablishmentReport? { get }
 }
 
 @_spi(ProtocolProvider)
@@ -246,6 +252,22 @@ extension BottomProtocolHandler where Self: ~Copyable {
         return nil
     }
 
+    public func getMetrics(
+        _ from: ProtocolInstanceReference,
+        requestedNetworkMetric: RequestedNetworkMetrics
+    ) -> NetworkMetrics? {
+        do { try validate(upper: from, #function) } catch { return nil }
+        switch requestedNetworkMetric {
+        case .protocolEstablishmentReports:
+            guard let report = protocolEstablishmentReport else { return nil }
+            return .protocolEstablishmentReports([report])
+        case .dataTransferSnapshot:
+            var snapshot = DataTransferSnapshot()
+            updateDataTransferSnapshot(&snapshot)
+            return .dataTransferSnapshot(snapshot)
+        }
+    }
+
     #if !NETWORK_EMBEDDED
     public func getOptions<T>(from parameters: Parameters) -> ProtocolOptions<T>? {
         parameters.protocolOptions(for: self.reference)
@@ -281,6 +303,10 @@ extension BottomProtocolHandler where Self: ~Copyable {
     #if !NETWORK_EMBEDDED
     public var metadata: AbstractProtocolMetadata? { nil }
     #endif
+
+    public func updateDataTransferSnapshot(_ snapshot: inout DataTransferSnapshot) {}
+
+    public var protocolEstablishmentReport: ProtocolEstablishmentReport? { nil }
 }
 
 @available(Network 0.1.0, *)

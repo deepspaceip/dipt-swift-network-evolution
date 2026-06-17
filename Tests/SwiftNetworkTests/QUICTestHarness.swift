@@ -907,6 +907,7 @@ final class QUICTestHarness {
         clientOptions: ProtocolOptions<QUICProtocol> = QUICProtocol.options(),
         serverOptions: ProtocolOptions<QUICProtocol> = QUICProtocol.options(),
         sendMaxStreamUpdate: Bool = false,
+        validateMetrics: Bool = false,
         extraServerCIDs: [(QUICConnectionID, QUICStatelessResetToken)] = .init(),
         afterHandshake: ((QUICTestHarness) -> Void)? = nil,  // Block to run after handshake is complete
         afterData: ((QUICTestHarness) -> Void)? = nil,  // Block to run after handshake is complete
@@ -1095,6 +1096,38 @@ final class QUICTestHarness {
 
         if let afterData {
             afterData(self)
+        }
+
+        if validateMetrics {
+            if let serverHarness = state?.serverHarness, let clientHarness = state?.clientHarness {
+                var clientReports: NetworkMetrics?
+                var serverReports: NetworkMetrics?
+                let snapshotExpectation = XCTestExpectation(description: "Wait for QUIC connection to receive metrics")
+                context.async {
+                    clientReports = clientHarness.getMetrics(requestedNetworkMetric: .dataTransferSnapshot)
+                    serverReports = serverHarness.getMetrics(requestedNetworkMetric: .dataTransferSnapshot)
+                    XCTAssertNotNil(clientReports)
+                    XCTAssertNotNil(serverReports)
+                    snapshotExpectation.fulfill()
+                }
+                wait(for: [snapshotExpectation], timeout: 2.0)
+                // Now validate the protocol establishment report
+                clientReports = nil
+                serverReports = nil
+                let protocolEstablishmentReportExpectation = XCTestExpectation(
+                    description: "Wait for QUIC connection to receive metrics"
+                )
+                context.async {
+                    clientReports = clientHarness.getMetrics(requestedNetworkMetric: .protocolEstablishmentReports)
+                    serverReports = serverHarness.getMetrics(requestedNetworkMetric: .protocolEstablishmentReports)
+                    XCTAssertNotNil(clientReports)
+                    XCTAssertNotNil(serverReports)
+                    protocolEstablishmentReportExpectation.fulfill()
+                }
+                wait(for: [protocolEstablishmentReportExpectation], timeout: 2.0)
+            } else {
+                XCTFail("There should be saved server and client harnesses")
+            }
         }
 
         // If applicationError is present, act upon that here
@@ -1332,6 +1365,65 @@ final class QUICTestHarness {
             case .stopSending:
                 clientStream.abortInbound(error: .init(quicApplicationError: applicationError))
             }
+        }
+
+        wait(for: [serverFlowExpectation], timeout: timeout)
+        wait(for: [serverAbortExpectation], timeout: timeout)
+
+        _ = serverStream  // silence unused-warning; harness keeps strong ref
+        stop()
+    }
+
+    /// `RESET_STREAM` is the very first frame the server sees for a fresh
+    /// peer-initiated bidi stream — no preceding `STREAM` frame. The server
+    /// must still create the inbound flow and deliver the inbound-aborted
+    /// event for the reset to be observable end-to-end.
+    func runQUICResetStreamFirstFrameOnNewStream(
+        applicationError: UInt64 = 42,
+        timeout: TimeInterval = 4.0
+    ) {
+        do {
+            try quicHandshake()
+        } catch {
+            XCTFail("Handshake failed: \(error)")
+            return
+        }
+
+        guard let clientStream = createNewStream(identifier: "C1") else {
+            XCTFail("Failed to create client stream")
+            return
+        }
+
+        let serverFlowExpectation = XCTestExpectation(description: "Server sees new flow")
+        let serverAbortExpectation = XCTestExpectation(description: "Server sees inbound abort event")
+        var serverStream: StreamUpperHarness?
+
+        context.async {
+            self.state?.serverHarness.waitForNewFlow {
+                guard let stream = self.state?.serverHarness.upperHarnesses.last else {
+                    XCTFail("Server flow missing")
+                    serverFlowExpectation.fulfill()
+                    return
+                }
+                serverStream = stream
+                stream.waitForInboundAborted { error in
+                    XCTAssertNotNil(error, "Server should see inbound abort from RESET_STREAM")
+                    XCTAssertEqual(
+                        error?.quicApplicationError,
+                        Int64(applicationError),
+                        "Application error code should be propagated from RESET_STREAM"
+                    )
+                    serverAbortExpectation.fulfill()
+                }
+                serverFlowExpectation.fulfill()
+            }
+        }
+
+        // Reset with no prior write so the only frame the client emits for
+        // this stream id is RESET_STREAM. There is no STREAM frame to
+        // stride-create the flow ahead of the reset.
+        context.async {
+            clientStream.abortOutbound(error: .init(quicApplicationError: applicationError))
         }
 
         wait(for: [serverFlowExpectation], timeout: timeout)

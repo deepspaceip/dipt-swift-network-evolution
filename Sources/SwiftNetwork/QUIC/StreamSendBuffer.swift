@@ -193,38 +193,36 @@ struct StreamSendBuffer: ~Copyable {
             acknowledgedOffset = storageStartOffset
         }
 
-        // Record the newly acked range
-        acknowledgedDataRanges.insert(contentsOf: acknowledgedOffset..<totalAcknowledgedOffset)
-
-        guard acknowledgedDataRanges.ranges[0].lowerBound == storageStartOffset else {
-            // We can't increment the storageStartOffset due to a gap. Return.
-            return
-        }
-
-        // The first acked data range is contiguous with previous data. The end of that
-        // range will be the new start offset.
-        let oldStartOffset = storageStartOffset
-        let newStartOffset = acknowledgedDataRanges.ranges[0].upperBound
-
-        guard newStartOffset > oldStartOffset else {
-            // No change, ignore
-            return
-        }
-
-        // Update stored ranges
-        acknowledgedDataRanges.remove(contentsOf: oldStartOffset..<newStartOffset)
-
-        // Update offset cursor
-        storageStartOffset = newStartOffset
-
-        if !storage.isEmpty {
-            // Drop frame data for newly acked data
-            let difference = newStartOffset - oldStartOffset
-            guard storage.claim(fromStart: Int(difference)) else {
-                log.fault("Failed to claim \(difference) bytes from start of stream send buffer storage")
-                return
+        // ACK is contiguous with storageStartOffset and in-order
+        if acknowledgedOffset == storageStartOffset {
+            var newStartOffset = totalAcknowledgedOffset
+            var consumed = 0
+            while consumed < acknowledgedDataRanges.ranges.count
+                && acknowledgedDataRanges.ranges[consumed].lowerBound <= newStartOffset
+            {
+                newStartOffset = max(newStartOffset, acknowledgedDataRanges.ranges[consumed].upperBound)
+                consumed += 1
             }
+            // Remove the consumed in one shot
+            if consumed > 0 {
+                acknowledgedDataRanges.remove(contentsOf: 0..<UInt64(consumed))
+            }
+            let difference = newStartOffset - storageStartOffset
+            storageStartOffset = newStartOffset
+            if !storage.isEmpty {
+                guard storage.claim(fromStart: Int(difference)) else {
+                    log.fault(
+                        "Failed to claim \(difference) bytes from start of stream send buffer storage"
+                    )
+                    return
+                }
+            }
+            return
         }
+
+        // Out of order ACK. The gap will be consumed when the in-order
+        // path above processes an ACK that fits this range.
+        acknowledgedDataRanges.insert(contentsOf: acknowledgedOffset..<totalAcknowledgedOffset)
     }
 
     // Returns true if it acknowledged to the end of the data now, i.e. end of stream.

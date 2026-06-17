@@ -561,7 +561,7 @@ struct PacketParser: ~Copyable, PrefixedLoggable {
         do {
             try connection.protector.openHeader(&packet, frame: &frame)
         } catch {
-            connection.log.error("packet number undecryptable")
+            connection.log.error("Packet number undecryptable")
             return false
         }
 
@@ -594,21 +594,21 @@ struct PacketParser: ~Copyable, PrefixedLoggable {
 
     func retryTokenPresent(_ frame: inout Frame, token: [UInt8]?) -> Bool {
         guard let token else {
-            log.error("token is nil, discarding")
+            log.error("Token is nil, discarding")
             return false
         }
         guard let firstOctet = try? self.parseFirstOctet(&frame, claim: false) else {
-            log.error("could not parse first octet from packet")
+            log.error("Could not parse first octet from packet")
             return false
         }
         let longHeader = (firstOctet & 0x80) != 0
         guard longHeader else {
-            log.error("received invalid packet")
+            log.error("Received invalid packet")
             return false
         }
         let packetType = (firstOctet & 0x30) >> 4
         guard packetType == 0x0 else {
-            log.error("received packet when expecting Initial with retry token")
+            log.error("Received packet when expecting Initial with retry token")
             return false
         }
         var dcidLength: UInt8 = 0
@@ -626,7 +626,7 @@ struct PacketParser: ~Copyable, PrefixedLoggable {
             try read.span(expect: token.span.bytes)
         }
         guard result.isValid else {
-            log.error("could not parse a valid token from the packet")
+            log.error("Could not parse a valid token from the packet")
             return false
         }
         return true

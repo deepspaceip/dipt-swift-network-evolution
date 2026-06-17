@@ -760,6 +760,11 @@ extension QUICPath {
         #endif
         }
     }
+
+    @inline(__always)
+    func congestionControlFilloutDataTransferSnapshot(snapshot: inout DataTransferSnapshot) {
+        congestionControl?.filloutDataTransferSnapshot(dataTransferSnapshot: &snapshot)
+    }
 }
 
 #endif

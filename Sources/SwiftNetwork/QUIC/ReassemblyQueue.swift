@@ -264,7 +264,7 @@ struct ReassemblyQueue: ~Copyable {
 
         if _slowPath(size < oldSize) {
             traceDump()
-            log.fault("reassq length went backwards \(size) < \(oldSize)")
+            log.fault("Reassq length went backwards \(size) < \(oldSize)")
             return 0
         }
         return size - oldSize
@@ -288,17 +288,17 @@ struct ReassemblyQueue: ~Copyable {
                 "advanced \(dequeueItem.length), current offset \(currentOffset)"
             )
             if headOfLineBlocked {
-                log.debug("no longer head of line blocked")
+                log.debug("No longer head of line blocked")
             }
             headOfLineBlocked = false
             return dequeueItem
         } else if _slowPath(currentOffset > firstItemOffset) {
             traceDump()
-            log.fault("current offset \(currentOffset) > \(firstItemOffset)")
+            log.fault("Current offset \(currentOffset) > \(firstItemOffset)")
             return nil
         } else {
             log.debug(
-                "head of line blocked, bytes missing: [\(currentOffset),\(firstItemOffset)) (\(firstItemOffset - currentOffset) bytes)"
+                "Head of line blocked, bytes missing: [\(currentOffset),\(firstItemOffset)) (\(firstItemOffset - currentOffset) bytes)"
             )
             headOfLineBlocked = true
             traceDump()

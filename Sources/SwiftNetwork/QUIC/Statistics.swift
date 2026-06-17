@@ -137,13 +137,16 @@ enum QUICStatistic: Int, CaseIterable {
     case rxNewToken
 
     case txDepartureTimestamp
+
+    case statelessResetReceived
+    case statelessResetDuringPathProbe
 }
 
 // Availability due to Swift's inline array type (`[96 of Int]`)
 @available(anyAppleOS 26, *)
 struct Statistics: ~Copyable {
 
-    private var statisticsArray: [96 of Int]
+    private var statisticsArray: [98 of Int]
 
     init() {
         statisticsArray = .init(repeating: 0)

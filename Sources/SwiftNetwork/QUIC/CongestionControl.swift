@@ -282,6 +282,19 @@ enum CongestionControl {
         #endif
         }
     }
+
+    func filloutDataTransferSnapshot(dataTransferSnapshot: inout DataTransferSnapshot) {
+        switch self {
+        case .cubic(algorithm: let cubic):
+            cubic.filloutDataTransferSnapshot(dataTransferSnapshot: &dataTransferSnapshot)
+        #if !NETWORK_EMBEDDED
+        case .ledbat(algorithm: let ledbat):
+            ledbat.filloutDataTransferSnapshot(dataTransferSnapshot: &dataTransferSnapshot)
+        case .prague(algorithm: let prague):
+            prague.filloutDataTransferSnapshot(dataTransferSnapshot: &dataTransferSnapshot)
+        #endif
+        }
+    }
 }
 
 @available(Network 0.1.0, *)
@@ -464,7 +477,7 @@ extension CongestionControlProtocol {
     ) {
         congestionEvent(sentTime: largestAckSentTime, mss: mss, qlog: qlog)
         log.debug(
-            "link was flow controlled, reduced congestion window is \(congestionWindow) bytes"
+            "Link was flow controlled, reduced congestion window is \(congestionWindow) bytes"
         )
     }
 

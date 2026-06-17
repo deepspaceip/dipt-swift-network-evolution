@@ -730,7 +730,7 @@ public struct TransportParameters: PrefixedLoggable {
             }
             try parameter.serialize(&buffer, logPrefixer: self.log)
         }
-        log.debug("serialized size: \(buffer.count)")
+        log.debug("Serialized size: \(buffer.count)")
         return buffer
     }
 
@@ -740,10 +740,10 @@ public struct TransportParameters: PrefixedLoggable {
     ) throws(QUICError) -> TransportParameters {
         var parameters = TransportParameters(logPrefixer: logPrefixer)
         guard buffer.count >= 0 && buffer.count < UInt16.max else {
-            parameters.log.error("invalid TP size \(buffer.count)")
+            parameters.log.error("Invalid TP size \(buffer.count)")
             throw QUICError.transportParametersDecode(TransportParameterDecodeErrors.invalidSize)
         }
-        parameters.log.debug("deserializing transport parameters (size \(buffer.count))")
+        parameters.log.debug("Deserializing transport parameters (size \(buffer.count))")
 
         var maxAckDelay: UInt64? = nil
         var minAckDelay: UInt64? = nil
@@ -770,7 +770,7 @@ public struct TransportParameters: PrefixedLoggable {
                 }
             }
             guard buffer.count >= parameterLength && parameterLength < UInt16.max else {
-                parameters.log.error("invalid length \(parameterLength)")
+                parameters.log.error("Invalid length \(parameterLength)")
                 throw QUICError.transportParametersDecode(
                     TransportParameterDecodeErrors.invalidSize
                 )

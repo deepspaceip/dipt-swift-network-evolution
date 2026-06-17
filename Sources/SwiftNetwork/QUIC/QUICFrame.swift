@@ -1089,7 +1089,7 @@ struct FrameResetStream: ~Copyable, QUICFrameProtocol {
     func process(connection: QUICConnection) -> Bool {
         guard let streamID = QUICStreamID(self.id) else {
             let idValue = self.id
-            Logger.proto.error("stream frame with invalid stream ID \(idValue)")
+            Logger.proto.error("Stream frame with invalid stream ID \(idValue)")
             return false
         }
         // An endpoint that receives a RESET_STREAM frame for a
@@ -1102,13 +1102,24 @@ struct FrameResetStream: ~Copyable, QUICFrameProtocol {
             connection.close(with: .streamStateError, "RESET_STREAM for send-only stream")
             return false
         }
-        guard let flowID = connection.knownFlows[streamID] else {
-            return true
-        }
-        let potentialFlow = connection.flow(for: flowID)
-        if potentialFlow == nil {
+
+        let stream: QUICStreamInstance
+        if let flowID = connection.knownFlows[streamID] {
+            // The stream id is known. The flow object may still be missing
+            // if the stream was torn down without clearing `knownFlows`; in
+            // that case there is no one to deliver the reset to, so drop it.
+            guard let existing = connection.flow(for: flowID) else {
+                Logger.proto.error(
+                    "stream \(streamID.value) has known flow but no QUICStreamInstance; dropping RESET_STREAM"
+                )
+                return true
+            }
+            stream = existing
+
+        } else {
+            // RESET_STREAM may be the first frame the peer sends on a stream
+            // createInboundStreams will register it.
             let inboundStreamResult = connection.createInboundStreams(streamID: streamID)
-            // Use Int(exactly:) here to make sure that finalSize UInt64 can fit into Int64
             if inboundStreamResult.checkZombie {
                 connection.zombieStreamListFinalSizeReceived(
                     streamID: streamID,
@@ -1117,14 +1128,20 @@ struct FrameResetStream: ~Copyable, QUICFrameProtocol {
                 return true
             }
             if !inboundStreamResult.created {
-                return false
+                // The stream is being ignored. createInboundStreams already
+                // drove any required peer notification or close, so treat the
+                // frame as handled.
+                return true
             }
-        }
-        guard let stream = potentialFlow else {
-            Logger.proto.error(
-                "client state for flow \(flowID.debugDescription) is not a QUICStreamInstance"
-            )
-            return true
+            guard let flowID = connection.knownFlows[streamID],
+                let created = connection.flow(for: flowID)
+            else {
+                Logger.proto.error(
+                    "Stream \(streamID.value) is not a QUICStreamInstance after createInboundStreams"
+                )
+                return true
+            }
+            stream = created
         }
         // Set the application error code
         stream.streamMetadata.applicationError = self.code
@@ -1253,14 +1270,14 @@ struct FrameStopSending: ~Copyable, QUICFrameProtocol {
     func process(connection: QUICConnection) -> Bool {
         guard let streamID = QUICStreamID(self.id) else {
             let idValue = self.id
-            Logger.proto.error("stream frame with invalid stream ID \(idValue)")
+            Logger.proto.error("Stream frame with invalid stream ID \(idValue)")
             return false
         }
         // An endpoint that receives a STOP_SENDING frame for a receive-only
         // stream MUST terminate the connection with error STREAM_STATE_ERROR.
         if streamID.isReceiveOnly(server: connection.isServer) {
             Logger.proto.error(
-                "received STOP_SENDING for receive only stream"
+                "Received STOP_SENDING for receive only stream"
             )
             connection.close(with: .streamStateError, "STREAM frame on send-only stream")
             return false

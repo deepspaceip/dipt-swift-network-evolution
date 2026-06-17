@@ -253,7 +253,7 @@ public struct BridgeDatagramProtocol: NetworkProtocol {
         public func sendDatagrams(_ datagrams: consuming FrameArray) throws(NetworkError) {
             let remotePort = remoteEndpoint!.port
             guard let remoteInstance = BridgeInstance.instances[remotePort] else {
-                log.error("unable to find instance for port: \(remotePort)")
+                log.error("Unable to find instance for port: \(remotePort)")
                 datagrams.finalizeAllFramesAsFailed()
                 return
             }
@@ -430,7 +430,7 @@ public struct BridgeStreamProtocol: NetworkProtocol {
         public func sendStreamData(_ streamData: consuming FrameArray) throws(NetworkError) {
             let remotePort = remoteEndpoint!.port
             guard let remoteInstance = BridgeInstance.instances[remotePort] else {
-                log.error("unable to find instance for port: \(remotePort)")
+                log.error("Unable to find instance for port: \(remotePort)")
                 streamData.finalizeAllFramesAsFailed()
                 return
             }

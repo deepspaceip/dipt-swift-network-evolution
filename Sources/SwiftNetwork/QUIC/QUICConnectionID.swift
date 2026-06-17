@@ -86,7 +86,7 @@ public struct QUICConnectionID: Sendable, Equatable, CustomStringConvertible {
     public init?(_ connectionID: [UInt8]) {
         guard connectionID.count <= QUICConnectionID.maximumSize else {
             let connectionIDCount = connectionID.count
-            Logger.proto.fault("invalid QUICConnectionID length \(connectionIDCount)")
+            Logger.proto.fault("Invalid QUICConnectionID length \(connectionIDCount)")
             return nil
         }
         actualLength = connectionID.count
@@ -106,7 +106,7 @@ public struct QUICConnectionID: Sendable, Equatable, CustomStringConvertible {
     public init?(_ connectionID: Span<UInt8>) {
         guard connectionID.count <= QUICConnectionID.maximumSize else {
             let connectionIDCount = connectionID.count
-            Logger.proto.fault("invalid QUICConnectionID length \(connectionIDCount)")
+            Logger.proto.fault("Invalid QUICConnectionID length \(connectionIDCount)")
             return nil
         }
         actualLength = connectionID.count
@@ -117,7 +117,7 @@ public struct QUICConnectionID: Sendable, Equatable, CustomStringConvertible {
     public init(_ size: Int) {
         var size = size
         if size > QUICConnectionID.maximumSize {
-            Logger.proto.fault("invalid QUICConnectionID length \(size)")
+            Logger.proto.fault("Invalid QUICConnectionID length \(size)")
             size = QUICConnectionID.maximumSize
         }
         if size != 0 && size < 4 {
@@ -130,7 +130,7 @@ public struct QUICConnectionID: Sendable, Equatable, CustomStringConvertible {
     // Creates a QUICConnectionID from a buffer with a specific size.
     init?(_ buffer: [UInt8], size: Int) {
         guard size <= QUICConnectionID.maximumSize, buffer.count >= size else {
-            Logger.proto.fault("invalid QUICConnectionID length \(size)")
+            Logger.proto.fault("Invalid QUICConnectionID length \(size)")
             return nil
         }
         let cidBytes = Array(buffer[0..<min(size, QUICConnectionID.maximumSize)])

@@ -346,7 +346,7 @@ struct Cubic: CongestionControlProtocol, CubicLikeProtocol {
     ) {
         if _slowPath(ceCount < ecnCECounter) {
             log.fault(
-                "new CE count \(ceCount) can't be less than current CE count \(ecnCECounter)"
+                "New CE count \(ceCount) can't be less than current CE count \(ecnCECounter)"
             )
         }
         // Update packets acked and marked on every ACK, even if it
@@ -433,12 +433,10 @@ struct Cubic: CongestionControlProtocol, CubicLikeProtocol {
         initPipeAckSamples()
     }
 
-    #if !NETWORK_EMBEDDED
     func filloutDataTransferSnapshot(dataTransferSnapshot: inout DataTransferSnapshot) {
         dataTransferSnapshot.transportCongestionWindow = congestionWindow
         dataTransferSnapshot.transportSlowStartThreshold = slowStartThreshold
     }
-    #endif
 
     mutating func reset(mss: Int, qlog: QLog? = nil) {
         congestionWindow = Cubic.initialCongestionWindow(mss)

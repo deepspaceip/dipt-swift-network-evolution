@@ -184,7 +184,6 @@ public class UpperHarness<LinkageType: InboundDataLinkage>: UpperHarnessProtocol
     }
 
     public func start() {
-        log.debug("start")
         invokeConnect()
     }
 
@@ -194,7 +193,6 @@ public class UpperHarness<LinkageType: InboundDataLinkage>: UpperHarnessProtocol
     }
 
     public func stop(error: NetworkError? = nil) {
-        log.debug("stop")
         invokeDisconnect(error: error)
     }
 
@@ -684,7 +682,7 @@ public class DatagramLowerHarness: LowerHarness<OutboundDatagramLinkage>, Bottom
 
     public func receiveDatagrams(maximumDatagramCount: Int) throws(NetworkError) -> FrameArray? {
         let array = pendingInboundPackets.drainArray(maximumFrameCount: maximumDatagramCount)
-        log.debug("deliver inbound datagram count: \(array.count)")
+        log.debug("Deliver inbound datagram count: \(array.count)")
         return array
     }
 
@@ -924,6 +922,12 @@ public class NewFlowHarness<LinkageType: InboundFlowLinkage, HarnessType: UpperH
                 return nil
             }
             return metadata
+        }
+    }
+
+    final public func getMetrics(requestedNetworkMetric: RequestedNetworkMetrics) -> NetworkMetrics? {
+        fromExternal {
+            lower.invokeGetMetrics(reference, requestedNetworkMetric: requestedNetworkMetric)
         }
     }
 }

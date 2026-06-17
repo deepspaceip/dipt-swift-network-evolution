@@ -949,7 +949,7 @@ final class QLog {
             return jsonData
         } else {
             let topLevelObject = topLevelObject
-            Logger.proto.error("error serializing JSON: \(topLevelObject)")
+            Logger.proto.error("Error serializing JSON: \(topLevelObject)")
             return nil
         }
     }

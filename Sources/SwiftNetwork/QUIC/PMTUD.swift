@@ -233,24 +233,24 @@ struct PMTUDState: ~Copyable {
         if !enabled {
             return
         }
-        path.log.info("received ICMP packet too big MTU: \(nextMTU)")
+        path.log.info("Received ICMP packet too big MTU: \(nextMTU)")
         if nextMTU < PMTUDState.minimumMTU {
-            path.log.info("ignore packet too big MTU < minimum MTU: \(PMTUDState.minimumMTU)")
+            path.log.info("Ignore packet too big MTU < minimum MTU: \(PMTUDState.minimumMTU)")
         } else if nextMTU == currentPathMTU {
             path.log.info(
-                "finished searching: packet too big MTU == current MTU: \(currentPathMTU)"
+                "Finished searching: packet too big MTU == current MTU: \(currentPathMTU)"
             )
             searchComplete(on: path)
         } else if nextMTU > probedMTU {
-            path.log.info("ignore packet too big MTU > probed size: \(probedMTU)")
+            path.log.info("Ignore packet too big MTU > probed size: \(probedMTU)")
         } else if PMTUDState.minimumMTU <= nextMTU && nextMTU < currentPathMTU {
-            path.log.info("packet too big MTU < current path MTU \(currentPathMTU)")
+            path.log.info("Packet too big MTU < current path MTU \(currentPathMTU)")
             packetTooBigMTU = (packetTooBigMTU == 0) ? nextMTU : min(packetTooBigMTU, nextMTU)
             path.parentProtocol.recordSentPackets {
                 enterBlackholeDetection(on: path)
             }
         } else if currentPathMTU < nextMTU && nextMTU < probedMTU {
-            path.log.info("current path MTU < packet too big MTU size < probed MTU")
+            path.log.info("Current path MTU < packet too big MTU size < probed MTU")
             packetTooBigMTU = (packetTooBigMTU == 0) ? nextMTU : min(packetTooBigMTU, nextMTU)
         }
     }
@@ -307,9 +307,9 @@ struct PMTUDState: ~Copyable {
         }
 
         failedProbeCount += 1
-        path.log.info("lost probe for MTU \(lostMTU), probe count \(failedProbeCount)")
+        path.log.info("Lost probe for MTU \(lostMTU), probe count \(failedProbeCount)")
         if failedProbeCount == PMTUDState.maxProbeCount {
-            path.log.info("finish searching: reached maxProbeCount")
+            path.log.info("Finished searching: reached maxProbeCount")
             searchComplete(on: path)
         } else {
             updateProbeSize(on: path)
@@ -383,7 +383,7 @@ struct PMTUDState: ~Copyable {
 
     private mutating func enterBlackholeDetection(on path: QUICPath) -> NetworkUniqueDeque<SentPacketRecord> {
         guard enabled else { return .init() }
-        path.log.info("entering blackhole detection, setting path MTU to \(PMTUDState.minimumMTU)")
+        path.log.info("Entering blackhole detection, setting path MTU to \(PMTUDState.minimumMTU)")
         currentPathMTU = PMTUDState.minimumMTU
         searchCompleted = false
         failedProbeCount = 0
@@ -468,7 +468,7 @@ struct PMTUDState: ~Copyable {
 
     private mutating func updateProbeSize(on path: QUICPath) {
         if searchCompleted {
-            Logger.proto.fault("attempt to update probe size while search is completed")
+            Logger.proto.fault("Attempt to update probe size while search is completed")
             return
         }
 

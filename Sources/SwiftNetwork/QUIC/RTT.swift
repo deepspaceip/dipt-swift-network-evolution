@@ -58,7 +58,7 @@ struct RTT: ~Copyable, PrefixedLoggable {
         }
         set {
             _remoteMaxAckDelay = newValue
-            log.debug("new remoteMaxAckDelay: \(_remoteMaxAckDelay)")
+            log.debug("New remoteMaxAckDelay: \(_remoteMaxAckDelay)")
         }
     }
 

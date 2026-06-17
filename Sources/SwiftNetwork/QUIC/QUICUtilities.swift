@@ -64,7 +64,7 @@ public struct QUICConnectionUtilities {
         shortHeaderDestinationCIDLength: Int?
     ) -> QUICRoutingHeader? {
         guard buffer.count >= Constants.minimumPacketSize else {
-            Logger.proto.error("buffer length < minimum packet size, len=\(buffer.count)")
+            Logger.proto.error("Buffer length < minimum packet size, len=\(buffer.count)")
             return nil
         }
 

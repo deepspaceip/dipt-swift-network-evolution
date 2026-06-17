@@ -89,6 +89,12 @@ public protocol OneToOneProtocolHandler: ~Copyable, OutboundDataHandler, Inbound
     /// Protocols that don't handle events should initialize this to `true`.
     /// The stack may set this to `false` explicitly, after which you shouldn't set it back to `true`.
     var passthroughEvents: Bool { get set }
+
+    /// Update this protocols data transfer snapshot.
+    func updateDataTransferSnapshot(_ snapshot: inout DataTransferSnapshot)
+
+    /// Fetch this protocols establishment report entry
+    var protocolEstablishmentReport: ProtocolEstablishmentReport? { get }
 }
 
 @_spi(ProtocolProvider)
@@ -380,6 +386,36 @@ extension OneToOneProtocolHandler where Self: ~Copyable {
         #endif
     }
 
+    public func getMetrics(
+        _ from: ProtocolInstanceReference,
+        requestedNetworkMetric: RequestedNetworkMetrics
+    ) -> NetworkMetrics? {
+        do { try validate(upper: from, #function) } catch { return nil }
+        let lowerMetrics = lower.invokeGetMetrics(
+            effectiveSelfReference,
+            requestedNetworkMetric: requestedNetworkMetric
+        )
+        switch requestedNetworkMetric {
+        case .protocolEstablishmentReports:
+            var reports = [ProtocolEstablishmentReport]()
+            if case .protocolEstablishmentReports(let protocolEstablishmentReports) = lowerMetrics {
+                reports = protocolEstablishmentReports
+            }
+            if let currentProtocolEstablishmentReport = protocolEstablishmentReport {
+                reports.append(currentProtocolEstablishmentReport)
+            }
+            return .protocolEstablishmentReports(reports)
+        case .dataTransferSnapshot:
+            if case .dataTransferSnapshot(var snapshot) = lowerMetrics {
+                updateDataTransferSnapshot(&snapshot)
+                return .dataTransferSnapshot(snapshot)
+            }
+            var snapshot = DataTransferSnapshot()
+            updateDataTransferSnapshot(&snapshot)
+            return .dataTransferSnapshot(snapshot)
+        }
+    }
+
     public func tlsOptions(from parameters: Parameters) -> ProtocolOptions<SwiftTLSProtocol>? {
         parameters.tlsOptions(for: self.reference)
     }
@@ -431,6 +467,10 @@ extension OneToOneProtocolHandler where Self: ~Copyable {
     public mutating func handleApplicationEvent(_ event: ApplicationEvent) -> HandleNetworkEventResult {
         .unconsumed
     }
+
+    public func updateDataTransferSnapshot(_ snapshot: inout DataTransferSnapshot) {}
+
+    public var protocolEstablishmentReport: ProtocolEstablishmentReport? { nil }
 }
 
 @available(Network 0.1.0, *)

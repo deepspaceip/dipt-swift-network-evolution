@@ -542,7 +542,15 @@ public struct InPlaceSerializer<Factory: SerializerSpanFactory & ~Copyable & ~Es
             return
         }
 
+        #if os(watchOS) && arch(arm64_32)
+        // Fix for Span not being available on 32-bit watchOS
+        // This surfaces when build with the arm64_32 toolchain
+        // https://github.com/swiftlang/swift/blob/51b0b4aa41f28eae7d96af6f98c1fbd2b4b63958/stdlib/public/core/StringUTF8View.swift#L386
+        let utf8Bytes = Array(value.utf8).span.bytes
+        #else
+        // Builds for watchOS 64 bit variants and all other platforms
         let utf8Bytes = value.utf8.span.bytes
+        #endif
         let utf8ByteCount = utf8Bytes.byteCount
         if byteCount <= utf8ByteCount {
             try span(utf8Bytes.extracting(first: byteCount))
@@ -757,7 +765,15 @@ public struct FrameSerializer: ~Copyable {
             return
         }
 
+        #if os(watchOS) && arch(arm64_32)
+        // Fix for Span not being available on 32-bit watchOS
+        // This surfaces when build with the arm64_32 toolchain
+        // https://github.com/swiftlang/swift/blob/51b0b4aa41f28eae7d96af6f98c1fbd2b4b63958/stdlib/public/core/StringUTF8View.swift#L386
+        let utf8Bytes = Array(value.utf8).span.bytes.extracting(first: byteCount)
+        #else
+        // Builds for watchOS 64 bit variants and all other platforms
         let utf8Bytes = value.utf8.span.bytes.extracting(first: byteCount)
+        #endif
         let extraBytes = byteCount - utf8Bytes.byteCount
 
         withOutputSpan(length: byteCount) { outputSpan in

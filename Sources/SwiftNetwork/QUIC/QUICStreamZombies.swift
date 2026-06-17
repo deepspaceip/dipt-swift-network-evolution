@@ -148,7 +148,7 @@ struct QUICStreamZombieList {
             return
         }
         connection.log.debug(
-            "received final size of \(finalSize) (previous received size \(lastSize)"
+            "Received final size of \(finalSize) (previous received size \(lastSize)"
         )
 
         let newLastOffset = finalSize == 0 ? 0 : finalSize - 1
@@ -172,7 +172,7 @@ struct QUICStreamZombieList {
             )
         else {
             connection.log.error(
-                "final size invariants violated (final size \(finalSize))"
+                "Final size invariants violated (final size \(finalSize))"
             )
             return
         }

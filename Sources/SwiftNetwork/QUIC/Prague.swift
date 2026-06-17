@@ -544,7 +544,7 @@ struct Prague: CongestionControlProtocol, CubicLikeProtocol {
     ) {
         if _slowPath(ceCount < ecnCECounter) {
             log.fault(
-                "new CE count \(ceCount) can't be less than current CE count \(ecnCECounter)"
+                "New CE count \(ceCount) can't be less than current CE count \(ecnCECounter)"
             )
         }
 
@@ -658,12 +658,10 @@ struct Prague: CongestionControlProtocol, CubicLikeProtocol {
         resetInternal()
     }
 
-    #if !NETWORK_EMBEDDED
     func filloutDataTransferSnapshot(dataTransferSnapshot: inout DataTransferSnapshot) {
         dataTransferSnapshot.transportCongestionWindow = congestionWindow
         dataTransferSnapshot.transportSlowStartThreshold = slowStartThreshold
     }
-    #endif
 
     mutating func reset(mss: Int, qlog: QLog? = nil) {
         congestionWindow = Prague.initialCongestionWindow(mss)

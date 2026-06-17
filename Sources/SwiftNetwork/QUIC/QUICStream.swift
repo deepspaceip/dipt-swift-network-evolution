@@ -73,7 +73,7 @@ struct QUICStreamIDState: ~Copyable {
         pendingStartStreams.append(stream)
         stream.pendingStart = true
         let logContext = self.logContext
-        stream.log.debug("is pending \(logContext)")
+        stream.log.debug("Is pending \(logContext)")
     }
 
     mutating func removePending(_ stream: QUICStreamInstance) {
@@ -89,7 +89,7 @@ struct QUICStreamIDState: ~Copyable {
         pendingStartStreams.remove(at: index)
         stream.pendingStart = false
         let logContext = self.logContext
-        stream.log.debug("is no longer pending \(logContext)")
+        stream.log.debug("Is no longer pending \(logContext)")
     }
 
     mutating func removeAllPending() {
@@ -162,7 +162,7 @@ struct QUICStreamIDState: ~Copyable {
                 return (valid: false, checkZombie: true)
             } else {
                 connection.log.error(
-                    "peer is attempting to open an invalid stream (\(streamID)); our role is \(isServer ? "server" : "client") (last \(logContext) \(largestOutboundStreamID?.description ?? "nil"))"
+                    "Peer is attempting to open an invalid stream (\(streamID)); our role is \(isServer ? "server" : "client") (last \(logContext) \(largestOutboundStreamID?.description ?? "nil"))"
                 )
                 connection.close(with: .streamStateError, "invalid stream ID")
 
@@ -172,7 +172,7 @@ struct QUICStreamIDState: ~Copyable {
 
         if newStreamIDsAreBlocked(streamID) {
             connection.log.error(
-                "stream ID \(streamID) exceeded the maximum allowed"
+                "Stream ID \(streamID) exceeded the maximum allowed"
             )
             connection.close(with: .streamLimitError, "exceeded maximum stream ID")
 
@@ -184,7 +184,7 @@ struct QUICStreamIDState: ~Copyable {
         // already closed.
         if streamID < nextInboundStreamID {
             connection.log.info(
-                "not recreating closed stream (next \(logContext) \(nextInboundStreamID))"
+                "Not recreating closed stream (next \(logContext) \(nextInboundStreamID))"
             )
             return (valid: false, checkZombie: true)
         }
@@ -397,7 +397,7 @@ struct QUICStreamList: ~Copyable {
         }
         list.remove(at: index)
         stream.listMembership.remove(listType)
-        stream.log.debug("removed from \(name)")
+        stream.log.debug("Removed from \(name)")
     }
 
     mutating func removeAll(connection: QUICConnection) {
@@ -626,9 +626,9 @@ public final class QUICStreamInstance: MultiplexedStreamFlow<QUICConnection>,
 
     deinit {
         if let streamID = streamID {
-            log.debug("deallocating unassigned stream \(streamID.value)")
+            log.debug("Deallocating unassigned stream \(streamID.value)")
         } else {
-            log.debug("deallocating unassigned stream")
+            log.debug("Deallocating unassigned stream")
         }
         reassemblyQueue.dequeueAll()
         // If handleStreamClose has already been called just return
@@ -706,7 +706,7 @@ public final class QUICStreamInstance: MultiplexedStreamFlow<QUICConnection>,
         // have enough space to take the stream data
         if frame.length > flowControlState.maximumUnreadInboundBytesAllowed {
             log.error(
-                "not enough receive buffer space \(frame.length) > \(flowControlState.maximumUnreadInboundBytesAllowed)"
+                "Not enough receive buffer space \(frame.length) > \(flowControlState.maximumUnreadInboundBytesAllowed)"
             )
             frame.frame.finalize(success: false)
             return false
@@ -790,7 +790,7 @@ public final class QUICStreamInstance: MultiplexedStreamFlow<QUICConnection>,
             }
             if newOffset > reassemblyQueue.finOffset {
                 log.error(
-                    "bytes received \(newOffset) > fin offset \(reassemblyQueue.finOffset)"
+                    "Bytes received \(newOffset) > fin offset \(reassemblyQueue.finOffset)"
                 )
                 connection.close(with: .internalError, "bytes received larger than FIN offset")
                 return false
@@ -917,7 +917,7 @@ public final class QUICStreamInstance: MultiplexedStreamFlow<QUICConnection>,
         let totalLength = reassemblyQueue.availableToDequeue
         log.datapath("total available reassembled data \(totalLength)")
         guard totalLength >= 0 else {
-            log.error("reassembled data length cannot be negative")
+            log.error("Reassembled data length cannot be negative")
             return nil
         }
         if totalLength == 0 {
@@ -936,7 +936,7 @@ public final class QUICStreamInstance: MultiplexedStreamFlow<QUICConnection>,
                 // This is a ReassemblyQueue bug, hopefully retransmission will recover
                 // Therefore `deliveredInboundBytes` is called below, so all the accounting is
                 // kept correct.
-                log.error("reassembled dequeued data length > available length, dropping data")
+                log.error("Reassembled dequeued data length > available length, dropping data")
                 break
             }
 
@@ -969,7 +969,7 @@ public final class QUICStreamInstance: MultiplexedStreamFlow<QUICConnection>,
         if writtenCount < totalLength {
             // This is a ReassemblyQueue bug, but should be recoverable
             log.error(
-                "reassembled dequeued data length \(writtenCount) < available length \(totalLength)"
+                "Reassembled dequeued data length \(writtenCount) < available length \(totalLength)"
             )
         }
 
@@ -1056,7 +1056,7 @@ public final class QUICStreamInstance: MultiplexedStreamFlow<QUICConnection>,
                     return
                 }
                 log.notice(
-                    "reached unidirectional stream limit (STREAMS_BLOCKED): \(connection.unidirectionalStreams.remoteMaxStreams)"
+                    "Reached unidirectional stream limit (STREAMS_BLOCKED): \(connection.unidirectionalStreams.remoteMaxStreams)"
                 )
                 connection.unidirectionalStreams.previousRemoteMaxStreams =
                     connection.unidirectionalStreams.remoteMaxStreams
@@ -1072,7 +1072,7 @@ public final class QUICStreamInstance: MultiplexedStreamFlow<QUICConnection>,
                     return
                 }
                 log.notice(
-                    "reached bidirectional stream limit (STREAMS_BLOCKED): \(connection.bidirectionalStreams.remoteMaxStreams)"
+                    "Reached bidirectional stream limit (STREAMS_BLOCKED): \(connection.bidirectionalStreams.remoteMaxStreams)"
                 )
                 connection.bidirectionalStreams.previousRemoteMaxStreams =
                     connection.bidirectionalStreams.remoteMaxStreams

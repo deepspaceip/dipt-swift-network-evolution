@@ -73,7 +73,7 @@ final class SwiftNetworkInterfaceTests: NetTestCase {
             let wastedSockFd = socket(AF_INET, Int32(SOCK_DGRAM.rawValue), 0)
             #endif
             if wastedSockFd < 0 {
-                Logger.proto.info("successfully opened too many sockets")
+                Logger.proto.info("Successfully opened too many sockets")
                 socketsExhausted = true
                 break
             }

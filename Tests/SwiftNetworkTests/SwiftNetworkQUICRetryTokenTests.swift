@@ -46,6 +46,7 @@ internal import os
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
 
+@available(Network 0.1.0, *)
 final class SwiftNetworkQUICRetryTokenTests: NetTestCase {
     func testQUICInternalServerForceRetryDuringInitial() throws {
         let serverOptions = QUICProtocol.options()

@@ -34,6 +34,7 @@ extension FixedWidthInteger {
         return nil
     }
 
+    @available(macOS 11, iOS 14, tvOS 14, watchOS 7, *)
     var variableLengthSize: Int {
         guard let size = self.safeVariableLengthSize else {
             Logger.proto.error("Integer value too large to encode into a 8-byte VLE")
@@ -52,6 +53,7 @@ extension UInt64 {
         if self <= 4_611_686_018_427_387_903 { return 8 }
         return nil
     }
+    @available(macOS 11, iOS 14, tvOS 14, watchOS 7, *)
     @inline(__always)
     var variableLengthSize: Int {
         guard let size = self.safeVariableLengthSize else {
@@ -63,6 +65,7 @@ extension UInt64 {
 }
 
 extension UInt64 {
+    @available(macOS 11, iOS 14, tvOS 14, watchOS 7, *)
     func variableLengthEncodeInto(_ buffer: inout [UInt8]) {
         guard let length = self.safeVariableLengthSize else {
             // Too big, encode the max UInt62 value instead
@@ -88,6 +91,7 @@ extension UInt64 {
         }
     }
 
+    @available(macOS 10.14.4, iOS 12.2, tvOS 12.2, watchOS 5.2, *)
     @discardableResult
     func variableLengthEncodeInto(
         _ bytes: inout MutableRawSpan,
@@ -118,6 +122,7 @@ extension UInt64 {
         return length
     }
 
+    @available(macOS 11, iOS 14, tvOS 14, watchOS 7, *)
     func variableLengthValidateInBuffer(_ buffer: RawSpan, offset: Int = 0) throws(VariableLengthEncodingError) -> Int {
         let length = self.variableLengthSize
         guard offset + length <= buffer.byteCount else {

@@ -165,6 +165,7 @@ public protocol OutboundDatagramHandler: ~Copyable, OutboundDataHandler where Up
 
 // MARK: Implementation Details
 
+@available(Network 0.1.0, *)
 extension AutomaticLowerDatagramProcessing where Self: ~Copyable {
     mutating func _readInboundDatagrams() {
         var readCount = 0
@@ -195,6 +196,7 @@ extension AutomaticLowerDatagramProcessing where Self: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension AutomaticUpperDatagramProcessing where Self: ~Copyable {
     internal func newOutboundFrame(_ dataSize: Int) -> Frame {
         Frame(count: dataSize)
@@ -229,6 +231,7 @@ extension AutomaticUpperDatagramProcessing where Self: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolInstanceReference {
     func receiveDatagrams(
         _ from: ProtocolInstanceReference,

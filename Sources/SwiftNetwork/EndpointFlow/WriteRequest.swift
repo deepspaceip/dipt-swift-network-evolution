@@ -23,6 +23,7 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 struct WriteRequest: ~Copyable {
     var frame: Frame
     let completion: (@Sendable (Result<Void, NetworkError>) -> Void)?

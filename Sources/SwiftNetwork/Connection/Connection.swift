@@ -92,6 +92,7 @@ public protocol NetworkProtocolOptions {
     func configure(parameters: Parameters)
 }
 
+@available(Network 0.1.0, *)
 extension NetworkProtocolOptions {
     public var belowProtocol: BelowProtocol {
         fatalError("This should not be called")

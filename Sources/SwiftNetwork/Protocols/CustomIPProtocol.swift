@@ -118,6 +118,7 @@ public struct CustomIPProtocol: NetworkProtocol {
     }
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolOptions<CustomIPProtocol> {
     var ipProtocolNumber: UInt8 {
         get { perProtocolOptions!.ipProtocolNumber }

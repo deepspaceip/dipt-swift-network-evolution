@@ -21,6 +21,7 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 struct Pacer: ~Copyable {
     var packetSentTime: NetworkClock.Instant = .zero  // in nanoseconds and in absolute time, when we last sent a packet
     var startupRate: UInt64 = 0  // pacing rate during startup (includes reset, after idle etc)

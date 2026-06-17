@@ -22,6 +22,7 @@ internal import os
 #endif
 
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 public final class DatagramPerfTestHandler: ProtocolInstanceContainer, InboundDatagramHandler, LoggableProtocol {
 
     public typealias LowerProtocol = OutboundDatagramLinkage
@@ -240,6 +241,7 @@ public final class DatagramPerfTestHandler: ProtocolInstanceContainer, InboundDa
 }
 
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 extension DatagramPerfTestHandler: UpperProtocolHandler {
 
     // UpperProtocolHandler conformance

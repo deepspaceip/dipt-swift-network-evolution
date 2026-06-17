@@ -777,6 +777,7 @@ public struct Parameters: Hashable, CustomStringConvertible {
 
 // MARK: - Description
 
+@available(Network 0.1.0, *)
 extension Parameters {
     public var description: String {
         #if !NETWORK_EMBEDDED
@@ -880,6 +881,7 @@ extension Parameters {
 
 // MARK: - Accessors
 
+@available(Network 0.1.0, *)
 extension Parameters {
     var processUUID: SystemUUID {
         get { pathParameters.processPathValue.processUUID }

@@ -24,7 +24,8 @@ internal import os
 
 // MARK: - IP address parsing
 
-private func parseIPv4(_ string: String) -> IPv4Address? {
+@available(Network 0.1.0, *)
+func parseIPv4(_ string: String) -> IPv4Address? {
     let parts = string.split(separator: ".")
     guard parts.count == 4 else { return nil }
     var bytes = [UInt8]()
@@ -35,7 +36,8 @@ private func parseIPv4(_ string: String) -> IPv4Address? {
     return IPv4Address(bytes)
 }
 
-private func parseIPv6(_ string: String) -> IPv6Address? {
+@available(Network 0.1.0, *)
+func parseIPv6(_ string: String) -> IPv6Address? {
     var addr = in6_addr()
     guard string.withCString({ inet_pton(AF_INET6, $0, &addr) }) == 1 else {
         return nil
@@ -46,17 +48,20 @@ private func parseIPv6(_ string: String) -> IPv6Address? {
 
 // MARK: - Helpers
 
-private func makeParams(localEndpoint: Endpoint) -> ParametersBuilder<UDP> {
+@available(Network 0.1.0, *)
+func makeParams(localEndpoint: Endpoint) -> ParametersBuilder<UDP> {
     let builder = ParametersBuilder<UDP>.parameters { UDP() }
         .localEndpoint(localEndpoint)
     return builder
 }
 
-private func makeConnection(to remote: Endpoint, localEndpoint: Endpoint) -> NetworkConnection<UDP> {
+@available(Network 0.1.0, *)
+func makeConnection(to remote: Endpoint, localEndpoint: Endpoint) -> NetworkConnection<UDP> {
     NetworkConnection(to: remote, using: makeParams(localEndpoint: localEndpoint))
 }
 
-private func parseEndpoints(ipString: String, port: UInt16, localPort: UInt16) -> (remote: Endpoint, local: Endpoint)? {
+@available(Network 0.1.0, *)
+func parseEndpoints(ipString: String, port: UInt16, localPort: UInt16) -> (remote: Endpoint, local: Endpoint)? {
     if let v4 = parseIPv4(ipString) {
         return (
             Endpoint(address: v4, port: port),
@@ -73,9 +78,10 @@ private func parseEndpoints(ipString: String, port: UInt16, localPort: UInt16) -
 
 // MARK: - SocketTransfer
 
-let NSEC_PER_MSEC = UInt64(Duration.milliseconds(1) / Duration.nanoseconds(1))
-
+@available(Network 0.1.0, *)
 final class SocketTransfer {
+
+    static let NSEC_PER_MSEC = UInt64(Duration.milliseconds(1) / Duration.nanoseconds(1))
 
     let clientPort: UInt16 = 9100
     let serverPort: UInt16 = 9101
@@ -176,7 +182,7 @@ final class SocketTransfer {
         print("Completed \(successCount) / \(iterations) transfers")
         guard successCount == iterations else { return 0 }
         let endTime = DispatchTime.now().uptimeNanoseconds
-        return Double(endTime - timestart) / Double(NSEC_PER_MSEC) / 1000.0
+        return Double(endTime - timestart) / Double(SocketTransfer.NSEC_PER_MSEC) / 1000.0
     }
 
     func sendToRemote(
@@ -224,63 +230,69 @@ final class SocketTransfer {
         print("Completed \(successCount) / \(iterations) sends")
         guard successCount == iterations else { return 0 }
         let endTime = DispatchTime.now().uptimeNanoseconds
-        return Double(endTime - timestart) / Double(NSEC_PER_MSEC) / 1000.0
+        return Double(endTime - timestart) / Double(SocketTransfer.NSEC_PER_MSEC) / 1000.0
     }
 }
 
-// MARK: - Argument parsing
+// MARK: - Argument parsing helper
 
-var iterations = 100
-var sendSize = 1000
-var echo = true
-var remoteIP: String? = nil
-var remotePort: UInt16? = nil
-var localPort: UInt16 = 0
-let arguments = CommandLine.arguments
-
-func parseArg<T>(_ flag: String, parse: (String) -> T?) -> T? {
+func parseArg<T>(_ arguments: [String], _ flag: String, parse: (String) -> T?) -> T? {
     guard let index = arguments.firstIndex(of: flag),
         arguments.count > index + 1
     else { return nil }
     return parse(arguments[index + 1])
 }
 
-if let v: Int = parseArg("-iterations", parse: { Int($0) }) { iterations = v }
-if let v: Int = parseArg("-size", parse: { Int($0) }) { sendSize = v }
-if let v: String = parseArg("-ip", parse: { $0 }) { remoteIP = v }
-if let v: UInt16 = parseArg("-port", parse: { UInt16($0) }) { remotePort = v }
-if let v: UInt16 = parseArg("-localport", parse: { UInt16($0) }) { localPort = v }
-if arguments.contains("-oneway") { echo = false }
+if #available(anyAppleOS 26, *) {
+    // MARK: - Argument parsing
 
-// MARK: - Run
+    var iterations = 100
+    var sendSize = 1000
+    var echo = true
+    var remoteIP: String? = nil
+    var remotePort: UInt16? = nil
+    var localPort: UInt16 = 0
+    let arguments = CommandLine.arguments
 
-let socketTransfer = SocketTransfer()
+    if let v: Int = parseArg(arguments, "-iterations", parse: { Int($0) }) { iterations = v }
+    if let v: Int = parseArg(arguments, "-size", parse: { Int($0) }) { sendSize = v }
+    if let v: String = parseArg(arguments, "-ip", parse: { $0 }) { remoteIP = v }
+    if let v: UInt16 = parseArg(arguments, "-port", parse: { UInt16($0) }) { remotePort = v }
+    if let v: UInt16 = parseArg(arguments, "-localport", parse: { UInt16($0) }) { localPort = v }
+    if arguments.contains("-oneway") { echo = false }
 
-if let remoteIP {
-    guard let remotePort else {
-        print("Error: -port is required when using -ip")
-        exit(1)
-    }
-    print("Starting \(iterations) sends to \(remoteIP):\(remotePort)")
-    let totalTime = socketTransfer.sendToRemote(
-        ipString: remoteIP,
-        port: remotePort,
-        localPort: localPort,
-        iterations: iterations,
-        sendSize: sendSize
-    )
-    if totalTime > 0 {
-        print("Finished all (\(iterations)) sends in \(totalTime) seconds")
+    // MARK: - Run
+
+    let socketTransfer = SocketTransfer()
+
+    if let remoteIP {
+        guard let remotePort else {
+            print("Error: -port is required when using -ip")
+            exit(1)
+        }
+        print("Starting \(iterations) sends to \(remoteIP):\(remotePort)")
+        let totalTime = socketTransfer.sendToRemote(
+            ipString: remoteIP,
+            port: remotePort,
+            localPort: localPort,
+            iterations: iterations,
+            sendSize: sendSize
+        )
+        if totalTime > 0 {
+            print("Finished all (\(iterations)) sends in \(totalTime) seconds")
+        } else {
+            print("Error running all (\(iterations)) sends, something failed")
+        }
     } else {
-        print("Error running all (\(iterations)) sends, something failed")
+        let mode = echo ? "round-trip echo" : "one-way send"
+        print("Starting \(iterations) \(mode) transfers")
+        let totalTime = socketTransfer.run(iterations: iterations, sendSize: sendSize, echo: echo)
+        if totalTime > 0 {
+            print("Finished all (\(iterations)) transfers in \(totalTime) seconds")
+        } else {
+            print("Error running all (\(iterations)) transfers, something failed")
+        }
     }
 } else {
-    let mode = echo ? "round-trip echo" : "one-way send"
-    print("Starting \(iterations) \(mode) transfers")
-    let totalTime = socketTransfer.run(iterations: iterations, sendSize: sendSize, echo: echo)
-    if totalTime > 0 {
-        print("Finished all (\(iterations)) transfers in \(totalTime) seconds")
-    } else {
-        print("Error running all (\(iterations)) transfers, something failed")
-    }
+    fatalError("This tool requires macOS 26 or newer")
 }

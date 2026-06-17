@@ -45,6 +45,7 @@ internal import os
 
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
+@available(Network 0.1.0, *)
 final class SwiftNetworkQUICKeepaliveTests: NetTestCase {
     func testQUICClientKeepAliveWithLowTimeoutAndPMTUDInterval() throws {
         // This test is expected to timeout because the idleTimeout is set to 2 seconds.

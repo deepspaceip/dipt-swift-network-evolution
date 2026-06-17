@@ -18,10 +18,13 @@ import XCTest
 @testable import SwiftNetwork
 #endif
 
+@available(Network 0.1.0, *)
 extension Int: NetworkComparable {}
 
+@available(Network 0.1.0, *)
 extension UInt8: NetworkComparable {}
 
+@available(Network 0.1.0, *)
 final class SwiftNetworkHeapTests: XCTestCase {
 
     func testSimple() throws {
@@ -147,6 +150,7 @@ final class SwiftNetworkHeapTests: XCTestCase {
 
 }
 
+@available(Network 0.1.0, *)
 extension NetworkHeap {
     internal func checkHeapProperty() -> Bool {
         func checkHeapProperty(index: Int) -> Bool {
@@ -173,6 +177,7 @@ extension NetworkHeap {
     }
 }
 
+@available(Network 0.1.0, *)
 extension Array where Element: NetworkComparable & Copyable {
     init(_ heap: borrowing NetworkHeap<Element>) {
         self = []
@@ -184,6 +189,7 @@ extension Array where Element: NetworkComparable & Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension NetworkHeap {
     func sorted() -> [Element] {
         Array(self).sorted(by: { $0 < $1 })

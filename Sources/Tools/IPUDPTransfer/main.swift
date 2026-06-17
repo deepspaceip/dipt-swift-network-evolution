@@ -23,6 +23,7 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 final class IPUDPTransfer {
 
     // 169.254.156.146
@@ -199,64 +200,68 @@ final class IPUDPTransfer {
     }
 }
 
-// Take command line arguments
-var iterations = 1000
-var packets = 1000
-var loggingHandler: LoggingHandle = LoggingHandle(loggingType: .none)
-var sendSize = 1000  // 1k
-var arguments = CommandLine.arguments.dropFirst(0)
-if arguments.contains("-iterations"),
-    let index = arguments.firstIndex(of: "-iterations")
-{
-    if arguments.count >= (index + 2) {
-        if let parsedIterations = Int(arguments[index + 1]) {
-            iterations = parsedIterations
+if #available(anyAppleOS 26, *) {
+    // Take command line arguments
+    var iterations = 1000
+    var packets = 1000
+    var loggingHandler: LoggingHandle = LoggingHandle(loggingType: .none)
+    var sendSize = 1000  // 1k
+    let arguments = CommandLine.arguments.dropFirst(0)
+    if arguments.contains("-iterations"),
+        let index = arguments.firstIndex(of: "-iterations")
+    {
+        if arguments.count >= (index + 2) {
+            if let parsedIterations = Int(arguments[index + 1]) {
+                iterations = parsedIterations
+            }
         }
     }
-}
 
-if arguments.contains("-packets"),
-    let index = arguments.firstIndex(of: "-packets")
-{
-    if arguments.count >= (index + 2) {
-        if let parsedPackets = Int(arguments[index + 1]) {
-            packets = parsedPackets
+    if arguments.contains("-packets"),
+        let index = arguments.firstIndex(of: "-packets")
+    {
+        if arguments.count >= (index + 2) {
+            if let parsedPackets = Int(arguments[index + 1]) {
+                packets = parsedPackets
+            }
         }
     }
-}
 
-if arguments.contains("-logging"),
-    let index = arguments.firstIndex(of: "-logging")
-{
-    if arguments.count >= (index + 2) {
-        let parsedLoggingOption = String(arguments[index + 1])
-        loggingHandler = LoggingHandle(parsedLoggingOption)
-    }
-}
-
-if arguments.contains("-size"),
-    let index = arguments.firstIndex(of: "-size")
-{
-    if arguments.count >= (index + 2) {
-        if let sendSizeOption = Int(arguments[index + 1]) {
-            sendSize = sendSizeOption
+    if arguments.contains("-logging"),
+        let index = arguments.firstIndex(of: "-logging")
+    {
+        if arguments.count >= (index + 2) {
+            let parsedLoggingOption = String(arguments[index + 1])
+            loggingHandler = LoggingHandle(parsedLoggingOption)
         }
     }
-}
 
-// Create and run the transfers
-let ipUDPTransfer = IPUDPTransfer()
-let group = DispatchGroup()
-print("Starting \(iterations) transfers of \(packets) packets with logging set to \(loggingHandler)")
-let totalTime = ipUDPTransfer.run(
-    iterations: iterations,
-    packets: packets,
-    loggingHandle: loggingHandler,
-    group: group,
-    sendSize: sendSize
-)
-if totalTime > 0 {
-    print("Finished all (\(iterations)) transfers in \(totalTime) seconds")
+    if arguments.contains("-size"),
+        let index = arguments.firstIndex(of: "-size")
+    {
+        if arguments.count >= (index + 2) {
+            if let sendSizeOption = Int(arguments[index + 1]) {
+                sendSize = sendSizeOption
+            }
+        }
+    }
+
+    // Create and run the transfers
+    let ipUDPTransfer = IPUDPTransfer()
+    let group = DispatchGroup()
+    print("Starting \(iterations) transfers of \(packets) packets with logging set to \(loggingHandler)")
+    let totalTime = ipUDPTransfer.run(
+        iterations: iterations,
+        packets: packets,
+        loggingHandle: loggingHandler,
+        group: group,
+        sendSize: sendSize
+    )
+    if totalTime > 0 {
+        print("Finished all (\(iterations)) transfers in \(totalTime) seconds")
+    } else {
+        print("Error running all (\(iterations)) transfers, something failed")
+    }
 } else {
-    print("Error running all (\(iterations)) transfers, something failed")
+    fatalError("This tool requires macOS 26 or newer")
 }

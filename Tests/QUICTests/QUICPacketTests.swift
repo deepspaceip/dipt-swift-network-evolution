@@ -27,6 +27,7 @@ import BasicContainers
 internal import DequeModule
 #endif
 
+@available(Network 0.1.0, *)
 final class PacketTests: XCTestCase {
     func testRequiresLongHeader() {
         for keyState in PacketKeyState.allCases {

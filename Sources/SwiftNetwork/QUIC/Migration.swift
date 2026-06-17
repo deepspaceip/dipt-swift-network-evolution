@@ -13,6 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 #if !NETWORK_NO_SWIFT_QUIC
+@available(Network 0.1.0, *)
 struct Migration: ~Copyable {
     static let defaultMigrationVersion = 7
     static let defaultPTOThreshold = 3
@@ -160,6 +161,7 @@ struct Migration: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension QUICConnection {
     public func handlePathChanged(
         path pathID: MultiplexingPathIdentifier,

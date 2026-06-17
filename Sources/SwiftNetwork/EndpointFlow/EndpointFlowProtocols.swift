@@ -19,10 +19,12 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 protocol AbstractEndpointFlowProtocol: InboundDataHandler, LoggableProtocol {
     func teardown()
 }
 
+@available(Network 0.1.0, *)
 class EndpointFlowProtocol<LinkageType: InboundDataLinkage>: ProtocolInstanceContainer, AbstractEndpointFlowProtocol {
     typealias LowerProtocol = LinkageType.PairedLinkage
 
@@ -245,6 +247,7 @@ class EndpointFlowProtocol<LinkageType: InboundDataLinkage>: ProtocolInstanceCon
     }
 }
 
+@available(Network 0.1.0, *)
 final class DatagramEndpointFlowProtocol: EndpointFlowProtocol<InboundDatagramLinkage>, InboundDatagramHandler {
 
     override var reference: ProtocolInstanceReference { ProtocolInstanceReference(datagramEndpointFlow: self) }
@@ -373,6 +376,7 @@ final class DatagramEndpointFlowProtocol: EndpointFlowProtocol<InboundDatagramLi
     }
 }
 
+@available(Network 0.1.0, *)
 final class StreamEndpointFlowProtocol: EndpointFlowProtocol<InboundStreamLinkage>, InboundStreamHandler {
 
     override var reference: ProtocolInstanceReference { ProtocolInstanceReference(streamEndpointFlow: self) }

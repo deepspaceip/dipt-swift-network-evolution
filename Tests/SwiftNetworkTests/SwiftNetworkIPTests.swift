@@ -22,6 +22,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) import Network
 #endif
 
+@available(Network 0.1.0, *)
 final class SwiftNetworkIPTests: NetTestCase {
 
     // 169.254.156.146

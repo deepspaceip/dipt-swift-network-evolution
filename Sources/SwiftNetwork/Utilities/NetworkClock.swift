@@ -217,6 +217,7 @@ public struct NetworkDuration: DurationProtocol, Hashable, Equatable, CustomStri
 /// 2. You can create a clock with any value, which is useful for unit tests.
 #if !NETWORK_EMBEDDED
 @_spi(Essentials)
+// Availability due to `SwiftNetwork`'s `System.Time` (used by `Instant.now`)
 @available(Network 0.1.0, *)
 #endif
 public struct NetworkClock: Clock {

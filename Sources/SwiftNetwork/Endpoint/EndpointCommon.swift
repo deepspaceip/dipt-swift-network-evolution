@@ -39,6 +39,7 @@ public struct EndpointEqualityFlags: OptionSet, Sendable {
     static public let all: EndpointEqualityFlags = [.interface, .parent, .proxyParent, .alternatives, .publicKeys]
 }
 
+@available(Network 0.1.0, *)
 extension Endpoint.EndpointType {
     enum EndpointRawType: UInt32 {
         case invalid = 0
@@ -81,6 +82,7 @@ extension Endpoint.EndpointType {
     }
 }
 
+@available(Network 0.1.0, *)
 protocol EndpointProtocol: CustomStringConvertible {
     var interface: Interface? { get }
     func isEqual(to other: Self, flags: EndpointEqualityFlags) -> Bool
@@ -132,6 +134,7 @@ public protocol EndpointCommonProtocol: Hashable, Equatable {
 }
 
 #if !NETWORK_PRIVATE
+@available(Network 0.1.0, *)
 extension EndpointCommonProtocol {
     var interface: Interface? {
         get { common.interface }
@@ -139,6 +142,7 @@ extension EndpointCommonProtocol {
     }
 }
 
+@available(Network 0.1.0, *)
 extension EndpointCommon {
     init?(_ data: inout [UInt8]) {
         self.interface = nil

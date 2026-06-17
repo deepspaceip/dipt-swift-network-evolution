@@ -22,6 +22,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
+@available(Network 0.1.0, *)
 class ManagedConnectionIDTests: XCTestCase {
     func testInit() {
         let managedConnectionID = ManagedConnectionID(

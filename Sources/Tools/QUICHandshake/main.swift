@@ -25,6 +25,7 @@ internal import os
 
 #if IMPORT_SWIFTTLS && canImport(SwiftTLS)
 
+@available(Network 0.1.0, *)
 final class QUICHandshake {
 
     let quicBenchmarkUtility = QUICBenchmarkUtility()
@@ -164,35 +165,39 @@ final class QUICHandshake {
     }
 }
 
-// Take command line arguments
-var iterations = 10000
-var loggingHandler: LoggingHandle = LoggingHandle(loggingType: .none)
-var arguments = CommandLine.arguments.dropFirst(0)
-if arguments.contains("-iterations"),
-    let index = arguments.firstIndex(of: "-iterations")
-{
-    if arguments.count >= (index + 2) {
-        if let parsedIterations = Int(arguments[index + 1]) {
-            iterations = parsedIterations
+if #available(anyAppleOS 26, *) {
+    // Take command line arguments
+    var iterations = 10000
+    var loggingHandler: LoggingHandle = LoggingHandle(loggingType: .none)
+    let arguments = CommandLine.arguments.dropFirst(0)
+    if arguments.contains("-iterations"),
+        let index = arguments.firstIndex(of: "-iterations")
+    {
+        if arguments.count >= (index + 2) {
+            if let parsedIterations = Int(arguments[index + 1]) {
+                iterations = parsedIterations
+            }
         }
     }
-}
 
-if arguments.contains("-logging"),
-    let index = arguments.firstIndex(of: "-logging")
-{
-    if arguments.count >= (index + 2) {
-        let parsedLoggingOption = String(arguments[index + 1])
-        loggingHandler = LoggingHandle(parsedLoggingOption)
+    if arguments.contains("-logging"),
+        let index = arguments.firstIndex(of: "-logging")
+    {
+        if arguments.count >= (index + 2) {
+            let parsedLoggingOption = String(arguments[index + 1])
+            loggingHandler = LoggingHandle(parsedLoggingOption)
+        }
     }
+
+    // Create and run the handshake
+    let handshake = QUICHandshake()
+    let group = DispatchGroup()
+    print("Starting \(iterations) iterations with logging set to \(loggingHandler)")
+    let totalTime = handshake.run(iterations: iterations, loggingHandle: loggingHandler, group: group)
+
+    print("Finished all (\(iterations)) iterations in \(totalTime) seconds")
+} else {
+    fatalError("This tool requires macOS 26 or newer")
 }
-
-// Create and run the handshake
-let handshake = QUICHandshake()
-let group = DispatchGroup()
-print("Starting \(iterations) iterations with logging set to \(loggingHandler)")
-let totalTime = handshake.run(iterations: iterations, loggingHandle: loggingHandler, group: group)
-
-print("Finished all (\(iterations)) iterations in \(totalTime) seconds")
 
 #endif

@@ -20,6 +20,7 @@ internal import os
 #endif
 
 // This class won't be shared across thread boundaries.
+@available(Network 0.1.0, *)
 final class LogPrefixer: @unchecked Sendable {
     var log: NetworkLoggerState
     var logIDString: String {
@@ -120,6 +121,7 @@ final class LogPrefixer: @unchecked Sendable {
 }
 
 #if !NETWORK_NO_SWIFT_QUIC
+@available(Network 0.1.0, *)
 protocol PrefixedLoggable: ~Copyable {
     var log: LogPrefixer { get }
 }

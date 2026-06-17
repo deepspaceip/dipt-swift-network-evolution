@@ -91,6 +91,7 @@ public struct QUICStatelessResetToken: Equatable, Sendable, CustomStringConverti
     }
 }
 
+@available(Network 0.1.0, *)
 extension QUICStatelessResetToken.TokenStorage {
     fileprivate static var emptyToken: QUICStatelessResetToken.TokenStorage {
         QUICStatelessResetToken.TokenStorage(repeating: 0)

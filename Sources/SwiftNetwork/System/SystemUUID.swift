@@ -125,6 +125,8 @@ public struct SystemUUID: Hashable, Equatable, CustomStringConvertible, Sendable
     }
 }
 
+// Availability due to Swift's `UInt128.random(in:)` (introduced in Swift 6.0 / iOS 18 / macOS 15)
+@available(macOS 15, iOS 18, tvOS 18, watchOS 11, *)
 extension UInt128 {
     static var randomUUIDValue: UInt128 {
         let random = UInt128.random(in: 1...UInt128.max)
@@ -144,6 +146,7 @@ extension UInt128 {
 }
 
 #if !NETWORK_STANDALONE
+@available(Network 0.1.0, *)
 extension SystemUUID: Codable {
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()

@@ -21,6 +21,7 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 extension System {
     static func isHighMemory() -> Bool {
         #if NETWORK_EMBEDDED

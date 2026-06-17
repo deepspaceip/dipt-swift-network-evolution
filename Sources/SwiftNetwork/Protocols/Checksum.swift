@@ -54,6 +54,7 @@ enum ChecksumError: Error {
     case invalidBuffer
 }
 
+@available(Network 0.1.0, *)
 extension IPv6Address {
     func checksum() -> UInt32 {
         let address = self.addressValue
@@ -66,6 +67,7 @@ extension IPv6Address {
     }
 }
 
+@available(Network 0.1.0, *)
 struct Checksum: ~Copyable {
 
     // Compute IPv6 pseudo-header checksum
@@ -104,6 +106,7 @@ struct Checksum: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension Frame {
     func checksum16(offset: Int, length: Int) throws(ChecksumError) -> UInt16 {
         let frameLength = self.unclaimedLength

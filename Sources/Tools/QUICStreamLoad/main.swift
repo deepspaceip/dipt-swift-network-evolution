@@ -31,6 +31,7 @@ import Crypto
 
 #if IMPORT_SWIFTTLS && canImport(SwiftTLS)
 
+@available(Network 0.1.0, *)
 final class QUICStreamLoad {
 
     // 169.254.156.146
@@ -414,100 +415,104 @@ final class QUICStreamLoad {
     }
 }
 
-// Take command line arguments
-var loggingHandler: LoggingHandle = LoggingHandle(loggingType: .none)
-var uploadSize = 1000  // 1kb
-var downloadSize = 1000  // 1kb
-var streamCount = 100000
-var concurrentStreams = 100
-var linkDelay = NetworkDuration.zero
-var arguments = CommandLine.arguments.dropFirst(0)
+if #available(anyAppleOS 26, *) {
+    // Take command line arguments
+    var loggingHandler: LoggingHandle = LoggingHandle(loggingType: .none)
+    var uploadSize = 1000  // 1kb
+    var downloadSize = 1000  // 1kb
+    var streamCount = 100000
+    var concurrentStreams = 100
+    var linkDelay = NetworkDuration.zero
+    let arguments = CommandLine.arguments.dropFirst(0)
 
-if arguments.contains("-logging"),
-    let index = arguments.firstIndex(of: "-logging")
-{
-    if arguments.count >= (index + 2) {
-        let parsedLoggingOption = String(arguments[index + 1])
-        loggingHandler = LoggingHandle(parsedLoggingOption)
-    }
-}
-
-if arguments.contains("-stream-count"),
-    let index = arguments.firstIndex(of: "-stream-count")
-{
-    if arguments.count >= (index + 2) {
-        if let streamCountOption = Int(arguments[index + 1]) {
-            streamCount = streamCountOption
+    if arguments.contains("-logging"),
+        let index = arguments.firstIndex(of: "-logging")
+    {
+        if arguments.count >= (index + 2) {
+            let parsedLoggingOption = String(arguments[index + 1])
+            loggingHandler = LoggingHandle(parsedLoggingOption)
         }
     }
-}
 
-if arguments.contains("-concurrent-streams"),
-    let index = arguments.firstIndex(of: "-concurrent-streams")
-{
-    if arguments.count >= (index + 2) {
-        if let concurrentStreamsOption = Int(arguments[index + 1]) {
-            concurrentStreams = concurrentStreamsOption
+    if arguments.contains("-stream-count"),
+        let index = arguments.firstIndex(of: "-stream-count")
+    {
+        if arguments.count >= (index + 2) {
+            if let streamCountOption = Int(arguments[index + 1]) {
+                streamCount = streamCountOption
+            }
         }
     }
-}
 
-if arguments.contains("-link-delay-ms"),
-    let index = arguments.firstIndex(of: "-link-delay-ms")
-{
-    if arguments.count >= (index + 2) {
-        if let linkDelayOption = Int(arguments[index + 1]) {
-            linkDelay = .milliseconds(linkDelayOption)
+    if arguments.contains("-concurrent-streams"),
+        let index = arguments.firstIndex(of: "-concurrent-streams")
+    {
+        if arguments.count >= (index + 2) {
+            if let concurrentStreamsOption = Int(arguments[index + 1]) {
+                concurrentStreams = concurrentStreamsOption
+            }
         }
     }
-}
 
-if arguments.contains("-link-delay-us"),
-    let index = arguments.firstIndex(of: "-link-delay-us")
-{
-    if arguments.count >= (index + 2) {
-        if let linkDelayOption = Int(arguments[index + 1]) {
-            linkDelay = .microseconds(linkDelayOption)
+    if arguments.contains("-link-delay-ms"),
+        let index = arguments.firstIndex(of: "-link-delay-ms")
+    {
+        if arguments.count >= (index + 2) {
+            if let linkDelayOption = Int(arguments[index + 1]) {
+                linkDelay = .milliseconds(linkDelayOption)
+            }
         }
     }
-}
 
-if arguments.contains("-upload-size"),
-    let index = arguments.firstIndex(of: "-upload-size")
-{
-    if arguments.count >= (index + 2) {
-        if let sizeOption = Int(arguments[index + 1]) {
-            uploadSize = sizeOption
+    if arguments.contains("-link-delay-us"),
+        let index = arguments.firstIndex(of: "-link-delay-us")
+    {
+        if arguments.count >= (index + 2) {
+            if let linkDelayOption = Int(arguments[index + 1]) {
+                linkDelay = .microseconds(linkDelayOption)
+            }
         }
     }
-}
 
-if arguments.contains("-download-size"),
-    let index = arguments.firstIndex(of: "-download-size")
-{
-    if arguments.count >= (index + 2) {
-        if let sizeOption = Int(arguments[index + 1]) {
-            downloadSize = sizeOption
+    if arguments.contains("-upload-size"),
+        let index = arguments.firstIndex(of: "-upload-size")
+    {
+        if arguments.count >= (index + 2) {
+            if let sizeOption = Int(arguments[index + 1]) {
+                uploadSize = sizeOption
+            }
         }
     }
-}
 
-// Create and run the transfers
-let quicStreamLoad = QUICStreamLoad()
-let group = DispatchGroup()
-let totalTime = quicStreamLoad.run(
-    loggingHandle: loggingHandler,
-    group: group,
-    streamCount: streamCount,
-    concurrentStreams: concurrentStreams,
-    uploadSize: uploadSize,
-    downloadSize: downloadSize,
-    linkDelay: linkDelay
-)
-if totalTime > .zero {
-    print("Finished test in \(totalTime)")
+    if arguments.contains("-download-size"),
+        let index = arguments.firstIndex(of: "-download-size")
+    {
+        if arguments.count >= (index + 2) {
+            if let sizeOption = Int(arguments[index + 1]) {
+                downloadSize = sizeOption
+            }
+        }
+    }
+
+    // Create and run the transfers
+    let quicStreamLoad = QUICStreamLoad()
+    let group = DispatchGroup()
+    let totalTime = quicStreamLoad.run(
+        loggingHandle: loggingHandler,
+        group: group,
+        streamCount: streamCount,
+        concurrentStreams: concurrentStreams,
+        uploadSize: uploadSize,
+        downloadSize: downloadSize,
+        linkDelay: linkDelay
+    )
+    if totalTime > .zero {
+        print("Finished test in \(totalTime)")
+    } else {
+        print("Error running test")
+    }
 } else {
-    print("Error running test")
+    fatalError("This tool requires macOS 26 or newer")
 }
 
 #endif

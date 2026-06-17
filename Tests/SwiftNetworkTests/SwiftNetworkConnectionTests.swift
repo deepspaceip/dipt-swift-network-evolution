@@ -21,6 +21,7 @@ import Crypto
 import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import SwiftNetwork
 
+@available(Network 0.1.0, *)
 final class SwiftNetworkConnectionTests: NetTestCase {
     func testUDPConnectionInit() throws {
         let c1 = NetworkConnection(to: Endpoint(address: IPv4Address.loopback, port: 7777)) {

@@ -21,6 +21,7 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 enum QUICStatistic: Int, CaseIterable {
     case connectionAttempts
     case connectionsEstablished
@@ -141,6 +142,8 @@ enum QUICStatistic: Int, CaseIterable {
     case statelessResetDuringPathProbe
 }
 
+// Availability due to Swift's inline array type (`[96 of Int]`)
+@available(anyAppleOS 26, *)
 struct Statistics: ~Copyable {
 
     private var statisticsArray: [98 of Int]

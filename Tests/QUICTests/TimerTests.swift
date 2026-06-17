@@ -18,14 +18,17 @@ import XCTest
 
 #if canImport(SwiftNetwork)
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import SwiftNetwork
+@available(Network 0.1.0, *)
 typealias QUICTimer = SwiftNetwork.Timer
 #elseif canImport(Network)
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 typealias QUICTimer = Network.Timer
 #endif
 
+@available(Network 0.1.0, *)
 let timerTestsLogPrefixer = LogPrefixer("[TimerTests]")
 
+@available(Network 0.1.0, *)
 final class TimerTests: XCTestCase {
 
     func testOneTimer() {

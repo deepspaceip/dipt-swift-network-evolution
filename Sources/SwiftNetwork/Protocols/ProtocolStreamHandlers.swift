@@ -199,6 +199,7 @@ public protocol OutboundStreamEarlyDataHandler: ~Copyable, OutboundStreamHandler
 
 // MARK: Implementations
 
+@available(Network 0.1.0, *)
 extension AutomaticLowerStreamProcessing where Self: ~Copyable {
     mutating func _readInboundStreamData() {
         var readCount = 0
@@ -224,6 +225,7 @@ extension AutomaticLowerStreamProcessing where Self: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension AutomaticUpperStreamProcessing where Self: ~Copyable {
     internal func newOutboundFrame(_ dataSize: Int) -> Frame {
         Frame(count: dataSize)
@@ -265,6 +267,7 @@ extension AutomaticUpperStreamProcessing where Self: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension AutomaticUpperStreamProcessing where Self: ~Copyable, Self: OutboundStreamEarlyDataHandler {
     mutating func sendEarlyStreamData(_ streamData: consuming FrameArray) throws(NetworkError) {
         upperSendQueue.add(frames: streamData)
@@ -272,6 +275,7 @@ extension AutomaticUpperStreamProcessing where Self: ~Copyable, Self: OutboundSt
     }
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolInstanceReference {
     func receiveStreamData(
         _ from: ProtocolInstanceReference,

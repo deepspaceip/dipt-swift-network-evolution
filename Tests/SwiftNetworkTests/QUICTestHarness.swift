@@ -46,6 +46,7 @@ internal import os
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
 
+@available(Network 0.1.0, *)
 final class QUICTestHarness {
     // 127.0.0.1
     static let clientIPv4Address: [UInt8] = [0x7f, 0x00, 0x00, 0x01]

@@ -12,6 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
+// Availability due to Swift's `Span` type
+@available(anyAppleOS 26, *)
 extension Array {
     init(copying span: Span<Element>, maxCount: Int) {
         let copyCount = Swift.min(span.count, maxCount)

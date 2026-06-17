@@ -195,6 +195,7 @@ extension TopDatagramProtocol where Self: ~Copyable, Self: ~Copyable {
 
 // MARK: - Top Protocol Implementation Details
 
+@available(Network 0.1.0, *)
 extension TopProtocolHandler where Self: ~Copyable {
     var asUpper: LowerProtocol.PairedLinkage { .init(reference: reference) }
 
@@ -248,6 +249,7 @@ extension TopProtocolHandler where Self: ~Copyable {
 }
 
 // Default implementations, to be overridden as necessary
+@available(Network 0.1.0, *)
 extension TopProtocolHandler where Self: ~Copyable {
     public func handleConnectedEvent() {}
 
@@ -256,6 +258,7 @@ extension TopProtocolHandler where Self: ~Copyable {
     public func handleNetworkProtocolEvent(_ event: NetworkProtocolEvent) {}
 }
 
+@available(Network 0.1.0, *)
 extension TopDatapathProtocol where Self: ~Copyable {
     public func handleInboundDataAvailableEvent(_ from: ProtocolInstanceReference) {
         do { try validate(lower: from, #function) } catch { return }
@@ -268,6 +271,7 @@ extension TopDatapathProtocol where Self: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension TopDatapathProtocol where Self: ~Copyable {
     // Default implementations, to be overridden as necessary
     public func handleInboundDataAvailableEvent() {}
@@ -275,6 +279,7 @@ extension TopDatapathProtocol where Self: ~Copyable {
     public func handleOutboundRoomAvailableEvent() {}
 }
 
+@available(Network 0.1.0, *)
 extension TopProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundDatagramLinkage {
     public mutating func attachLowerDatagramProtocol(
         _ lowerProtocol: ProtocolInstanceReference,
@@ -296,6 +301,7 @@ extension TopProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundDat
     }
 }
 
+@available(Network 0.1.0, *)
 extension TopProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundStreamLinkage {
     public mutating func attachLowerStreamProtocol(
         _ lowerProtocol: ProtocolInstanceReference,
@@ -317,6 +323,7 @@ extension TopProtocolHandler where Self: ~Copyable, LowerProtocol == OutboundStr
     }
 }
 
+@available(Network 0.1.0, *)
 extension TopStreamProtocol where Self: ~Copyable {
     public func handleInboundAbortedEvent(_ from: ProtocolInstanceReference, error: NetworkError?) {
         do { try validate(lower: from, #function) } catch { return }
@@ -329,6 +336,7 @@ extension TopStreamProtocol where Self: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension TopStreamProtocol where Self: ~Copyable {
     // Default implementations, to be overridden as necessary
     public func handleInboundAbortedEvent(error: NetworkError?) {}

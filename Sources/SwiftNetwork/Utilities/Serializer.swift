@@ -834,6 +834,7 @@ public struct FrameSerializer: ~Copyable {
     #endif
 }
 
+@available(Network 0.1.0, *)
 extension Serializer {
 
     public static func serialize<T: SerializerSpanFactory & ~Copyable & ~Escapable>(

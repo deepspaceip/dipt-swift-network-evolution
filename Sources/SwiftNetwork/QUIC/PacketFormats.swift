@@ -21,21 +21,25 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 private struct PacketFormatConstants {
     static let preambleLength = MemoryLayout<UInt8>.size
 }
 
+@available(Network 0.1.0, *)
 extension QUICConnectionID {
     // number of bytes required to represent a Connection ID length on the wire
     static let headerCIDLength = 1
 }
 
+@available(Network 0.1.0, *)
 enum QUICPacketFormatsError: Int, Error {
     case serializationBufferTooSmall
     case unexpectedLength
     case sealingFailure
 }
 
+@available(Network 0.1.0, *)
 private func validateSerializationResult(_ result: SerializationResult) throws(QUICError) {
     guard result.isValid else {
         throw QUICError.packetFormats(QUICPacketFormatsError.serializationBufferTooSmall)
@@ -43,6 +47,7 @@ private func validateSerializationResult(_ result: SerializationResult) throws(Q
 }
 
 // MARK: - Version Negotiation
+@available(Network 0.1.0, *)
 struct QUICVersionNegotiation: ~Copyable {
     // 0                   1                   2                   3
     // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -119,6 +124,7 @@ struct QUICVersionNegotiation: ~Copyable {
 }
 
 // Retry Packet
+@available(Network 0.1.0, *)
 struct QUICRetryPacket: ~Copyable {
     // 0                   1                   2                   3
     // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -204,6 +210,7 @@ struct QUICRetryPacket: ~Copyable {
 }
 
 // https://www.rfc-editor.org/rfc/rfc9001.html#name-retry-packet-integrity
+@available(Network 0.1.0, *)
 struct QUICPseudoRetry: ~Copyable {
     static func assemble(
         firstByte: UInt8,
@@ -224,6 +231,7 @@ struct QUICPseudoRetry: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 struct QUICStatelessResetPacket: ~Copyable {
 
     // This design ensures that a Stateless Reset is -- to the extent possible -- indistinguishable from a regular packet with a short header

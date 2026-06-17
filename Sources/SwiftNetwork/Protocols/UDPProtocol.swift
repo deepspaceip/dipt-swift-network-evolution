@@ -458,6 +458,7 @@ public struct UDPProtocol: NetworkProtocol {
     }
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolOptions<UDPProtocol> {
     public var preferNoChecksum: Bool {
         get { perProtocolOptions!.contains(.preferNoChecksum) }

@@ -418,6 +418,7 @@ public struct StreamDeserializer<
     }
 }
 
+@available(Network 0.1.0, *)
 extension StreamDeserializer
 where T: StreamDeserializerState & ~Copyable, Factory: DeserializerSpanFactory & ~Copyable & ~Escapable {
     public static func beginState(_ stateIdentifier: StateIdentifier) -> [Step] {
@@ -432,6 +433,7 @@ where T: StreamDeserializerState & ~Copyable, Factory: DeserializerSpanFactory &
     }
 }
 
+@available(Network 0.1.0, *)
 extension StreamDeserializer where T: ~Copyable, Factory == FrameArraySpanFactory {
     public mutating func handleFrames(_ frames: inout FrameArray) throws(DeserializationError) -> T? {
         try handleInputInternal(
@@ -459,6 +461,7 @@ extension StreamDeserializer where T: ~Copyable, Factory == FrameArraySpanFactor
     }
 }
 
+@available(Network 0.1.0, *)
 extension StreamDeserializer where T: ~Copyable, Factory == SingleSpanFactory {
     public mutating func handleSpan(_ span: RawSpan) throws(DeserializationError) -> T? {
         try handleInputInternal(
@@ -482,6 +485,7 @@ extension StreamDeserializer where T: ~Copyable, Factory == SingleSpanFactory {
     }
 }
 
+@available(Network 0.1.0, *)
 extension StreamDeserializer where Factory: ~Copyable & ~Escapable, T: ~Copyable, StateIdentifier == Int {
     public static func parser(
         @StreamDeserializationBuilder<T, StateIdentifier, Factory> _ builder: (_ stream: StreamDeserializer.Type) ->
@@ -495,6 +499,7 @@ extension StreamDeserializer where Factory: ~Copyable & ~Escapable, T: ~Copyable
     }
 }
 
+@available(Network 0.1.0, *)
 extension StreamDeserializer where Factory: ~Copyable & ~Escapable, T: StreamDeserializerState & ~Copyable {
     public static func parser(
         @StreamDeserializationBuilder<T, T.StateMachineStepIdentifier, Factory> _ builder: (

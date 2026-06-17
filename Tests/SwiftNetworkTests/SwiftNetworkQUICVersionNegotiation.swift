@@ -46,6 +46,7 @@ internal import os
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
 
+@available(Network 0.1.0, *)
 final class SwiftNetworkQUICVersionNegotiation: NetTestCase {
     func testQUICClientForceVersionNegotiation() throws {
         // This test forces version negotiation from the client by sending the negotiation pattern to the server in the initial.

@@ -27,8 +27,10 @@ import BasicContainers
 internal import DequeModule
 #endif
 
+@available(Network 0.1.0, *)
 let recoveryTestsLogPrefixer: LogPrefixer = LogPrefixer("[RecoveryTests]")
 
+@available(Network 0.1.0, *)
 final class RecoveryTests: XCTestCase {
     var connection = QUICConnection(context: .implicitContext)
     var path: QUICPath! = nil

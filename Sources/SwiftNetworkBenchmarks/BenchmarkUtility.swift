@@ -36,6 +36,7 @@ internal import os
 #endif
 
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 public struct QUICLoopbackState {
     public let context: NetworkContext
     public var clientApplicationLayers: [StreamUpperHarness]
@@ -67,6 +68,7 @@ public struct QUICLoopbackState {
 }
 
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 public struct QUICClientEndpointResult {
     public var instance: QUICConnection
     public var parameters: Parameters
@@ -76,6 +78,7 @@ public struct QUICClientEndpointResult {
 }
 
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 public struct QUICServerEndpointResult {
     public var instance: QUICConnection
     public var parameters: Parameters
@@ -89,6 +92,7 @@ public enum BenchmarkError: Error {
 }
 
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 public final class QUICBenchmarkUtility {
 
     // 127.0.0.1 (Just point both at loopback)
@@ -255,6 +259,9 @@ public final class QUICBenchmarkUtility {
 #endif
 
 @_spi(ProtocolProvider)
+#if !(os(Linux) || NETWORK_EMBEDDED)
+@available(macOS 11, iOS 14, tvOS 14, watchOS 7, *)
+#endif
 public struct LoggingHandle: CustomStringConvertible {
     #if os(Linux) || NETWORK_EMBEDDED
     let logger = Logger(label: "com.apple.network.benchmarks")
@@ -311,6 +318,7 @@ public struct LoggingHandle: CustomStringConvertible {
 }
 
 @_spi(ProtocolProvider)
+@available(Network 0.1.0, *)
 public final class DataBenchmarkUtility {
     @discardableResult
     public func loopOutputHandlerPackets(

@@ -35,6 +35,7 @@ struct NetworkStateIndex: Hashable {
 // This type does not convey any particular order, but is used to be a condensed
 // way of holding elements that have fast lookup. This is similar to how
 // interface indices (if_index) is used in kernel networking stacks.
+@available(Network 0.1.0, *)
 struct NetworkGappyArray<Element: ~Copyable>: ~Copyable {
 
     // Array of elements, which may have gaps

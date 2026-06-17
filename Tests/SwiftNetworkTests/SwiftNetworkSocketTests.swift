@@ -24,6 +24,7 @@ import XCTest
 #endif
 #endif
 
+@available(Network 0.1.0, *)
 final class SwiftNetworkSocketTests: NetTestCase {
 
     // MARK: - Helpers

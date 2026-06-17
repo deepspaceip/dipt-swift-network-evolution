@@ -31,6 +31,7 @@ import Crypto
 
 #if IMPORT_SWIFTTLS && canImport(SwiftTLS)
 
+@available(Network 0.1.0, *)
 final class QUICTransfer {
 
     // 169.254.156.146
@@ -319,65 +320,70 @@ final class QUICTransfer {
     }
 }
 
-// Take command line arguments
-var iterations = 10000  // 5gb total (if 500000 sendSize)
-var loggingHandler: LoggingHandle = LoggingHandle(loggingType: .none)
-var sendSize = 500000  // 500kb
-var linkDelay = NetworkDuration.zero
-var arguments = CommandLine.arguments.dropFirst(0)
-if arguments.contains("-iterations"),
-    let index = arguments.firstIndex(of: "-iterations")
-{
-    if arguments.count >= (index + 2) {
-        if let parsedIterations = Int(arguments[index + 1]) {
-            iterations = parsedIterations
+if #available(anyAppleOS 26, *) {
+    // Take command line arguments
+    var iterations = 10000  // 5gb total (if 500000 sendSize)
+    var loggingHandler: LoggingHandle = LoggingHandle(loggingType: .none)
+    var sendSize = 500000  // 500kb
+    var linkDelay = NetworkDuration.zero
+    let arguments = CommandLine.arguments.dropFirst(0)
+    if arguments.contains("-iterations"),
+        let index = arguments.firstIndex(of: "-iterations")
+    {
+        if arguments.count >= (index + 2) {
+            if let parsedIterations = Int(arguments[index + 1]) {
+                iterations = parsedIterations
+            }
         }
     }
-}
 
-if arguments.contains("-logging"),
-    let index = arguments.firstIndex(of: "-logging")
-{
-    if arguments.count >= (index + 2) {
-        let parsedLoggingOption = String(arguments[index + 1])
-        loggingHandler = LoggingHandle(parsedLoggingOption)
-    }
-}
-
-if arguments.contains("-size"),
-    let index = arguments.firstIndex(of: "-size")
-{
-    if arguments.count >= (index + 2) {
-        if let sendSizeOption = Int(arguments[index + 1]) {
-            sendSize = sendSizeOption
+    if arguments.contains("-logging"),
+        let index = arguments.firstIndex(of: "-logging")
+    {
+        if arguments.count >= (index + 2) {
+            let parsedLoggingOption = String(arguments[index + 1])
+            loggingHandler = LoggingHandle(parsedLoggingOption)
         }
     }
-}
-if arguments.contains("-link-delay-ms"),
-    let index = arguments.firstIndex(of: "-link-delay-ms")
-{
-    if arguments.count >= (index + 2) {
-        if let linkDelayOption = Int(arguments[index + 1]) {
-            linkDelay = .milliseconds(linkDelayOption)
+
+    if arguments.contains("-size"),
+        let index = arguments.firstIndex(of: "-size")
+    {
+        if arguments.count >= (index + 2) {
+            if let sendSizeOption = Int(arguments[index + 1]) {
+                sendSize = sendSizeOption
+            }
         }
     }
-}
 
-// Create and run the transfers
-let quicTransfer = QUICTransfer()
-let group = DispatchGroup()
-print("Starting \(iterations) transfers with logging set to \(loggingHandler)")
-let totalTime = quicTransfer.run(
-    iterations: iterations,
-    loggingHandle: loggingHandler,
-    group: group,
-    sendSize: sendSize,
-    linkDelay: linkDelay
-)
-if totalTime > 0 {
-    print("Finished all (\(iterations)) transfers in \(totalTime) seconds")
+    if arguments.contains("-link-delay-ms"),
+        let index = arguments.firstIndex(of: "-link-delay-ms")
+    {
+        if arguments.count >= (index + 2) {
+            if let linkDelayOption = Int(arguments[index + 1]) {
+                linkDelay = .milliseconds(linkDelayOption)
+            }
+        }
+    }
+
+    // Create and run the transfers
+    let quicTransfer = QUICTransfer()
+    let group = DispatchGroup()
+    print("Starting \(iterations) transfers with logging set to \(loggingHandler)")
+    let totalTime = quicTransfer.run(
+        iterations: iterations,
+        loggingHandle: loggingHandler,
+        group: group,
+        sendSize: sendSize,
+        linkDelay: linkDelay
+    )
+    if totalTime > 0 {
+        print("Finished all (\(iterations)) transfers in \(totalTime) seconds")
+    } else {
+        print("Error running all (\(iterations)) transfers, something failed")
+    }
 } else {
-    print("Error running all (\(iterations)) transfers, something failed")
+    fatalError("This tool requires macOS 26 or newer")
 }
 
 #endif

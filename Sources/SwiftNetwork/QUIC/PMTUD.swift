@@ -26,6 +26,7 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 struct PMTUDState: ~Copyable {
     static let minimumMTU = 1280
     static let maximumMTU = 9216

@@ -22,6 +22,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
+@available(Network 0.1.0, *)
 let protectorTestsLogPrefixer: LogPrefixer = LogPrefixer("[ProtectorTests]")
 
 #if IMPORT_CRYPTO
@@ -37,6 +38,7 @@ import CryptoKit
 import Crypto
 #endif
 
+@available(Network 0.1.0, *)
 extension InlineArray where Element: Equatable {
     fileprivate func equalTo(_ rhs: Self) -> Bool {
         for i in 0..<rhs.count {
@@ -46,6 +48,7 @@ extension InlineArray where Element: Equatable {
     }
 }
 
+@available(Network 0.1.0, *)
 final class ProtectorTests: XCTestCase {
     // RFC 9001 Appendix A Sample Packet Protection
     let initialCID = QUICConnectionID([0x83, 0x94, 0xc8, 0xf0, 0x3e, 0x51, 0x57, 0x08])!

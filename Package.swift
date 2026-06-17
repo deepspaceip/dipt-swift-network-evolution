@@ -14,7 +14,7 @@ let versionNumbers = ["0.1.0"]
 // Availability Macro Utilities
 
 enum _OSAvailability: String {
-    // This should match the package's deployment target
+    // The OS versions in which `Network 0.1.0` APIs first became available.
     case alwaysAvailable = "macOS 26, iOS 26, tvOS 26, watchOS 26, visionOS 26"
     // Use 10000 for future availability to avoid compiler magic around the 9999 version number but ensure it is greater than 9999
     case future = "macOS 10000, iOS 10000, tvOS 10000, watchOS 10000, visionOS 10000"
@@ -46,6 +46,7 @@ var settings: [SwiftSetting] = [
     .define("SWIFTTLS_CERTIFICATE_VERIFICATION"),
     .unsafeFlags(["-Xfrontend", "-experimental-spi-only-imports"]),
     .enableExperimentalFeature("Lifetimes"),
+    .enableExperimentalFeature("AnyAppleOSAvailability"),
     .enableUpcomingFeature("ExistentialAny"),
 ]
 
@@ -88,9 +89,6 @@ settings.append(.define("SHIM_CRYPTO_SPAN_APIS"))
 
 let package = Package(
     name: "swift-network-evolution",
-    platforms: [
-        .macOS("26.0"), .iOS("26.0"), .tvOS("26.0"), .watchOS("26.0"), .visionOS("26.0"),
-    ],
     products: [
         .library(
             name: "SwiftNetwork",
@@ -143,52 +141,52 @@ let package = Package(
         .target(
             name: "SwiftNetworkBenchmarks",
             dependencies: targetDependencies + ["SwiftNetwork"],
-            swiftSettings: settings
+            swiftSettings: availabilityMacros + settings
         ),
         .testTarget(
             name: "SwiftNetworkTests",
             dependencies: ["SwiftNetwork"],
-            swiftSettings: settings
+            swiftSettings: availabilityMacros + settings
         ),
         .testTarget(
             name: "QUICTests",
             dependencies: ["SwiftNetwork"],
-            swiftSettings: settings
+            swiftSettings: availabilityMacros + settings
         ),
         .executableTarget(
             name: "QUICHandshake",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/QUICHandshake",
             exclude: ["README.md"],
-            swiftSettings: settings,
+            swiftSettings: availabilityMacros + settings,
         ),
         .executableTarget(
             name: "IPUDPTransfer",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/IPUDPTransfer",
             exclude: ["README.md"],
-            swiftSettings: settings
+            swiftSettings: availabilityMacros + settings
         ),
         .executableTarget(
             name: "QUICTransfer",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/QUICTransfer",
             exclude: ["README.md"],
-            swiftSettings: settings
+            swiftSettings: availabilityMacros + settings
         ),
         .executableTarget(
             name: "QUICStreamLoad",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/QUICStreamLoad",
             exclude: ["README.md"],
-            swiftSettings: settings
+            swiftSettings: availabilityMacros + settings
         ),
         .executableTarget(
             name: "SocketTransfer",
             dependencies: ["SwiftNetwork", "SwiftNetworkBenchmarks"],
             path: "Sources/Tools/SocketTransfer",
             exclude: ["README.md"],
-            swiftSettings: settings
+            swiftSettings: availabilityMacros + settings
         ),
     ]
 )

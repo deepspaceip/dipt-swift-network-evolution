@@ -58,6 +58,7 @@ enum TransportParameterEncodeErrors: Int, Error {
     case invalidValue
 }
 
+@available(Network 0.1.0, *)
 enum TransportParameter: Equatable {
     case originalDCID(
         _ type: TransportParameterTypes = .originalDCID,

@@ -18,6 +18,7 @@ import XCTest
 @testable import SwiftNetwork
 #endif
 
+@available(Network 0.1.0, *)
 final class SwiftNetworkGappyArrayTests: XCTestCase {
 
     struct GappyElement: ~Copyable {

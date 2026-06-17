@@ -45,6 +45,7 @@ internal import os
 
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
+@available(Network 0.1.0, *)
 final class SwiftNetworkQUICPacer: NetTestCase {
     func testQUICClientPacingMarkedPackets() throws {
         let clientOptions = QUICProtocol.options()

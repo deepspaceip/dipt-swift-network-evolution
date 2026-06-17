@@ -16,6 +16,8 @@
 
 internal import Synchronization
 
+// Availability due to `Synchronization`'s `Mutex`
+@available(macOS 15, iOS 18, tvOS 18, watchOS 11, visionOS 2, *)
 typealias NetworkMutex = Mutex
 
 #endif

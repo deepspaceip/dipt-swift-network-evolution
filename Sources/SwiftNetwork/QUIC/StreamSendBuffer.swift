@@ -24,6 +24,7 @@ internal import os
 typealias StreamOffset = UInt64
 typealias StreamLength = UInt64
 
+@available(Network 0.1.0, *)
 struct StreamSendBuffer: ~Copyable {
     private var storage = FrameArrayQueue()
     private(set) var storageStartOffset: StreamOffset = 0
@@ -239,6 +240,7 @@ struct StreamSendBuffer: ~Copyable {
 }
 
 // Special case of frame array that keeps track of the total unclaimed length
+@available(Network 0.1.0, *)
 struct FrameArrayQueue: ~Copyable {
     private var frames = FrameArray()
     private var cachedUnclaimedLength = 0

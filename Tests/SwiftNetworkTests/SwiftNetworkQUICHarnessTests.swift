@@ -49,6 +49,7 @@ import Dispatch
 
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
+@available(Network 0.1.0, *)
 final class SwiftNetworkQUICHarnessTests: NetTestCase {
 
     // MARK: Handshake tests

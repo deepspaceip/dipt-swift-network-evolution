@@ -23,6 +23,7 @@ public protocol ProtocolLinkage {
     var reference: ProtocolInstanceReference { get }
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolLinkage {
     public var isDetached: Bool {
         self.reference.isNone
@@ -41,6 +42,7 @@ public protocol UpperProtocolLinkage: ProtocolLinkage where PairedLinkage: Lower
     )
 }
 
+@available(Network 0.1.0, *)
 extension UpperProtocolLinkage {
     public func deliverConnectedEvent(_ from: ProtocolInstanceReference) {
         from.deliverEventToUpperProtocol(event: .connected(from, self.reference))
@@ -66,6 +68,7 @@ public protocol InboundDataLinkage: UpperProtocolLinkage where PairedLinkage: Ou
     func deliverOutboundRoomAvailableEvent(_ from: ProtocolInstanceReference)
 }
 
+@available(Network 0.1.0, *)
 extension InboundDataLinkage {
     public func deliverInboundDataAvailableEvent(_ from: ProtocolInstanceReference) {
         from.deliverEventToUpperProtocol(event: .inboundDataAvailable(from, self.reference))
@@ -86,6 +89,7 @@ public protocol InboundFlowLinkage: UpperProtocolLinkage where PairedLinkage: Li
     )
 }
 
+@available(Network 0.1.0, *)
 extension InboundFlowLinkage {
     public func deliverNewInboundFlowEvent(
         _ from: ProtocolInstanceReference,
@@ -117,6 +121,7 @@ public protocol ListenerLinkage: LowerProtocolLinkage where PairedLinkage: Inbou
     #endif
 }
 
+@available(Network 0.1.0, *)
 extension ListenerLinkage {
     #if !NETWORK_EMBEDDED
     public func invokeAttachUpperProtocolToNewFlow(
@@ -171,6 +176,7 @@ public protocol LowerProtocolLinkage: ProtocolLinkage where PairedLinkage: Upper
     func invokeGetMetadata<P: NetworkProtocol>(_ from: ProtocolInstanceReference) -> ProtocolMetadata<P>?
 }
 
+@available(Network 0.1.0, *)
 extension LowerProtocolLinkage {
     public var isConnected: Bool {
         reference.isConnected

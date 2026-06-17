@@ -45,6 +45,7 @@ internal import os
 
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
+@available(Network 0.1.0, *)
 final class SwiftNetworkQUICStackTests: NetTestCase {
 
     // 10.0.0.20

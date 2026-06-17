@@ -131,8 +131,11 @@ public struct NetworkError: Error, Sendable, Hashable, CustomStringConvertible {
 }
 
 #if !NETWORK_EMBEDDED
+@available(Network 0.1.0, *)
 extension NetworkError: Codable {}
+@available(Network 0.1.0, *)
 extension NetworkError.Domain: Codable {}
+@available(Network 0.1.0, *)
 extension NetworkError.CommonCategory: Codable {}
 #endif
 
@@ -171,12 +174,14 @@ public struct NetworkPOSIXError: NetworkDomainSpecificError {
     }
 }
 
+@available(Network 0.1.0, *)
 extension NetworkError {
     public static func posix(_ errorCode: Int32) -> Self {
         .init(NetworkPOSIXError(errorCode: errorCode))
     }
 }
 
+@available(Network 0.1.0, *)
 extension NetworkError.CommonCategory {
     enum HTTP {
         public static var http1FallbackRequested: NetworkError.CommonCategory {
@@ -185,6 +190,7 @@ extension NetworkError.CommonCategory {
     }
 }
 
+@available(Network 0.1.0, *)
 enum HTTP2Error: Int64, NetworkDomainSpecificError {
     static var domain: NetworkError.Domain { .init(rawValue: "HTTP2") }
 
@@ -257,6 +263,7 @@ enum HTTP2Error: Int64, NetworkDomainSpecificError {
     }
 }
 
+@available(Network 0.1.0, *)
 enum TLSNetworkError: Int64, NetworkDomainSpecificError {
     static var domain: NetworkError.Domain { .init(rawValue: "tls") }
 
@@ -294,6 +301,7 @@ enum TLSNetworkError: Int64, NetworkDomainSpecificError {
     }
 }
 
+@available(Network 0.1.0, *)
 extension NetworkError {
     static func tls(_ tlsError: TLSNetworkError) -> NetworkError {
         .init(tlsError)

@@ -35,6 +35,7 @@ enum RTTControlType: UInt8 {
     case rateEquivalence
 }
 
+@available(Network 0.1.0, *)
 struct Prague: CongestionControlProtocol, CubicLikeProtocol {
     let log: LogPrefixer
 

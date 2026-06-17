@@ -229,6 +229,7 @@ public final class NetworkContext: NetworkContextProtocol, @unchecked Sendable {
 // MARK: - Globals
 
 #if !NETWORK_PRIVATE && !NETWORK_STANDALONE && canImport(Dispatch) && !NETWORK_EMBEDDED
+@available(Network 0.1.0, *)
 extension NetworkContext {
     struct TimerEntry: ~Copyable, NetworkComparable {
         var targetTime: DispatchTime
@@ -369,6 +370,7 @@ extension NetworkContext {
 
 // MARK: - Async
 
+@available(Network 0.1.0, *)
 extension NetworkContext {
 
     var queue: DispatchQueue {
@@ -392,6 +394,7 @@ extension NetworkContext {
 
 // MARK: - Timers
 
+@available(Network 0.1.0, *)
 extension NetworkContext {
 
     enum FutureTime {

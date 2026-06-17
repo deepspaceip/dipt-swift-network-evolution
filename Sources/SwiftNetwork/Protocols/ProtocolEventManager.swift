@@ -24,6 +24,7 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 struct ProtocolEventManagerState: ~Copyable {
     enum EventState {
         case idle
@@ -301,6 +302,7 @@ public struct ProtocolEventManager: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension NetworkContext {
     fileprivate func softAssert() {
         #if DEBUG
@@ -590,6 +592,7 @@ extension NetworkContext {
     }
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolInstance where Self: ~Copyable {
     func connectRequested() {
         reference.connectRequested()
@@ -609,6 +612,7 @@ extension ProtocolInstance where Self: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolInstanceReference {
 
     func connectRequested() {

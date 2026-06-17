@@ -22,6 +22,7 @@ import XCTest
 @_spi(Essentials) @_spi(ProtocolProvider) @testable import Network
 #endif
 
+@available(Network 0.1.0, *)
 extension Frame {
     var allBytesCopy: [UInt8]? {
         guard let allBytes = self.allBytes else { return nil }
@@ -31,6 +32,7 @@ extension Frame {
     }
 }
 
+@available(Network 0.1.0, *)
 extension FrameCrypto {
     fileprivate var data: [UInt8] {
         guard let span = frame.span else { return [] }
@@ -38,6 +40,7 @@ extension FrameCrypto {
     }
 }
 
+@available(Network 0.1.0, *)
 extension FrameStreamReceived {
     fileprivate var data: [UInt8] {
         guard let span = frame.span else { return [] }
@@ -45,6 +48,7 @@ extension FrameStreamReceived {
     }
 }
 
+@available(Network 0.1.0, *)
 extension FrameDatagram {
     fileprivate var data: [UInt8] {
         guard let span = frame.span else { return [] }
@@ -52,6 +56,7 @@ extension FrameDatagram {
     }
 }
 
+@available(Network 0.1.0, *)
 class QUICFrameTests: XCTestCase {
 
     var stats: Statistics!

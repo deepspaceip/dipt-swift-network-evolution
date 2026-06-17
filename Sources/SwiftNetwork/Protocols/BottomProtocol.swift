@@ -174,6 +174,7 @@ where UpperProtocol == InboundDatagramLinkage {
 
 // MARK: - Bottom Protocol Implementation Details
 
+@available(Network 0.1.0, *)
 extension BottomProtocolHandler where Self: ~Copyable {
     var asLower: UpperProtocol.PairedLinkage { .init(reference: reference) }
 
@@ -278,6 +279,7 @@ extension BottomProtocolHandler where Self: ~Copyable {
 }
 
 // Default implementations, to be overridden as necessary
+@available(Network 0.1.0, *)
 extension BottomProtocolHandler where Self: ~Copyable {
     public func setup(
         remote: Endpoint?,
@@ -307,6 +309,7 @@ extension BottomProtocolHandler where Self: ~Copyable {
     public var protocolEstablishmentReport: ProtocolEstablishmentReport? { nil }
 }
 
+@available(Network 0.1.0, *)
 extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol == InboundDatagramLinkage {
     public mutating func attachUpperDatagramProtocol(
         _ from: ProtocolInstanceReference,
@@ -331,6 +334,7 @@ extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol == InboundD
     }
 }
 
+@available(Network 0.1.0, *)
 extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol == InboundStreamLinkage {
     public mutating func attachUpperStreamProtocol(
         _ from: ProtocolInstanceReference,
@@ -355,6 +359,7 @@ extension BottomProtocolHandler where Self: ~Copyable, UpperProtocol == InboundS
     }
 }
 
+@available(Network 0.1.0, *)
 extension BottomDatagramProtocol where Self: ~Copyable {
     public mutating func receiveDatagrams(
         _ from: ProtocolInstanceReference,
@@ -392,6 +397,7 @@ extension BottomDatagramProtocol where Self: ~Copyable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension BottomStreamProtocol where Self: ~Copyable {
     public mutating func receiveStreamData(
         _ from: ProtocolInstanceReference,

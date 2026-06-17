@@ -21,6 +21,7 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 enum QUICShorthandFrame: CustomStringConvertible {
     case padding(_ entry: ShorthandFramePadding)
     case ping(_ entry: ShorthandFrameGeneric)
@@ -95,6 +96,7 @@ enum QUICShorthandFrame: CustomStringConvertible {
     }
 }
 
+@available(Network 0.1.0, *)
 protocol ShorthandLogEntry: CustomStringConvertible {
     var outgoing: Bool { get }
 }

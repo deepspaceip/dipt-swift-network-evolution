@@ -489,6 +489,7 @@ public struct Interface: Sendable, Hashable, CustomStringConvertible {
 }
 
 #if !NETWORK_EMBEDDED
+@available(Network 0.1.0, *)
 extension Interface: Codable {
     enum CodingKeys: String, CodingKey {
         case name
@@ -518,6 +519,7 @@ extension Interface: Codable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension InterfaceType: Codable {
     enum CodingKeys: String, CodingKey {
         case value
@@ -535,6 +537,7 @@ extension InterfaceType: Codable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension InterfaceSubtype: Codable {
     enum CodingKeys: String, CodingKey {
         case value

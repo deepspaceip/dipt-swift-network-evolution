@@ -33,6 +33,7 @@ public protocol UpperProtocolHandler<LowerProtocol>: ~Copyable, ProtocolInstance
     mutating func handleNetworkProtocolEvent(_ from: ProtocolInstanceReference, event: NetworkProtocolEvent)
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolInstanceReference {
     func handleConnectedEvent(_ from: ProtocolInstanceReference) {
         switch reference {
@@ -148,6 +149,7 @@ public protocol LowerProtocolHandler<UpperProtocol>: ~Copyable, ProtocolInstance
     ) -> NetworkMetrics?
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolInstanceReference {
     func connect(_ from: ProtocolInstanceReference) {
         guard !isNone else { return }

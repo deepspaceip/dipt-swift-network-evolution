@@ -14,6 +14,7 @@
 //  Constants for QUIC
 
 #if !NETWORK_NO_SWIFT_QUIC
+@available(Network 0.1.0, *)
 enum Constants {
     static let initialMSS = 1200
     static let streamIDDatagramMask: UInt64 = 0x8000_0000_0000_0000

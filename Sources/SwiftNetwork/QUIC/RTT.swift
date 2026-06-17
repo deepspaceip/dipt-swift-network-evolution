@@ -21,6 +21,7 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 struct RTT: ~Copyable, PrefixedLoggable {
     static let initialRTT: NetworkDuration = .milliseconds(333)
     static let historyInterval: NetworkDuration = .seconds(60)

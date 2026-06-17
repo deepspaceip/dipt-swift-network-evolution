@@ -22,6 +22,7 @@ public protocol InboundFlowHandler: ~Copyable, UpperProtocolHandler {
     )
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolInstanceReference {
     func handleNewInboundFlowEvent(
         _ from: ProtocolInstanceReference,
@@ -130,6 +131,7 @@ public protocol HeterogeneousListenerHandler: ~Copyable, ListenerHandler {
     associatedtype SecondaryUpperProtocol: InboundFlowLinkage
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolInstanceReference {
     #if !NETWORK_EMBEDDED
     func attachUpperProtocolToNewFlow<Linkage: LowerProtocolLinkage>(

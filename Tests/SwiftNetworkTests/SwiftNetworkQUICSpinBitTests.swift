@@ -46,6 +46,7 @@ internal import os
 #if IMPORT_SWIFTTLS
 #if canImport(SwiftTLS)
 
+@available(Network 0.1.0, *)
 final class SwiftNetworkQUICSpinBitTests: NetTestCase {
     func testQUICSpinBitEnabledOrDisabled() throws {
         // Even when the client leaves the spin bit enabled there is a chance (1 / 16) that it

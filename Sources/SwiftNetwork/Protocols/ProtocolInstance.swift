@@ -47,6 +47,7 @@ public protocol ProtocolInstance: ~Copyable {
     var eventManager: ProtocolEventManager { get set }
 }
 
+@available(Network 0.1.0, *)
 extension ProtocolInstance where Self: ~Copyable {
 
     /// Schedules an asynchronous block from within a protocol implementation.
@@ -327,6 +328,7 @@ public protocol ProtocolInstanceContainer: AnyObject {
 }
 
 #if !NETWORK_EMBEDDED
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer {
     public func accessLower<R, E: Error>(
         at index: Int?,
@@ -440,6 +442,7 @@ extension ProtocolInstanceContainer {
         fatalError("Unimplemented container function")
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: ProtocolInstance {
     var reference: ProtocolInstanceReference { ProtocolInstanceReference(custom: self) }
 
@@ -451,6 +454,7 @@ extension ProtocolInstanceContainer where Self: ProtocolInstance {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: LowerProtocolHandler {
     public func accessLower<R, E: Error>(
         at index: Int?,
@@ -460,6 +464,7 @@ extension ProtocolInstanceContainer where Self: LowerProtocolHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: TimerSchedulable {
     public func accessTimerSchedulable<R, E: Error>(
         at index: Int?,
@@ -469,6 +474,7 @@ extension ProtocolInstanceContainer where Self: TimerSchedulable {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: UpperProtocolHandler {
     public func accessUpper<R, E: Error>(
         at index: Int?,
@@ -478,6 +484,7 @@ extension ProtocolInstanceContainer where Self: UpperProtocolHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: ManyToManyProtocolHandler {
     public func accessManyToMany<R, E: Error>(
         at index: Int?,
@@ -487,6 +494,7 @@ extension ProtocolInstanceContainer where Self: ManyToManyProtocolHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: InboundFlowHandler {
     public func accessInboundFlowHandler<R, E: Error>(
         at index: Int?,
@@ -496,6 +504,7 @@ extension ProtocolInstanceContainer where Self: InboundFlowHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: ListenerHandler {
     public func accessListenerHandler<R, E: Error>(
         at index: Int?,
@@ -505,6 +514,7 @@ extension ProtocolInstanceContainer where Self: ListenerHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: DatagramListenerHandler {
     public func accessDatagramListenerHandler<R, E: Error>(
         at index: Int?,
@@ -514,6 +524,7 @@ extension ProtocolInstanceContainer where Self: DatagramListenerHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: StreamListenerHandler {
     public func accessStreamListenerHandler<R, E: Error>(
         at index: Int?,
@@ -523,6 +534,7 @@ extension ProtocolInstanceContainer where Self: StreamListenerHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: InboundDataHandler {
     public func accessInboundDataHandler<R, E: Error>(
         at index: Int?,
@@ -532,6 +544,7 @@ extension ProtocolInstanceContainer where Self: InboundDataHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: InboundDatagramHandler {
     public func accessInboundDatagramHandler<R, E: Error>(
         at index: Int?,
@@ -541,6 +554,7 @@ extension ProtocolInstanceContainer where Self: InboundDatagramHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: InboundStreamHandler {
     public func accessInboundStreamHandler<R, E: Error>(
         at index: Int?,
@@ -550,6 +564,7 @@ extension ProtocolInstanceContainer where Self: InboundStreamHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: OutboundDataHandler {
     public func accessOutboundDataHandler<R, E: Error>(
         at index: Int?,
@@ -559,6 +574,7 @@ extension ProtocolInstanceContainer where Self: OutboundDataHandler {
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: OutboundDatagramHandler {
     public func accessOutboundDatagramHandler<R: ~Copyable, E: Error>(
         at index: Int?,
@@ -576,6 +592,7 @@ extension ProtocolInstanceContainer where Self: OutboundDatagramHandler {
         return try body(&selfAccess, value)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: OutboundStreamHandler {
     public func accessOutboundStreamHandler<R: ~Copyable, E: Error>(
         at index: Int?,
@@ -593,6 +610,7 @@ extension ProtocolInstanceContainer where Self: OutboundStreamHandler {
         return try body(&selfAccess, value)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: OutboundStreamUnidirectionalAbortHandler {
     public func accessOutboundStreamUnidirectionalAbortHandler<R, E: Error>(
         at index: Int?,
@@ -602,6 +620,7 @@ extension ProtocolInstanceContainer where Self: OutboundStreamUnidirectionalAbor
         return try body(&selfAccess)
     }
 }
+@available(Network 0.1.0, *)
 extension ProtocolInstanceContainer where Self: OutboundStreamEarlyDataHandler {
     public func accessOutboundStreamEarlyDataHandler<R, T: ~Copyable, E: Error>(
         at index: Int?,

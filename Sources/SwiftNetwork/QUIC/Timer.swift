@@ -26,16 +26,19 @@ internal import Logging
 internal import os
 #endif
 
+@available(Network 0.1.0, *)
 protocol TimerUser {
     var timerID: Timer.TimerID? { get set }
     func timerFired(timeNow: NetworkClock.Instant)
 }
 
+@available(Network 0.1.0, *)
 protocol NonCopyableTimerUser: ~Copyable {
     var timerID: Timer.TimerID? { get set }
     mutating func timerFired(timeNow: NetworkClock.Instant)
 }
 
+@available(Network 0.1.0, *)
 private struct TimerEntry: ~Copyable {
     let identifier: Timer.TimerID
     var deadline: NetworkClock.Instant = .zero
@@ -60,6 +63,7 @@ private struct TimerEntry: ~Copyable {
 }
 
 // TODO: convert timer to ~Copyable
+@available(Network 0.1.0, *)
 final class Timer: PrefixedLoggable {
     typealias TimerID = UInt8
 

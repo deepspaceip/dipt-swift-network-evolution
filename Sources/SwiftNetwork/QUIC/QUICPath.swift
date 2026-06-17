@@ -104,6 +104,7 @@ enum QUICPathState: CustomStringConvertible, CaseIterable {
     }
 }
 
+@available(Network 0.1.0, *)
 struct PendingChallenge {
     let data = UInt64.random(in: 0..<UInt64.max)
 
@@ -111,6 +112,7 @@ struct PendingChallenge {
     let sentTime: NetworkClock.Instant
 }
 
+@available(Network 0.1.0, *)
 struct BandwidthDelayProduct {
     var currentBDP: Int = 0
     var count: Int = 0
@@ -621,6 +623,7 @@ public final class QUICPath: MultiplexingDatagramPath<QUICConnection>, Equatable
 }
 
 // Congestion Control access
+@available(Network 0.1.0, *)
 extension QUICPath {
     @inline(__always)
     var congestionControlWindow: UInt64 {

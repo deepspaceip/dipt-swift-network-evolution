@@ -23,6 +23,7 @@ internal import os
 
 // MARK: - QUIC Frames
 
+@available(Network 0.1.0, *)
 enum QUICFrame: ~Copyable {
     case padding(frame: FramePadding)
     case ping(frame: FramePing)
@@ -328,6 +329,7 @@ enum QUICFrame: ~Copyable {
 }
 // MARK: - QUIC Frame Types
 
+@available(Network 0.1.0, *)
 enum FrameType: RawRepresentable, CaseIterable, Equatable {
     static let paddingCode: UInt64 = 0x00
     static let pingCode: UInt64 = 0x01
@@ -513,6 +515,7 @@ enum FrameType: RawRepresentable, CaseIterable, Equatable {
     }
 }
 
+@available(Network 0.1.0, *)
 extension FrameType {
     func description() -> String {
         switch self {
@@ -568,6 +571,7 @@ extension FrameType {
     }
 }
 
+@available(Network 0.1.0, *)
 enum FrameParseError: Error {
     case parsingError
     case invalidType(UInt64)
@@ -585,12 +589,14 @@ enum FrameParseError: Error {
     }
 }
 
+@available(Network 0.1.0, *)
 enum FrameWriteError: Int, Error {
     case smallBuffer
     case invalidTypeForSend
 }
 
 // MARK: - QUIC Frame Protocols
+@available(Network 0.1.0, *)
 protocol QUICFrameProtocol: ~Copyable {
     var type: FrameType { get }
 
@@ -602,11 +608,13 @@ protocol QUICFrameProtocol: ~Copyable {
     // func write(frame: inout Frame, stats: inout Statistics?) throws(QUICError)
 }
 
+@available(Network 0.1.0, *)
 extension QUICFrameProtocol {
     // Most frames don't do anything when they are acknowledged.
     func acknowledged() {}
 }
 
+@available(Network 0.1.0, *)
 extension QUICFrameProtocol {
     // Common frame deserialization validation
     func validateDeserializationResult(_ result: DeserializationResult) throws(QUICError) {
@@ -636,6 +644,7 @@ extension QUICFrameProtocol {
     }
 }
 
+@available(Network 0.1.0, *)
 extension QUICFrameProtocol where Self: ~Copyable {
     // Common frame deserialization validation
     func validateDeserializationResult(_ result: DeserializationResult) throws(QUICError) {
@@ -667,6 +676,7 @@ extension QUICFrameProtocol where Self: ~Copyable {
 
 // MARK: - Padding (0x00)
 
+@available(Network 0.1.0, *)
 struct FramePadding: ~Copyable, QUICFrameProtocol {
     let type = FrameType.padding
 
@@ -759,6 +769,7 @@ struct FramePadding: ~Copyable, QUICFrameProtocol {
 }
 
 // MARK: Ping (0x01)
+@available(Network 0.1.0, *)
 struct FramePing: ~Copyable, QUICFrameProtocol {
     let type = FrameType.ping
 
@@ -808,11 +819,13 @@ struct FramePing: ~Copyable, QUICFrameProtocol {
 
 // MARK: Ack (0x02-0x03)
 
+@available(Network 0.1.0, *)
 struct FrameAckRange {
     var gap: PacketNumber
     var range: PacketNumber
 }
 
+@available(Network 0.1.0, *)
 struct FrameAck: QUICFrameProtocol {
     var type = FrameType.ack
 
@@ -1013,6 +1026,7 @@ struct FrameAck: QUICFrameProtocol {
 
 // MARK: Reset Stream (0x04)
 
+@available(Network 0.1.0, *)
 struct FrameResetStream: ~Copyable, QUICFrameProtocol {
     let type = FrameType.resetStream
 
@@ -1198,6 +1212,7 @@ struct FrameResetStream: ~Copyable, QUICFrameProtocol {
 
 // MARK: Stop Sending (0x05)
 
+@available(Network 0.1.0, *)
 struct FrameStopSending: ~Copyable, QUICFrameProtocol {
     let type = FrameType.stopSending
 
@@ -1328,6 +1343,7 @@ struct FrameStopSending: ~Copyable, QUICFrameProtocol {
 
 // MARK: Crypto (0x06)
 
+@available(Network 0.1.0, *)
 struct FrameCrypto: ~Copyable, QUICFrameProtocol {
     let type = FrameType.crypto
 
@@ -1569,6 +1585,7 @@ struct FrameCrypto: ~Copyable, QUICFrameProtocol {
 
 // MARK: New Token (0x07)
 
+@available(Network 0.1.0, *)
 struct FrameNewToken: ~Copyable, QUICFrameProtocol {
     let type = FrameType.newToken
 
@@ -1618,6 +1635,7 @@ struct FrameNewToken: ~Copyable, QUICFrameProtocol {
 
 // MARK: Stream (0x08...0x0f)
 
+@available(Network 0.1.0, *)
 struct FrameStreamFlag: ExpressibleByIntegerLiteral {
     // The FIN bit (0x01) indicates that the frame marks the end of the stream
     static let final: UInt64 = 0x01
@@ -1638,6 +1656,7 @@ struct FrameStreamFlag: ExpressibleByIntegerLiteral {
     }
 }
 
+@available(Network 0.1.0, *)
 extension FrameStreamFlag {
     static func fromCode(_ code: UInt64) -> FrameStreamFlag {
         let flag = code - FrameType.streamCodes.lowerBound
@@ -1660,6 +1679,7 @@ extension FrameStreamFlag {
 }
 
 // Only used for sending (or re-sending) STREAM frames
+@available(Network 0.1.0, *)
 struct FrameStreamSendMetadata: QUICFrameProtocol {
     let type: FrameType
 
@@ -1859,6 +1879,7 @@ struct FrameStreamSendMetadata: QUICFrameProtocol {
 }
 
 // Only used for receiving STREAM frames
+@available(Network 0.1.0, *)
 struct FrameStreamReceived: ~Copyable, QUICFrameProtocol {
     var type = FrameType.stream()
 
@@ -2000,6 +2021,7 @@ struct FrameStreamReceived: ~Copyable, QUICFrameProtocol {
 
 // MARK: Max Data (0x10)
 
+@available(Network 0.1.0, *)
 struct FrameMaxData: ~Copyable, QUICFrameProtocol {
     let type = FrameType.maxData
 
@@ -2043,6 +2065,7 @@ struct FrameMaxData: ~Copyable, QUICFrameProtocol {
 
 // MARK: Max Stream Data (0x11)
 
+@available(Network 0.1.0, *)
 struct FrameMaxStreamData: ~Copyable, QUICFrameProtocol {
     let type = FrameType.maxStreamData
 
@@ -2090,6 +2113,7 @@ struct FrameMaxStreamData: ~Copyable, QUICFrameProtocol {
 
 // MARK: Max Streams Bidirectional (0x12)
 
+@available(Network 0.1.0, *)
 struct FrameMaxStreamsBidirectional: ~Copyable, QUICFrameProtocol {
     let type = FrameType.maxStreamsBidirectional
 
@@ -2135,6 +2159,7 @@ struct FrameMaxStreamsBidirectional: ~Copyable, QUICFrameProtocol {
 
 // MARK: Max Streams Unidirectional (0x13)
 
+@available(Network 0.1.0, *)
 struct FrameMaxStreamsUnidirectional: ~Copyable, QUICFrameProtocol {
     let type = FrameType.maxStreamsUnidirectional
 
@@ -2180,6 +2205,7 @@ struct FrameMaxStreamsUnidirectional: ~Copyable, QUICFrameProtocol {
 
 // MARK: Data Blocked (0x14)
 
+@available(Network 0.1.0, *)
 struct FrameDataBlocked: ~Copyable, QUICFrameProtocol {
     let type = FrameType.dataBlocked
 
@@ -2228,6 +2254,7 @@ struct FrameDataBlocked: ~Copyable, QUICFrameProtocol {
 
 // MARK: Stream Data Blocked (0x15)
 
+@available(Network 0.1.0, *)
 struct FrameStreamDataBlocked: ~Copyable, QUICFrameProtocol {
     let type = FrameType.streamDataBlocked
 
@@ -2285,6 +2312,7 @@ struct FrameStreamDataBlocked: ~Copyable, QUICFrameProtocol {
 
 // MARK: Streams Blocked Bidirectional (0x16)
 
+@available(Network 0.1.0, *)
 struct FrameStreamsBlockedBidirectional: ~Copyable, QUICFrameProtocol {
     let type = FrameType.streamsBlockedBidirectional
 
@@ -2335,6 +2363,7 @@ struct FrameStreamsBlockedBidirectional: ~Copyable, QUICFrameProtocol {
 
 // MARK: Streams Blocked Unidirectional (0x17)
 
+@available(Network 0.1.0, *)
 struct FrameStreamsBlockedUnidirectional: ~Copyable, QUICFrameProtocol {
     let type = FrameType.streamsBlockedUnidirectional
 
@@ -2385,6 +2414,7 @@ struct FrameStreamsBlockedUnidirectional: ~Copyable, QUICFrameProtocol {
 
 // MARK: New Connection ID (0x18)
 
+@available(Network 0.1.0, *)
 struct FrameNewConnectionID: QUICFrameProtocol {
     let type = FrameType.newConnectionID
     private(set) var sequence: UInt64 = 0
@@ -2471,6 +2501,7 @@ struct FrameNewConnectionID: QUICFrameProtocol {
 
 // MARK: Retire Connection ID (0x19)
 
+@available(Network 0.1.0, *)
 struct FrameRetireConnectionID: QUICFrameProtocol {
     let type = FrameType.retireConnectionID
 
@@ -2514,6 +2545,7 @@ struct FrameRetireConnectionID: QUICFrameProtocol {
 
 // MARK: Path Challenge (0x1a)
 
+@available(Network 0.1.0, *)
 struct FramePathChallenge: QUICFrameProtocol {
     let type = FrameType.pathChallenge
 
@@ -2564,6 +2596,7 @@ struct FramePathChallenge: QUICFrameProtocol {
 
 // MARK: Path Response (0x1b)
 
+@available(Network 0.1.0, *)
 struct FramePathResponse: QUICFrameProtocol {
     let type = FrameType.pathResponse
 
@@ -2614,6 +2647,7 @@ struct FramePathResponse: QUICFrameProtocol {
 
 // MARK: Connection Close (0x1c)
 
+@available(Network 0.1.0, *)
 private func updateConnectionCloseStats(
     errorCode: UInt64,
     isRx: Bool,
@@ -2696,6 +2730,7 @@ private func updateConnectionCloseStats(
     }
 }
 
+@available(Network 0.1.0, *)
 struct FrameConnectionClose: ~Copyable, QUICFrameProtocol {
 
     let type = FrameType.connectionClose
@@ -2780,6 +2815,7 @@ struct FrameConnectionClose: ~Copyable, QUICFrameProtocol {
 
 // MARK: Application Close (0x1d)
 
+@available(Network 0.1.0, *)
 struct FrameApplicationClose: ~Copyable, QUICFrameProtocol {
     let type = FrameType.applicationClose
 
@@ -2857,6 +2893,7 @@ struct FrameApplicationClose: ~Copyable, QUICFrameProtocol {
 
 // MARK: Handshake Done (0x1e)
 
+@available(Network 0.1.0, *)
 struct FrameHandshakeDone: ~Copyable, QUICFrameProtocol {
     let type = FrameType.handshakeDone
 
@@ -2908,6 +2945,7 @@ struct FrameHandshakeDone: ~Copyable, QUICFrameProtocol {
 // The least significant bit of the Type field in the DATAGRAM frame is the LEN bit (0x01),
 // which indicates whether there is a Length field present: if this bit is set to 0,
 // the Length field is absent and the Datagram Data field extends to the end of the packet
+@available(Network 0.1.0, *)
 struct FrameDatagram: ~Copyable, QUICFrameProtocol {
     var type = FrameType.datagram()
 

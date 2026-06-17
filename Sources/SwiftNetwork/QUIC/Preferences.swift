@@ -33,6 +33,7 @@ struct QUICPreferences {
     private init() {}
 }
 #else
+@available(Network 0.1.0, *)
 struct QUICPreferences: ~Copyable, Sendable {
     static let shared = QUICPreferences()
 

@@ -768,6 +768,7 @@ public struct Frame: ~Copyable {
     #endif
 }
 
+@available(Network 0.1.0, *)
 extension Frame {
     var serviceClass: Parameters.ServiceClass {
         get { ipPacketValues?.serviceClass ?? .bestEffort }
@@ -780,6 +781,7 @@ extension Frame {
     }
 }
 
+@available(Network 0.1.0, *)
 extension Frame {
     // Copy length bytes from offset in this Frame into destination Frame.
     // checking the source offset, length and destination fit.

@@ -78,8 +78,6 @@ func parseEndpoints(ipString: String, port: UInt16, localPort: UInt16) -> (remot
 
 // MARK: - SocketTransfer
 
-
-
 @available(Network 0.1.0, *)
 final class SocketTransfer {
 

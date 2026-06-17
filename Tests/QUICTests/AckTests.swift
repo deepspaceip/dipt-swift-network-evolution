@@ -1009,6 +1009,50 @@ final class AckTests: XCTestCase {
         XCTAssertEqual(emittedBlocks, 0)
     }
 
+    // Appending more than Ack.maxAckBlocks (256) separate blocks must cause the
+    // oldest (lowest-PN) block to be dropped when the ACK is sized/assembled, and
+    // the block count must converge to 256.
+    func testAckMaxBlocksCap() {
+        // PNs spaced by 2 leave a one-packet gap between each, so no two blocks
+        // coalesce: 257 appends -> 257 separate blocks.
+        for i in 0...256 {
+            ack.append(packetNumberSpace: .applicationData, packetNumber: PacketNumber(Int64(i * 2)))
+        }
+        XCTAssertEqual(ack.blocksForPacketNumberSpace(packetNumberSpace: .applicationData), 257)
+
+        // Sizing the ACK drives AckSpace.build(), which trims one block because the
+        // count (257) exceeds Ack.maxAckBlocks.
+        XCTAssertGreaterThan(ack.size(for: .applicationData), 0)
+        XCTAssertEqual(ack.blocksForPacketNumberSpace(packetNumberSpace: .applicationData), 256)
+
+        // The dropped block must be the oldest one (the block covering PN 0).
+        // Re-appending PN 0 proves it: if PN 0 is no longer covered the append
+        // creates a fresh block (count -> 257); had any other block been dropped,
+        // PN 0 would still be covered and the append would be a no-op duplicate.
+        ack.append(packetNumberSpace: .applicationData, packetNumber: 0)
+        XCTAssertEqual(ack.blocksForPacketNumberSpace(packetNumberSpace: .applicationData), 257)
+        // Clean up that probe block so the cap-stability check below starts at 256.
+        ack.acknowledged(packetNumberSpace: .applicationData, between: 0, and: 0)
+        XCTAssertEqual(ack.blocksForPacketNumberSpace(packetNumberSpace: .applicationData), 256)
+
+        // The cap is stable: 256 is not > Ack.maxAckBlocks, so a second sizing
+        // removes nothing.
+        XCTAssertGreaterThan(ack.size(for: .applicationData), 0)
+        XCTAssertEqual(ack.blocksForPacketNumberSpace(packetNumberSpace: .applicationData), 256)
+    }
+
+    // Exactly Ack.maxAckBlocks (256) blocks must not trigger trimming: the guard
+    // is "> 256", not ">= 256".
+    func testAckMaxBlocksBoundary() {
+        for i in 0..<256 {
+            ack.append(packetNumberSpace: .applicationData, packetNumber: PacketNumber(Int64(i * 2)))
+        }
+        XCTAssertEqual(ack.blocksForPacketNumberSpace(packetNumberSpace: .applicationData), 256)
+
+        XCTAssertGreaterThan(ack.size(for: .applicationData), 0)
+        XCTAssertEqual(ack.blocksForPacketNumberSpace(packetNumberSpace: .applicationData), 256)
+    }
+
 }
 
 #endif

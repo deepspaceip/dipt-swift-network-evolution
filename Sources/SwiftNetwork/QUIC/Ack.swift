@@ -298,6 +298,10 @@ struct AckSpace: ~Copyable, PrefixedLoggable {
         if let frame {
             setAckFrame(packetNumberSpace, frame, (blockCount > Ack.pingThreshold))
         }
+        if blockCount > Ack.maxAckBlocks {
+            blocks.removeFirst()
+            generationCount += 1
+        }
 
         return len
     }
@@ -416,8 +420,28 @@ struct AckBlockSequence: Sequence {
 final class Ack: PrefixedLoggable, TimerUser {
     var log: LogPrefixer
 
-    static let pingThreshold = 5  // Threshold to add a PING frame.
-    static let immediateAcks = 8  // Number of immediate ACKs when we need to ACK immediately
+    // When an outgoing ACK reports more than this many blocks (i.e. this many gaps
+    // in the packet numbers we've received), we piggyback a PING frame. An ACK
+    // frame is not ack-eliciting on its own, so the peer is not obliged to
+    // acknowledge it; the PING makes the packet ack-eliciting, forcing the peer to
+    // ACK it. That ack-of-ack lets us confirm the peer saw our gap report and prune
+    // the corresponding ACK blocks, keeping the list from growing.
+    static let pingThreshold = 5
+
+    // Upper bound on the number of ACK blocks (ranges) we track per packet number
+    // space. A peer that sends highly fragmented or persistently reordered traffic
+    // would otherwise grow this list without bound, inflating both memory use and
+    // the size of the ACK frames we emit. When the count exceeds this limit we drop
+    // the oldest (lowest-PN) block as each ACK is built, trimming the list back
+    // toward the cap.
+    static let maxAckBlocks = 256
+
+    // Number of consecutive packets to ACK immediately (bypassing the ACK delay
+    // timer) after entering aggressive-ACK mode via ackAgressively(). The
+    // counter is seeded with this value and decremented on each ACK sent; while it
+    // is non-zero we send ACKs without waiting, which speeds up loss recovery and
+    // RTT sampling during sensitive phases.
+    static let immediateAcks = 8
 
     static let defaultPacketThreshold = 128
     static let defaultDelayExponent = 3 /* 2 ** 3 */

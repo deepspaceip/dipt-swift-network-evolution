@@ -306,6 +306,9 @@ public final class QUICPath: MultiplexingDatagramPath<QUICConnection>, Equatable
 
     private func setup() {
         self.initialMSS = parentProtocol.initialMSS
+        if let initialRTT = parentProtocol.initialRTT {
+            self.rtt.setInitialRTT(initialRTT)
+        }
         self.maximumMSS =
             PMTUDState.maximumMTU - (IPProtocol.ipv6HeaderLength + UDPProtocol.headerLength)
         self.minimumMSS =

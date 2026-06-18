@@ -50,6 +50,21 @@ struct RTT: ~Copyable, PrefixedLoggable {
         self.log = logPrefixer
     }
 
+    // Override the initial RTT estimate used before any RTT sample has been
+    // measured. Seeds the smoothed RTT and its variance per RFC 9002, matching
+    // how the first measurement initializes them. Has no effect once a real
+    // measurement has been taken.
+    mutating func setInitialRTT(_ initialRTT: NetworkDuration) {
+        guard !hasInitialMeasurement else {
+            log.debug("Ignoring configured initial RTT \(initialRTT): already measured")
+            return
+        }
+        latestRTT = initialRTT
+        smoothedRTT = initialRTT
+        RTTVariance = initialRTT / 2
+        log.debug("Using configured initial RTT \(initialRTT)")
+    }
+
     // 0 ms used for initial and handshake
     private var _remoteMaxAckDelay: NetworkDuration = .microseconds(0)
     var remoteMaxAckDelay: NetworkDuration {

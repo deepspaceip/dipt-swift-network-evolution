@@ -542,7 +542,7 @@ public struct InPlaceSerializer<Factory: SerializerSpanFactory & ~Copyable & ~Es
             return
         }
 
-        #if os(watchOS) && arch(arm64_32)
+        #if os(watchOS) && (arch(arm64_32) || arch(arm))
         // Fix for Span not being available on 32-bit watchOS
         // This surfaces when build with the arm64_32 toolchain
         // https://github.com/swiftlang/swift/blob/51b0b4aa41f28eae7d96af6f98c1fbd2b4b63958/stdlib/public/core/StringUTF8View.swift#L386
@@ -765,7 +765,7 @@ public struct FrameSerializer: ~Copyable {
             return
         }
 
-        #if os(watchOS) && arch(arm64_32)
+        #if os(watchOS) && (arch(arm64_32) || arch(arm))
         // Fix for Span not being available on 32-bit watchOS
         // This surfaces when build with the arm64_32 toolchain
         // https://github.com/swiftlang/swift/blob/51b0b4aa41f28eae7d96af6f98c1fbd2b4b63958/stdlib/public/core/StringUTF8View.swift#L386

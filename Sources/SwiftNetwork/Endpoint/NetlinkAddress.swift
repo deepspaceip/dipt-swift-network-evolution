@@ -35,7 +35,7 @@ struct NetlinkAddress: IPAddress, Hashable, CustomDebugStringConvertible {
     /// Creates a Netlink address from raw bytes.
     init?(_ bytes: [UInt8]) {
         if bytes.count >= NetlinkAddress.layoutSize {
-            #if os(Linux)
+            #if os(Linux) && NETLINK_ENABLED
             let nl = bytes.withUnsafeBytes { $0.load(as: sockaddr_nl.self) }
             self.init(nl)
             #else
@@ -47,12 +47,12 @@ struct NetlinkAddress: IPAddress, Hashable, CustomDebugStringConvertible {
         }
     }
 
-    #if os(Linux)
+    #if os(Linux) && NETLINK_ENABLED
     // Linux has a specific type: sockaddr_nl
     init(_ sockaddr_nl: sockaddr_nl) {
         self.address = sockaddr_nl
     }
-    #elseif canImport(Darwin)
+    #else
     // rtsock on Darwin uses sockaddr
     // struct sockaddr route_dst = { .sa_len = 2, .sa_family = PF_ROUTE, .sa_data = { 0, } };
     init(_ sockaddr: sockaddr) {
@@ -68,14 +68,14 @@ struct NetlinkAddress: IPAddress, Hashable, CustomDebugStringConvertible {
         "NetlinkAddress"
     }
 
-    #if os(Linux)
+    #if os(Linux) && NETLINK_ENABLED
     var address: sockaddr_nl
     var nl_pid: pid_t = 0
     #else
     var address: sockaddr
     #endif
 
-    #if os(Linux)
+    #if os(Linux) && NETLINK_ENABLED
     private static let layoutSize = MemoryLayout<sockaddr_nl>.size
     #else
     private static let layoutSize = MemoryLayout<sockaddr>.size

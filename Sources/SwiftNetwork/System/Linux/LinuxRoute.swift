@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if os(Linux)
+#if os(Linux) && canImport(Glibc) && NETLINK_ENABLED
 import Glibc
 internal import Logging
 internal import SwiftNetworkLinuxShim
@@ -534,6 +534,12 @@ internal enum SystemRoute {
             }
             return ifIndex
         }
+    }
+}
+#elseif os(Linux)
+internal enum SystemRoute {
+    static func routeGetInterfaceIndex(dst: any IPAddress, scopedIndex: UInt32 = 0) throws -> UInt32 {
+        0
     }
 }
 #endif

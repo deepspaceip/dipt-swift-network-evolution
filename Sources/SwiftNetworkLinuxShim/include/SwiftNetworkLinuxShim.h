@@ -18,8 +18,10 @@
 #ifdef __linux__
 
 #include <stdio.h>
-#include <linux/netlink.h>
-#include <linux/rtnetlink.h>
+#ifdef NETLINK_ENABLED
+    #include <linux/netlink.h>
+    #include <linux/rtnetlink.h>
+#endif
 #include <arpa/inet.h>
 
 // Not exposed in Glibc.swiftmodule

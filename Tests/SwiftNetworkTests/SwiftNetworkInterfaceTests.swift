@@ -121,7 +121,10 @@ final class SwiftNetworkInterfaceTests: NetTestCase {
         )
     }
 
-    func testRouteGetInterfaceIndex() {
+    func testRouteGetInterfaceIndex() throws {
+        #if os(Linux) && !NETLINK_ENABLED
+        try XCTSkipIf(true)
+        #else
         // Very basic localhost test
         let v4Bytes: [UInt8] = [0x7F, 0x00, 0x00, 0x01]
 
@@ -155,5 +158,6 @@ final class SwiftNetworkInterfaceTests: NetTestCase {
         // Use a v6 loopback address with a scoped interface index
         let routeIndex4 = try! System.routeGetInterfaceIndex(dst: IPv6Address.loopback, scopedIndex: 1)
         XCTAssertEqual(routeIndex4, 1)
+        #endif
     }
 }

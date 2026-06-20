@@ -320,6 +320,10 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
     private(set) var initialMSS = Constants.initialMSS
     private(set) var pathPropertiesMTU = 0
 
+    // Application-configured initial RTT estimate, applied to each path's RTT
+    // before any measurement. nil means use the protocol default.
+    private(set) var initialRTT: NetworkDuration?
+
     var isPacing: Bool = false
 
     // MARK: Logging
@@ -514,6 +518,8 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
             pmtudIgnoreCost = protocolOptions.quicConnectionOptions.pmtudIgnoreCost
             pmtudInterval = protocolOptions.quicConnectionOptions.pmtudUpdateInterval
 
+            initialRTT = protocolOptions.quicConnectionOptions.initialRTT
+
             pacingEnabled = protocolOptions.quicConnectionOptions.enablePacing
 
             testSendingShortPackets =
@@ -535,6 +541,9 @@ public final class QUICConnection: ManyToManyApplicationStreamProtocol,
 
             if let currentPath {
                 currentPath.pacePackets = pacingEnabled
+                if let initialRTT {
+                    currentPath.rtt.setInitialRTT(initialRTT)
+                }
                 currentPath.setupL4SState(l4sEnabled: enableL4s)
                 if currentPath.l4sEnabled && QUICPreferences.shared.ackCompressionEnabled {
                     // Disable ACK compression when L4S is enabled.

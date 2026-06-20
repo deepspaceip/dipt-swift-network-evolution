@@ -202,13 +202,21 @@ public struct QUICConnectionProtocol: NetworkProtocol {
             set { self._idleTimeout = newValue }
         }
 
+        // Initial RTT estimate to use before any RTT sample has been measured.
+        // nil = use the protocol default (RFC 9002 recommends 333ms).
+        internal var _initialRTT: NetworkDuration? = nil
+        public var initialRTT: NetworkDuration? {
+            get { self._initialRTT }
+            set { self._initialRTT = newValue }
+        }
+
         // nil = default
         // true = enabled
         // false = disabled
         public var enableL4S: Bool?
 
         internal var _maxUDPPayloadSize: UInt16 = UInt16.max
-        var maxUDPPayloadSize: UInt16 {
+        public var maxUDPPayloadSize: UInt16 {
             get { self._maxUDPPayloadSize }
             set { self._maxUDPPayloadSize = newValue }
         }
@@ -514,6 +522,7 @@ public struct QUICConnectionProtocol: NetworkProtocol {
             connectionOptions.initialMaxData = self.initialMaxData
             connectionOptions.maxUDPPayloadSize = self.maxUDPPayloadSize
             connectionOptions.idleTimeout = self.idleTimeout
+            connectionOptions.initialRTT = self.initialRTT
             connectionOptions.initialMaxStreamsBidirectional = self.initialMaxStreamsBidirectional
             connectionOptions.initialMaxStreamsUnidirectional = self.initialMaxStreamsUnidirectional
             connectionOptions.initialMaxStreamDataBidirectionalLocal = self.initialMaxStreamDataBidirectionalLocal
@@ -618,7 +627,8 @@ public struct QUICConnectionProtocol: NetworkProtocol {
                 && lhs.peerMaxData == rhs.peerMaxData && lhs.peerMaxDataUnidirectional == rhs.peerMaxDataUnidirectional
                 && lhs.peerMaxStreamsBidirectional == rhs.peerMaxStreamsBidirectional
                 && lhs.peerMaxStreamsUnidirectional == rhs.peerMaxStreamsUnidirectional
-                && lhs.idleTimeout == rhs.idleTimeout && lhs.enableL4S == rhs.enableL4S
+                && lhs.idleTimeout == rhs.idleTimeout && lhs.initialRTT == rhs.initialRTT
+                && lhs.enableL4S == rhs.enableL4S
                 && lhs.maxUDPPayloadSize == rhs.maxUDPPayloadSize
                 && rhs.maxDatagramFrameSize == lhs.maxDatagramFrameSize
                 && lhs.initialPacketSize == rhs.initialPacketSize && lhs.keepaliveCount == rhs.keepaliveCount

@@ -10,6 +10,14 @@ On macOS, iOS, and other Apple platforms, apps should use the Network.framework 
 > At this time, all types exposed in this package are marked as SPI and subject to change at any time.
 > There are no support guarantees that can be made until these SPIs transition to stable APIs at a later date.
 
+> [!NOTE]
+> This fork exposes some additional QUIC transport configuration parameters
+> to the API, for deep space IP networking use case
+> see: https://datatracker.ietf.org/doc/draft-many-tiptop-quic-profile/
+> Marc Blanchet, marc.blanchet@viagenie.ca
+
+
+
 ## Getting Started
 
 ## Prerequisites

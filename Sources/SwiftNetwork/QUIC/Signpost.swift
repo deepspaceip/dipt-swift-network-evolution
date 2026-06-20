@@ -14,14 +14,9 @@
 
 #if !NETWORK_NO_SWIFT_QUIC
 
-#if SignpostOutput
+#if SignpostOutput && canImport(os)
 
-#if canImport(Glibc)
-import Glibc
-internal import Logging
-#elseif canImport(os)
 internal import os
-#endif
 
 @available(Network 0.1.0, *)
 struct QUICSignpost {
@@ -114,7 +109,8 @@ struct QUICSignpost {
     }
 }
 #else
-// Signposts are not enabled unless the `SignpostOutput` package trait is enabled.
+// Signposts are not enabled unless the `SignpostOutput` package trait is
+// enabled and the target platform supports Apple's OS signposting APIs.
 @available(Network 0.1.0, *)
 struct QUICSignpost {
     typealias IntervalState = Int

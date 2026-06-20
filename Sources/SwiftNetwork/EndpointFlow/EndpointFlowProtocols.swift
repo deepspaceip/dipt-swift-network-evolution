@@ -491,7 +491,7 @@ final class StreamEndpointFlowProtocol: EndpointFlowProtocol<InboundStreamLinkag
         }
     }
 
-    func read(minimumBytes: Int, maximumBytes: Int) -> [UInt8]? {
+    func read(minimumBytes: Int, maximumBytes: Int) -> (content: [UInt8], isComplete: Bool)? {
         fromExternal {
             do throws(NetworkError) {
                 guard
@@ -504,6 +504,10 @@ final class StreamEndpointFlowProtocol: EndpointFlowProtocol<InboundStreamLinkag
                     log.debug("No more stream data available")
                     return nil
                 }
+                // Capture the end-of-stream marker (the peer's FIN) before the
+                // frames are finalized, so it can be surfaced to the reader.
+                // Otherwise the application never learns the stream completed.
+                let isComplete = frames.connectionComplete
                 var returnBuffer: [UInt8]? = nil
                 frames.iterateMutableFrames { frame in
                     var buffer = [UInt8]()
@@ -521,7 +525,7 @@ final class StreamEndpointFlowProtocol: EndpointFlowProtocol<InboundStreamLinkag
                     frame.finalize(success: true)
                     return true
                 }
-                return returnBuffer
+                return (returnBuffer ?? [], isComplete)
             } catch {
                 return nil
             }

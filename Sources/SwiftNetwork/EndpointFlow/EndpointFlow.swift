@@ -230,12 +230,14 @@ final class EndpointFlow: CustomDebugStringConvertible {
         case .stream(let flow):
             while true {
                 if let readRequest = self.readRequests.first {
-                    if let content = flow.read(
+                    if let result = flow.read(
                         minimumBytes: readRequest.minimumBytes,
                         maximumBytes: readRequest.maximumBytes
                     ) {
-                        // TODO: Get the actual metadata
-                        readRequest.complete(content: content, isComplete: false, isFinal: true)
+                        // Surface the stream's end-of-stream marker (FIN) as
+                        // `isComplete` so readers can detect the end of the
+                        // response instead of blocking on a further read.
+                        readRequest.complete(content: result.content, isComplete: result.isComplete, isFinal: true)
                         // TODO: This is not efficient. Probably better to use an ArraySlice here
                         self.readRequests.removeFirst()
                     } else {
